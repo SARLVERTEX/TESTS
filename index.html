@@ -3,57 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco - Test AR Précision</title>
+    <title>Vertex Monaco | Catalogue AR</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
     <style>
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #000; color: white; }
-        model-viewer {
-            width: 100vw;
-            height: 80vh;
-            background-color: #050505;
+        :root { --accent: #00CCFF; --bg: #050505; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; }
+
+        model-viewer { width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a1a 0%, #050505 100%); }
+
+        /* --- UI PANEL --- */
+        .header { position: absolute; top: 40px; left: 40px; z-index: 100; }
+        .header h1 { font-weight: 200; letter-spacing: 12px; margin: 0; font-size: 1.2rem; text-transform: uppercase; }
+        
+        /* --- SELECTEUR DE MODELE --- */
+        .selector-container {
+            position: absolute; top: 110px; left: 40px; z-index: 100;
+            background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
         }
-        .controls { padding: 20px; text-align: center; }
-        .ar-button {
-            background: #00CCFF;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            color: black;
-            font-weight: bold;
-            font-size: 1.1em;
-            cursor: pointer;
+        select {
+            background: transparent; color: var(--accent); border: none;
+            font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; outline: none;
+            text-transform: uppercase;
         }
+
+        /* --- HOTSPOTS --- */
+        .hotspot { width: 12px; height: 12px; border-radius: 50%; border: none; background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .annotation {
+            background: rgba(0, 0, 0, 0.8); border-left: 2px solid var(--accent);
+            color: #fff; padding: 6px 10px; font-size: 10px; position: absolute;
+            transform: translate(15px, -50%); white-space: nowrap;
+        }
+
+        /* --- ACTIONS --- */
+        .actions { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 100; }
+        .btn {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; padding: 12px 20px; font-size: 0.65rem; letter-spacing: 2px;
+            text-transform: uppercase; cursor: pointer; backdrop-filter: blur(10px);
+        }
+        .btn-main { background: var(--accent); color: black; font-weight: bold; border: none; }
+
+        #flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; pointer-events: none; z-index: 1000; }
     </style>
 </head>
 <body>
 
-    <model-viewer 
-        src="Double-Face 55_.glb" 
-        ar 
-        ar-modes="webxr scene-viewer quick-look" 
-        ar-placement="floor" 
-        camera-controls 
-        disable-zoom
-        shadow-intensity="1" 
-        environment-image="neutral"
-        alt="Gabarit Double-Face 55 Vertex Monaco">
+    <div id="flash"></div>
 
-        <button slot="ar-button" class="ar-button">
-            📐 LANCER LA MESURE AR
+    <div class="header">
+        <h1>Vertex</h1>
+        <div class="selector-container">
+            <select id="model-selector">
+                <option value="Double-Face 55_.glb" data-h="1950" data-l="900" data-y="1.95">Gabarit 55"</option>
+                <option value="Double-Face 65_.glb" data-h="2150" data-l="1100" data-y="2.15">Gabarit 65"</option>
+                <option value="Double-Face 75_.glb" data-h="2400" data-l="1300" data-y="2.40">Gabarit 75"</option>
+            </select>
+        </div>
+    </div>
+
+    <model-viewer id="viewer" src="Double-Face 55_.glb" ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor" camera-controls disable-zoom shadow-intensity="2" environment-image="neutral">
+
+        <button id="height-hotspot" class="hotspot" slot="hotspot-h" data-position="0 1.95 0" data-normal="0 1 0">
+            <div id="height-label" class="annotation">H : 1950 MM</div>
         </button>
 
-        <div slot="ar-failure" style="color: red; padding: 10px;">
-            Erreur : La détection du sol a échoué.
+        <div class="actions">
+            <button class="btn" onclick="takeSnapshot()">📸 Capture</button>
+            <button class="btn" onclick="toggleXray()">X-Ray</button>
+            <button slot="ar-button" class="btn btn-main">Mode AR</button>
         </div>
     </model-viewer>
 
-    <div class="controls">
-        <h2>Vertex Monaco - R&D Mode</h2>
-        <p>Dimensions : Fixes (1:1) | Mode : Ancrage au sol</p>
-        <p style="font-size: 0.8em; color: #666;">Note : Le zoom est désactivé pour garantir la précision de la mesure.</p>
-    </div>
+    <script>
+        const viewer = document.querySelector('#viewer');
+        const selector = document.querySelector('#model-selector');
+        const heightLabel = document.querySelector('#height-label');
+        const heightHotspot = document.querySelector('#height-hotspot');
 
+        // Changer de modèle
+        selector.addEventListener('change', (i) => {
+            const selected = i.target.options[i.target.selectedIndex];
+            
+            // 1. Change la source du fichier
+            viewer.src = i.target.value;
+
+            // 2. Met à jour l'étiquette de mesure
+            heightLabel.innerText = "H : " + selected.getAttribute('data-h') + " MM";
+            
+            // 3. Repositionne le point de mesure en hauteur
+            const newY = selected.getAttribute('data-y');
+            heightHotspot.setAttribute('data-position', `0 ${newY} 0`);
+        });
+
+        async function takeSnapshot() {
+            const flash = document.getElementById('flash');
+            flash.style.opacity = '1';
+            setTimeout(() => flash.style.opacity = '0', 100);
+            const blob = await viewer.toBlob({ idealAspect: true });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Vertex-Monaco-Capture.png';
+            a.click();
+        }
+
+        let xray = false;
+        function toggleXray() {
+            xray = !xray;
+            viewer.model.materials.forEach(m => {
+                m.setAlphaMode(xray ? "BLEND" : "OPAQUE");
+                m.pbrMetallicRoughness.setBaseColorFactor(xray ? [1, 1, 1, 0.3] : [1, 1, 1, 1]);
+            });
+        }
+    </script>
 </body>
 </html>
