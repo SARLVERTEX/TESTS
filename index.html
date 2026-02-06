@@ -3,109 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco | Ceiling System</title>
-    
+    <title>Vertex Monaco | Scanner de Vitrine</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-
     <style>
         :root { --accent: #00CCFF; --bg: #050505; }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; }
+        
+        /* Interface de Scan */
+        #scan-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1000; background: #000; display: flex; flex-direction: column;
+        }
+        
+        #camera-feed { width: 100%; height: 70%; background: #222; object-fit: cover; }
 
-        model-viewer {
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
-        }
-
-        /* --- UI HEADER --- */
-        .ui-header {
-            position: absolute; top: 40px; left: 40px; z-index: 100;
-            pointer-events: none;
-        }
-        .ui-header h1 { 
-            font-weight: 200; letter-spacing: 10px; margin: 0; 
-            font-size: 1.4rem; text-transform: uppercase; 
-        }
-        .status-tag {
-            font-size: 0.6rem; color: var(--accent); letter-spacing: 2px;
-            margin-top: 8px; display: flex; align-items: center; gap: 6px;
-        }
-        .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 1s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        /* --- HOTSPOTS (MESURES SUSPENDUES) --- */
-        .hotspot {
-            width: 16px; height: 16px; border-radius: 50%; border: 2px solid white;
-            background: var(--accent); box-shadow: 0 0 15px var(--accent);
-        }
-        .annotation {
-            background: rgba(0, 0, 0, 0.85); border-top: 2px solid var(--accent);
-            color: #fff; padding: 6px 10px; font-size: 11px; position: absolute;
-            transform: translate(15px, 20px); white-space: nowrap; font-family: monospace;
+        .instruction-bar {
+            padding: 20px; text-align: center; background: rgba(0,204,255,0.1);
+            border-bottom: 1px solid var(--accent);
         }
 
-        /* --- BOUTON AR --- */
-        .ar-button-container {
-            position: absolute; bottom: 50px; width: 100%;
-            display: flex; justify-content: center; z-index: 1000;
+        .recommendation-panel {
+            padding: 20px; display: none; text-align: center;
         }
-        #custom-ar-button {
-            background: var(--accent); color: black; border: none;
-            padding: 18px 35px; border-radius: 4px; font-weight: bold;
-            font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
+
+        .btn-action {
+            background: var(--accent); color: #000; border: none;
+            padding: 15px 30px; font-weight: bold; border-radius: 4px;
+            margin-top: 10px; cursor: pointer; text-transform: uppercase;
         }
+
+        /* Viewer 3D masqué au début */
+        #final-viewer { display: none; width: 100vw; height: 100vh; }
     </style>
 </head>
 <body>
 
-    <div class="ui-header">
-        <h1>Vertex</h1>
-        <div class="status-tag"><div class="dot"></div> FIXATION PLAFOND 1:1</div>
-    </div>
+    <div id="scan-container">
+        <div class="instruction-bar">
+            <h2 style="margin:0; font-size:1rem;">1. DÉLIMITEZ VOTRE VITRINE</h2>
+            <p style="font-size:0.7rem; opacity:0.7;">Cadrez votre vitrine et validez la zone disponible.</p>
+        </div>
+        
+        <video id="camera-feed" autoplay playsinline></video>
 
-    <model-viewer id="viewer" 
-        src="Double-Face 55_.glb" 
-        ar 
-        ar-modes="webxr scene-viewer quick-look" 
-        ar-placement="wall" 
-        ar-scale="fixed"
-        camera-controls 
-        disable-zoom
-        shadow-intensity="0" 
-        environment-image="neutral"
-        exposure="1.2">
-
-        <button class="hotspot" slot="hotspot-top" data-position="0 1.95 0" data-normal="0 1 0">
-            <div class="annotation">ANCRAGE PLAFOND</div>
-        </button>
-
-        <button class="hotspot" slot="hotspot-bottom" data-position="0 0 0" data-normal="0 -1 0">
-            <div class="annotation">BAS DE L'ÉCRAN : 1950 MM</div>
-        </button>
-
-        <div slot="ar-button" class="ar-button-container">
-            <button id="custom-ar-button">VÉRIFIER LA HAUTEUR SOUS PLAFOND</button>
+        <div class="recommendation-panel" id="result-box">
+            <h3 id="recommended-model">ANALYSE EN COURS...</h3>
+            <p id="model-details" style="font-size:0.8rem;"></p>
+            <button class="btn-action" onclick="showInAR()">Voir ce modèle en AR</button>
         </div>
 
+        <div id="scan-trigger" style="text-align:center; padding: 20px;">
+            <button class="btn-action" onclick="analyzeWindow()" style="background:white;">Scanner la zone</button>
+        </div>
+    </div>
+
+    <model-viewer id="final-viewer" ar ar-modes="webxr scene-viewer" ar-scale="fixed" camera-controls src="">
+        <button slot="ar-button" class="btn-action" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%);">
+            Lancer le test réel
+        </button>
     </model-viewer>
 
     <script>
-        const viewer = document.querySelector('#viewer');
+        const video = document.getElementById('camera-feed');
+        const resultBox = document.getElementById('result-box');
+        const scanTrigger = document.getElementById('scan-trigger');
 
-        // Gestion du cache pour les mises à jour en temps réel sur GitHub
-        window.addEventListener('load', () => {
-            const timestamp = new Date().getTime();
-            const currentSrc = viewer.src;
-            if (currentSrc) {
-                viewer.src = `${currentSrc.split('?')[0]}?t=${timestamp}`;
-            }
-        });
+        // Accès caméra
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => { video.srcObject = stream; })
+            .catch(err => alert("L'accès caméra est requis pour le diagnostic."));
 
-        // Correction de l'orientation si nécessaire au clic
-        viewer.addEventListener('ar-status', (event) => {
-            if(event.detail.status === 'presenting') {
-                console.log("Passage en mode AR suspendu");
-            }
-        });
+        function analyzeWindow() {
+            // Simulation d'IA d'analyse de surface
+            scanTrigger.style.display = 'none';
+            resultBox.style.display = 'block';
+            
+            // Logique de recommandation simplifiée
+            // Dans une version finale, on utiliserait les capteurs de profondeur (LiDAR)
+            const models = [
+                { name: 'Vertex Double-Face 55"', file: 'Double-Face 55_.glb', desc: 'Idéal pour vitrines standards (largeur < 1m)' },
+                { name: 'Vertex Double-Face 65"', file: 'Double-Face 65_.glb', desc: 'Recommandé pour grandes vitrines' }
+            ];
+            
+            const choice = models[0]; // Simulation d'un choix 55"
+            document.getElementById('recommended-model').innerText = `RECOMMANDATION : ${choice.name}`;
+            document.getElementById('model-details').innerText = choice.desc;
+            document.getElementById('final-viewer').src = choice.file;
+        }
+
+        function showInAR() {
+            document.getElementById('scan-container').style.display = 'none';
+            document.getElementById('final-viewer').style.display = 'block';
+        }
     </script>
 </body>
 </html>
