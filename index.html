@@ -3,174 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco | Certification Spatiale AR</title>
+    <title>Vertex Monaco | Ceiling System</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
     <style>
-        :root { 
-            --accent: #00CCFF; 
-            --bg: #050505;
-            --glass: rgba(255, 255, 255, 0.1);
-        }
-
-        body { 
-            margin: 0; font-family: 'Inter', -apple-system, sans-serif; 
-            background: var(--bg); color: white; overflow: hidden;
-        }
+        :root { --accent: #00CCFF; --bg: #050505; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; }
 
         model-viewer {
             width: 100vw; height: 100vh;
             background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
         }
 
-        /* --- INTERFACE --- */
+        /* --- UI HEADER --- */
         .ui-header {
             position: absolute; top: 40px; left: 40px; z-index: 100;
+            pointer-events: none;
         }
         .ui-header h1 { 
             font-weight: 200; letter-spacing: 10px; margin: 0; 
             font-size: 1.4rem; text-transform: uppercase; 
         }
-        .sync-tag {
+        .status-tag {
             font-size: 0.6rem; color: var(--accent); letter-spacing: 2px;
             margin-top: 8px; display: flex; align-items: center; gap: 6px;
         }
         .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 1s infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* --- SÉLECTEUR DE GABARIT --- */
-        .selector-box {
-            position: absolute; top: 110px; left: 40px; z-index: 100;
-            background: var(--glass); padding: 12px; border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px);
-        }
-        select {
-            background: transparent; color: var(--accent); border: none;
-            font-size: 0.8rem; letter-spacing: 1px; cursor: pointer; outline: none;
-            text-transform: uppercase; font-weight: bold;
-        }
-
-        /* --- HOTSPOTS (MESURES) --- */
+        /* --- HOTSPOTS (MESURES SUSPENDUES) --- */
         .hotspot {
-            width: 14px; height: 14px; border-radius: 50%; border: 2px solid white;
-            background: var(--accent); box-shadow: 0 0 15px var(--accent); cursor: pointer;
+            width: 16px; height: 16px; border-radius: 50%; border: 2px solid white;
+            background: var(--accent); box-shadow: 0 0 15px var(--accent);
         }
         .annotation {
-            background: rgba(0, 0, 0, 0.85); border-left: 2px solid var(--accent);
+            background: rgba(0, 0, 0, 0.85); border-top: 2px solid var(--accent);
             color: #fff; padding: 6px 10px; font-size: 11px; position: absolute;
-            transform: translate(15px, -50%); white-space: nowrap; font-family: monospace;
+            transform: translate(15px, 20px); white-space: nowrap; font-family: monospace;
         }
 
-        /* --- ACTIONS --- */
-        .footer-actions {
-            position: absolute; bottom: 40px; width: 100%;
-            display: flex; justify-content: center; gap: 12px; z-index: 100;
+        /* --- BOUTON AR --- */
+        .ar-button-container {
+            position: absolute; bottom: 50px; width: 100%;
+            display: flex; justify-content: center; z-index: 1000;
         }
-        .btn {
-            background: var(--glass); border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white; padding: 14px 22px; font-size: 0.7rem;
-            letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
-            backdrop-filter: blur(10px); transition: 0.3s;
-        }
-        .btn:hover { border-color: var(--accent); color: var(--accent); }
-        .btn-ar { background: var(--accent); color: black; font-weight: bold; border: none; }
-
-        #flash { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: white; opacity: 0; pointer-events: none; z-index: 1000; 
+        #custom-ar-button {
+            background: var(--accent); color: black; border: none;
+            padding: 18px 35px; border-radius: 4px; font-weight: bold;
+            font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div id="flash"></div>
-
     <div class="ui-header">
         <h1>Vertex</h1>
-        <div class="sync-tag"><div class="dot"></div> LIVE SCALE 1:1 LOCKED</div>
-        
-        <div class="selector-box">
-            <select id="model-selector">
-                <option value="Double-Face 55_.glb" data-h="1950" data-y="1.95">Gabarit 55" (Standard)</option>
-                <option value="Double-Face 65_.glb" data-h="2150" data-y="2.15">Gabarit 65" (Large)</option>
-                <option value="Double-Face 75_.glb" data-h="2400" data-y="2.40">Gabarit 75" (X-Large)</option>
-            </select>
-        </div>
+        <div class="status-tag"><div class="dot"></div> FIXATION PLAFOND 1:1</div>
     </div>
 
     <model-viewer id="viewer" 
         src="Double-Face 55_.glb" 
         ar 
-        ar-modes="scene-viewer webxr quick-look" 
-        ar-placement="floor" 
+        ar-modes="webxr scene-viewer quick-look" 
+        ar-placement="wall" 
         ar-scale="fixed"
         camera-controls 
         disable-zoom
-        shadow-intensity="2" 
+        shadow-intensity="0" 
         environment-image="neutral"
         exposure="1.2">
 
-        <button id="ht-point" class="hotspot" slot="hotspot-h" data-position="0 1.95 0" data-normal="0 1 0">
-            <div id="ht-label" class="annotation">H : 1950 MM</div>
+        <button class="hotspot" slot="hotspot-top" data-position="0 1.95 0" data-normal="0 1 0">
+            <div class="annotation">ANCRAGE PLAFOND</div>
         </button>
 
-        <div class="footer-actions">
-            <button class="btn" onclick="takeSnapshot()">📸 Capture</button>
-            <button class="btn" onclick="toggleXray()">X-Ray</button>
-            <button slot="ar-button" class="btn btn-ar">LANCER MESURE AR</button>
+        <button class="hotspot" slot="hotspot-bottom" data-position="0 0 0" data-normal="0 -1 0">
+            <div class="annotation">BAS DE L'ÉCRAN : 1950 MM</div>
+        </button>
+
+        <div slot="ar-button" class="ar-button-container">
+            <button id="custom-ar-button">VÉRIFIER LA HAUTEUR SOUS PLAFOND</button>
         </div>
 
     </model-viewer>
 
     <script>
         const viewer = document.querySelector('#viewer');
-        const selector = document.querySelector('#model-selector');
-        const htLabel = document.querySelector('#ht-label');
-        const htPoint = document.querySelector('#ht-point');
 
-        // 1. GESTION DU CACHE ET CHARGEMENT INITIAL
-        function updateModelSource(file) {
+        // Gestion du cache pour les mises à jour en temps réel sur GitHub
+        window.addEventListener('load', () => {
             const timestamp = new Date().getTime();
-            viewer.src = `${file}?t=${timestamp}`;
-        }
-
-        window.addEventListener('load', () => updateModelSource(selector.value));
-
-        // 2. CHANGEMENT DE MODÈLE ET MISE À JOUR DES MESURES
-        selector.addEventListener('change', (e) => {
-            const opt = e.target.options[e.target.selectedIndex];
-            updateModelSource(e.target.value);
-            
-            // Mise à jour visuelle des étiquettes
-            htLabel.innerText = `H : ${opt.getAttribute('data-h')} MM`;
-            htPoint.setAttribute('data-position', `0 ${opt.getAttribute('data-y')} 0`);
+            const currentSrc = viewer.src;
+            if (currentSrc) {
+                viewer.src = `${currentSrc.split('?')[0]}?t=${timestamp}`;
+            }
         });
 
-        // 3. FONCTION CAPTURE PHOTO
-        async function takeSnapshot() {
-            const flash = document.getElementById('flash');
-            flash.style.opacity = '1';
-            setTimeout(() => flash.style.opacity = '0', 100);
-
-            const blob = await viewer.toBlob({ idealAspect: true });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Vertex-Monaco-${new Date().getTime()}.png`;
-            a.click();
-        }
-
-        // 4. MODE X-RAY (TRANSPARENCE)
-        let xray = false;
-        function toggleXray() {
-            xray = !xray;
-            const materials = viewer.model.materials;
-            materials.forEach(m => {
-                m.setAlphaMode(xray ? "BLEND" : "OPAQUE");
-                m.pbrMetallicRoughness.setBaseColorFactor(xray ? [1, 1, 1, 0.3] : [1, 1, 1, 1]);
-            });
-        }
+        // Correction de l'orientation si nécessaire au clic
+        viewer.addEventListener('ar-status', (event) => {
+            if(event.detail.status === 'presenting') {
+                console.log("Passage en mode AR suspendu");
+            }
+        });
     </script>
 </body>
 </html>
