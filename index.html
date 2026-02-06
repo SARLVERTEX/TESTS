@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco | Live Update</title>
+    <title>Vertex Monaco | AR Metrology</title>
     
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 
@@ -12,77 +12,67 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; }
         model-viewer { width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a1a 0%, #050505 100%); }
 
-        .header { position: absolute; top: 40px; left: 40px; z-index: 100; }
-        .header h1 { font-weight: 200; letter-spacing: 12px; margin: 0; font-size: 1.2rem; text-transform: uppercase; }
-        
-        /* Indicateur de mise à jour */
-        .sync-status {
-            font-size: 0.6rem; color: var(--accent); letter-spacing: 1px;
-            display: flex; align-items: center; gap: 5px; margin-top: 5px;
+        /* Style des annotations pour qu'elles soient visibles en AR */
+        .hotspot {
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid white; background: var(--accent);
+            box-shadow: 0 0 10px rgba(0,204,255,0.8);
         }
-        .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .annotation {
+            background: rgba(0, 0, 0, 0.8); border-left: 2px solid var(--accent);
+            color: #fff; padding: 6px 10px; font-size: 12px;
+            position: absolute; transform: translate(15px, -50%);
+            white-space: nowrap; pointer-events: none;
+        }
 
-        .selector-container {
-            position: absolute; top: 110px; left: 40px; z-index: 100;
-            background: rgba(255, 255, 255, 0.05); padding: 10px; border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px);
-        }
-        select { background: transparent; color: var(--accent); border: none; font-size: 0.8rem; cursor: pointer; outline: none; }
+        .header { position: absolute; top: 30px; left: 30px; z-index: 100; pointer-events: none;}
+        .header h1 { font-weight: 200; letter-spacing: 8px; margin: 0; font-size: 1.2rem; }
 
         .actions { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 100; }
-        .btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 12px 20px; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
-        .btn-main { background: var(--accent); color: black; font-weight: bold; border: none; }
+        .btn { background: rgba(0,0,0,0.6); border: 1px solid var(--accent); color: var(--accent); padding: 12px 20px; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(10px); }
+        .btn-main { background: var(--accent); color: black; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Vertex</h1>
-        <div class="sync-status"><div class="dot"></div> LIVE VERSION ACTUALISÉE</div>
-        
-        <div class="selector-container">
-            <select id="model-selector">
-                <option value="Double-Face 55_.glb" data-h="1950" data-y="1.95">Gabarit 55"</option>
-                <option value="Double-Face 65_.glb" data-h="2150" data-y="2.15">Gabarit 65"</option>
-            </select>
-        </div>
+        <p style="font-size: 0.6rem; opacity: 0.6;">MODE : METROLOGIE LIVE</p>
     </div>
 
-    <model-viewer id="viewer" src="" ar ar-modes="webxr scene-viewer quick-look" ar-placement="floor" camera-controls disable-zoom shadow-intensity="2">
-        <button id="height-hotspot" class="hotspot" slot="hotspot-h" data-position="0 1.95 0" style="width:12px; height:12px; border-radius:50%; background:var(--accent); border:none;">
-            <div id="height-label" style="background:rgba(0,0,0,0.8); border-left:2px solid var(--accent); color:#fff; padding:6px 10px; font-size:10px; position:absolute; transform:translate(15px,-50%); white-space:nowrap;">H : 1950 MM</div>
+    <model-viewer id="viewer" 
+        src="Double-Face 55_.glb" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        ar-placement="floor" 
+        camera-controls 
+        interaction-prompt="auto"
+        shadow-intensity="2" 
+        exposure="1"
+        ar-status="not-presenting">
+
+        <button class="hotspot" slot="hotspot-h" data-position="0 1.95 0" data-normal="0 1 0">
+            <div class="annotation">H : 1950 MM</div>
+        </button>
+
+        <button class="hotspot" slot="hotspot-w" data-position="0.45 1 0" data-normal="1 0 0">
+            <div class="annotation">L : 900 MM</div>
         </button>
 
         <div class="actions">
-            <button class="btn" onclick="takeSnapshot()">📸 Capture</button>
-            <button slot="ar-button" class="btn btn-main">Mode AR</button>
+            <button class="btn" onclick="takeSnapshot()">📸 Photo</button>
+            <button slot="ar-button" class="btn btn-main">LANCER MESURE AR</button>
         </div>
     </model-viewer>
 
     <script>
         const viewer = document.querySelector('#viewer');
-        const selector = document.querySelector('#model-selector');
 
-        // FONCTION DE MISE À JOUR SANS CACHE
-        function loadModel(fileName) {
-            const timestamp = new Date().getTime(); // Génère un nombre unique basé sur l'heure
-            const freshUrl = `${fileName}?t=${timestamp}`; // Ajoute le timestamp à l'URL
-            viewer.src = freshUrl;
-            console.log("Modèle chargé (version fresh) : " + freshUrl);
-        }
-
-        // Chargement initial
+        // Force le rafraîchissement du modèle pour éviter le cache GitHub
         window.addEventListener('load', () => {
-            loadModel(selector.value);
-        });
-
-        // Changement de modèle via le menu
-        selector.addEventListener('change', (i) => {
-            const selected = i.target.options[i.target.selectedIndex];
-            loadModel(i.target.value);
-            document.querySelector('#height-label').innerText = "H : " + selected.getAttribute('data-h') + " MM";
-            document.querySelector('#height-hotspot').setAttribute('data-position', `0 ${selected.getAttribute('data-y')} 0`);
+            const url = new URL(viewer.src, window.location.href);
+            url.searchParams.set('t', new Date().getTime());
+            viewer.src = url.toString();
         });
 
         async function takeSnapshot() {
@@ -90,7 +80,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'Vertex-Monaco-Capture.png';
+            a.download = 'Vertex-Capture.png';
             a.click();
         }
     </script>
