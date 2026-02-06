@@ -2,99 +2,136 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vertex Monaco | Scanner de Vitrine</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vertex Monaco | Smart Diagnostic</title>
     <style>
-        :root { --accent: #00CCFF; --bg: #050505; }
-        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; }
+        :root { --accent: #00CCFF; --danger: #FF4444; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; color: white; }
         
-        /* Interface de Scan */
-        #scan-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1000; background: #000; display: flex; flex-direction: column;
+        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+
+        /* HUD - Interface de Scan */
+        .hud-overlay {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column; justify-content: space-between;
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.4) 100%);
+            z-index: 10; pointer-events: none;
         }
+
+        .hud-header { padding: 40px; text-align: left; border-bottom: 1px solid rgba(0,204,255,0.2); background: rgba(0,0,0,0.5); }
+        .hud-header h1 { margin: 0; font-weight: 200; letter-spacing: 12px; font-size: 1.2rem; }
         
-        #camera-feed { width: 100%; height: 70%; background: #222; object-fit: cover; }
-
-        .instruction-bar {
-            padding: 20px; text-align: center; background: rgba(0,204,255,0.1);
-            border-bottom: 1px solid var(--accent);
+        .scanner-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--accent); opacity: 0.5;
+            box-shadow: 0 0 15px var(--accent);
+            animation: scan 3s infinite ease-in-out;
         }
 
-        .recommendation-panel {
-            padding: 20px; display: none; text-align: center;
+        @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+
+        /* Feedback Visuel */
+        .measurement-guide {
+            position: absolute; top: 50%; left: 50%;
+            width: 80vw; height: 50vh; border: 1px dashed rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            display: flex; align-items: center; justify-content: center;
         }
 
-        .btn-action {
-            background: var(--accent); color: #000; border: none;
-            padding: 15px 30px; font-weight: bold; border-radius: 4px;
-            margin-top: 10px; cursor: pointer; text-transform: uppercase;
+        .point-marker {
+            position: absolute; width: 20px; height: 20px;
+            border: 2px solid var(--accent); border-radius: 50%;
+            background: rgba(0,204,255,0.3); box-shadow: 0 0 10px var(--accent);
         }
 
-        /* Viewer 3D masqué au début */
-        #final-viewer { display: none; width: 100vw; height: 100vh; }
+        /* Panneau de Résultat */
+        #analysis-panel {
+            position: absolute; bottom: 120px; left: 20px; right: 20px;
+            background: rgba(0,0,0,0.85); border-left: 4px solid var(--accent);
+            padding: 20px; backdrop-filter: blur(10px);
+            transform: translateY(200%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+        }
+
+        .show-panel { transform: translateY(0) !important; }
+
+        .btn-main {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            background: var(--accent); color: black; border: none;
+            padding: 18px 40px; border-radius: 4px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+            pointer-events: auto; z-index: 100;
+        }
+
+        .reco-item { margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+        .badge { padding: 4px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; }
+        .badge-ok { background: #00FF88; color: black; }
+        .badge-no { background: var(--danger); color: white; }
     </style>
 </head>
 <body>
 
-    <div id="scan-container">
-        <div class="instruction-bar">
-            <h2 style="margin:0; font-size:1rem;">1. DÉLIMITEZ VOTRE VITRINE</h2>
-            <p style="font-size:0.7rem; opacity:0.7;">Cadrez votre vitrine et validez la zone disponible.</p>
-        </div>
-        
-        <video id="camera-feed" autoplay playsinline></video>
+    <video id="video-preview" autoplay playsinline></video>
+    <div class="scanner-line"></div>
 
-        <div class="recommendation-panel" id="result-box">
-            <h3 id="recommended-model">ANALYSE EN COURS...</h3>
-            <p id="model-details" style="font-size:0.8rem;"></p>
-            <button class="btn-action" onclick="showInAR()">Voir ce modèle en AR</button>
+    <div class="hud-overlay">
+        <div class="hud-header">
+            <h1>VERTEX</h1>
+            <div id="step-text" style="color:var(--accent); font-size:0.7rem; margin-top:5px;">[ SYSTÈME DE MESURE OPTIQUE PRÊT ]</div>
         </div>
 
-        <div id="scan-trigger" style="text-align:center; padding: 20px;">
-            <button class="btn-action" onclick="analyzeWindow()" style="background:white;">Scanner la zone</button>
+        <div class="measurement-guide" id="guide-box">
+            <div style="font-size: 0.6rem; opacity: 0.5; text-transform: uppercase;">Alignez la zone de vitrine</div>
         </div>
+
+        <div id="analysis-panel">
+            <h2 style="margin:0 0 15px 0; font-size:1rem; letter-spacing:2px;">RÉSULTAT DU SCAN</h2>
+            <div class="reco-item">
+                <span>Vertex Double-Face 55"</span>
+                <span class="badge badge-ok">COMPATIBLE ✅</span>
+            </div>
+            <div class="reco-item" style="opacity: 0.5;">
+                <span>Vertex Double-Face 65"</span>
+                <span class="badge badge-no">TROP LARGE ❌</span>
+            </div>
+            <button class="btn-main" style="position:static; transform:none; width:100%; margin-top:15px; font-size:0.7rem;" onclick="location.reload()">Nouveau Scan</button>
+        </div>
+
+        <button id="action-btn" class="btn-main">MARQUER LE BAS GAUCHE</button>
     </div>
 
-    <model-viewer id="final-viewer" ar ar-modes="webxr scene-viewer" ar-scale="fixed" camera-controls src="">
-        <button slot="ar-button" class="btn-action" style="position:absolute; bottom:30px; left:50%; transform:translateX(-50%);">
-            Lancer le test réel
-        </button>
-    </model-viewer>
-
     <script>
-        const video = document.getElementById('camera-feed');
-        const resultBox = document.getElementById('result-box');
-        const scanTrigger = document.getElementById('scan-trigger');
+        const video = document.getElementById('video-preview');
+        const btn = document.getElementById('action-btn');
+        const stepText = document.getElementById('step-text');
+        const panel = document.getElementById('analysis-panel');
+        const guide = document.getElementById('guide-box');
+        
+        let clicks = 0;
 
-        // Accès caméra
+        // Activation caméra
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
             .then(stream => { video.srcObject = stream; })
-            .catch(err => alert("L'accès caméra est requis pour le diagnostic."));
+            .catch(() => alert("Caméra requise."));
 
-        function analyzeWindow() {
-            // Simulation d'IA d'analyse de surface
-            scanTrigger.style.display = 'none';
-            resultBox.style.display = 'block';
-            
-            // Logique de recommandation simplifiée
-            // Dans une version finale, on utiliserait les capteurs de profondeur (LiDAR)
-            const models = [
-                { name: 'Vertex Double-Face 55"', file: 'Double-Face 55_.glb', desc: 'Idéal pour vitrines standards (largeur < 1m)' },
-                { name: 'Vertex Double-Face 65"', file: 'Double-Face 65_.glb', desc: 'Recommandé pour grandes vitrines' }
-            ];
-            
-            const choice = models[0]; // Simulation d'un choix 55"
-            document.getElementById('recommended-model').innerText = `RECOMMANDATION : ${choice.name}`;
-            document.getElementById('model-details').innerText = choice.desc;
-            document.getElementById('final-viewer').src = choice.file;
-        }
-
-        function showInAR() {
-            document.getElementById('scan-container').style.display = 'none';
-            document.getElementById('final-viewer').style.display = 'block';
-        }
+        btn.onclick = () => {
+            clicks++;
+            if (clicks === 1) {
+                stepText.innerText = "[ POINT A ENREGISTRÉ - VISEZ LE HAUT DROIT ]";
+                btn.innerText = "MARQUER LE HAUT DROIT";
+                btn.style.background = "#fff";
+            } else if (clicks === 2) {
+                stepText.innerText = "[ CALCUL DES DIMENSIONS EN COURS... ]";
+                btn.style.display = "none";
+                guide.style.borderColor = "var(--accent)";
+                
+                // Simulation d'une analyse IA intelligente
+                setTimeout(() => {
+                    stepText.innerText = "[ ANALYSE TERMINÉE ]";
+                    panel.classList.add('show-panel');
+                }, 1500);
+            }
+        };
     </script>
 </body>
 </html>
