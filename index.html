@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex Monaco - Test AR Précision</title>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <style>
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #000; color: white; }
+        model-viewer {
+            width: 100vw;
+            height: 80vh;
+            background-color: #050505;
+        }
+        .controls { padding: 20px; text-align: center; }
+        .ar-button {
+            background: #00CCFF;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: black;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <model-viewer 
+        src="Double-Face 55_.glb" 
+        ar 
+        ar-modes="webxr scene-viewer quick-look" 
+        ar-placement="floor" 
+        camera-controls 
+        disable-zoom
+        shadow-intensity="1" 
+        environment-image="neutral"
+        alt="Gabarit Double-Face 55 Vertex Monaco">
+
+        <button slot="ar-button" class="ar-button">
+            📐 LANCER LA MESURE AR
+        </button>
+
+        <div slot="ar-failure" style="color: red; padding: 10px;">
+            Erreur : La détection du sol a échoué.
+        </div>
+    </model-viewer>
+
+    <div class="controls">
+        <h2>Vertex Monaco - R&D Mode</h2>
+        <p>Dimensions : Fixes (1:1) | Mode : Ancrage au sol</p>
+        <p style="font-size: 0.8em; color: #666;">Note : Le zoom est désactivé pour garantir la précision de la mesure.</p>
+    </div>
+
+</body>
+</html>
