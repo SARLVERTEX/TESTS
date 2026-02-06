@@ -12,44 +12,60 @@
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: white; overflow: hidden; }
         model-viewer { width: 100vw; height: 100vh; background: radial-gradient(circle, #1a1a1a 0%, #050505 100%); }
 
-        /* Style des annotations pour qu'elles soient visibles en AR */
+        /* --- UI --- */
+        .header { position: absolute; top: 30px; left: 30px; z-index: 100; pointer-events: none;}
+        .header h1 { font-weight: 200; letter-spacing: 8px; margin: 0; font-size: 1.2rem; text-transform: uppercase; }
+
+        /* --- HOTSPOTS --- */
         .hotspot {
-            width: 14px; height: 14px; border-radius: 50%;
+            width: 16px; height: 16px; border-radius: 50%;
             border: 2px solid white; background: var(--accent);
             box-shadow: 0 0 10px rgba(0,204,255,0.8);
+            cursor: pointer;
         }
         .annotation {
-            background: rgba(0, 0, 0, 0.8); border-left: 2px solid var(--accent);
+            background: rgba(0, 0, 0, 0.85); border-left: 2px solid var(--accent);
             color: #fff; padding: 6px 10px; font-size: 12px;
             position: absolute; transform: translate(15px, -50%);
             white-space: nowrap; pointer-events: none;
+            font-family: monospace;
         }
 
-        .header { position: absolute; top: 30px; left: 30px; z-index: 100; pointer-events: none;}
-        .header h1 { font-weight: 200; letter-spacing: 8px; margin: 0; font-size: 1.2rem; }
-
-        .actions { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; gap: 10px; z-index: 100; }
-        .btn { background: rgba(0,0,0,0.6); border: 1px solid var(--accent); color: var(--accent); padding: 12px 20px; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; backdrop-filter: blur(10px); }
-        .btn-main { background: var(--accent); color: black; font-weight: bold; }
+        /* --- BOUTON AR (FIXÉ) --- */
+        .ar-button-container {
+            position: absolute; bottom: 50px; width: 100%;
+            display: flex; justify-content: center; z-index: 1000;
+        }
+        #custom-ar-button {
+            background: var(--accent);
+            color: black;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 204, 255, 0.3);
+        }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>Vertex</h1>
-        <p style="font-size: 0.6rem; opacity: 0.6;">MODE : METROLOGIE LIVE</p>
+        <p style="font-size: 0.6rem; opacity: 0.6;">R&D : CERTIFICATION SPATIALE</p>
     </div>
 
     <model-viewer id="viewer" 
         src="Double-Face 55_.glb" 
         ar 
-        ar-modes="webxr scene-viewer quick-look" 
+        ar-modes="scene-viewer webxr quick-look" 
         ar-placement="floor" 
         camera-controls 
-        interaction-prompt="auto"
         shadow-intensity="2" 
-        exposure="1"
-        ar-status="not-presenting">
+        environment-image="neutral">
 
         <button class="hotspot" slot="hotspot-h" data-position="0 1.95 0" data-normal="0 1 0">
             <div class="annotation">H : 1950 MM</div>
@@ -59,30 +75,21 @@
             <div class="annotation">L : 900 MM</div>
         </button>
 
-        <div class="actions">
-            <button class="btn" onclick="takeSnapshot()">📸 Photo</button>
-            <button slot="ar-button" class="btn btn-main">LANCER MESURE AR</button>
+        <div slot="ar-button" class="ar-button-container">
+            <button id="custom-ar-button">📐 LANCER MESURE AR</button>
         </div>
+
     </model-viewer>
 
     <script>
         const viewer = document.querySelector('#viewer');
 
-        // Force le rafraîchissement du modèle pour éviter le cache GitHub
+        // Force l'actualisation du fichier pour GitHub Pages
         window.addEventListener('load', () => {
             const url = new URL(viewer.src, window.location.href);
             url.searchParams.set('t', new Date().getTime());
             viewer.src = url.toString();
         });
-
-        async function takeSnapshot() {
-            const blob = await viewer.toBlob({ idealAspect: true });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Vertex-Capture.png';
-            a.click();
-        }
     </script>
 </body>
 </html>
