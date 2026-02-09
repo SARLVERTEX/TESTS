@@ -3,144 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Précision Certifiée</title>
+    <title>Vertex Monaco | Diagnostic Altimétrique</title>
     <style>
-        :root { --gold: #D4AF37; --gold-dark: #B8860B; }
+        :root { --gold: #D4AF37; --gold-brushed: #B8860B; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; color: white; }
         
-        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.5; }
 
-        /* HUD Supérieur */
-        .hud-top {
+        /* Interface de Calibration */
+        #setup-screen {
+            position: absolute; inset: 0; background: #000; z-index: 1000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center;
+        }
+
+        /* HUD Expert */
+        .hud-header {
             position: absolute; top: 0; width: 100%; padding: 30px 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            text-align: center; z-index: 10;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            text-align: center; z-index: 100; border-bottom: 0.5px solid var(--gold);
         }
-        .data-stream { font-family: monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; }
 
-        /* Niveau à Bulle Gold */
-        .level-container {
+        .laser-reticle {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 150px; height: 150px; border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 50%; pointer-events: none; z-index: 5;
+            width: 80px; height: 80px; border: 0.5px solid var(--gold); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; pointer-events: none;
         }
-        #bubble {
-            position: absolute; top: 50%; left: 50%; width: 20px; height: 20px;
-            background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px var(--gold); transition: all 0.1s ease-out;
-        }
-        .center-target {
-            position: absolute; top: 50%; left: 50%; width: 30px; height: 30px;
-            border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%);
-        }
+        .laser-reticle::after { content: ''; width: 4px; height: 4px; background: var(--gold); border-radius: 50%; box-shadow: 0 0 10px var(--gold); }
 
-        /* Bouton dynamique */
+        /* Bouton Gold */
         .btn-vertex {
-            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
-            background: var(--gold); color: black; border: none;
-            padding: 18px 40px; border-radius: 4px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
-            z-index: 100; opacity: 0.3; pointer-events: none; transition: 0.3s;
+            background: linear-gradient(135deg, var(--gold), var(--gold-brushed));
+            color: black; border: none; padding: 20px 40px; font-weight: 900;
+            text-transform: uppercase; letter-spacing: 3px; border-radius: 2px;
+            cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .active { opacity: 1 !important; pointer-events: auto !important; box-shadow: 0 0 20px var(--gold); }
 
-        /* Panel Résultat */
+        /* Panneau de Résultats */
         #result-panel {
             position: absolute; bottom: 0; width: 100%; background: white; color: black;
-            padding: 35px; transform: translateY(100%); transition: 0.6s; z-index: 200;
-            border-radius: 20px 20px 0 0; box-sizing: border-box;
+            padding: 40px 30px; border-radius: 24px 24px 0 0; transform: translateY(100%);
+            transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1); z-index: 500; box-sizing: border-box;
         }
+        .show-results { transform: translateY(0) !important; }
+
+        .data-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+        .data-val { font-weight: 800; color: var(--gold-brushed); }
     </style>
 </head>
 <body>
 
     <video id="video-preview" autoplay playsinline></video>
 
-    <div class="hud-top">
-        <div class="data-stream">ACCEL: <span id="accel-val">0.00</span> | GYRO: <span id="gyro-val">0.00</span></div>
-        <div id="instruction" style="margin-top: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Stabilisez l'appareil</div>
+    <div id="setup-screen">
+        <div style="color:var(--gold); letter-spacing: 5px; font-size: 10px; margin-bottom: 20px;">VERTEX MONACO</div>
+        <h1 style="font-weight: 200; margin-bottom: 30px;">HAUTEUR DES YEUX</h1>
+        <div style="font-size: 40px; color: var(--gold); font-weight: bold; margin-bottom: 10px;">
+            <input type="number" id="eye-height" value="165" style="background:transparent; border:none; border-bottom: 2px solid var(--gold); color:var(--gold); width:120px; text-align:center; font-size:40px; outline:none;">
+            <span style="font-size: 18px;">CM</span>
+        </div>
+        <p style="font-size: 12px; opacity: 0.6; max-width: 250px; margin-bottom: 40px;">Pour un calcul précis, indiquez la distance entre le sol et vos yeux.</p>
+        <button class="btn-vertex" onclick="initScanner()">INITIALISER</button>
     </div>
 
-    <div class="level-container">
-        <div class="center-target"></div>
-        <div id="bubble"></div>
+    <div class="hud-header">
+        <div style="font-family: monospace; font-size: 9px; color: var(--gold); margin-bottom: 5px;">ANGLE SENSOR: <span id="live-angle">0.0</span>°</div>
+        <div id="instruction" style="text-transform: uppercase; letter-spacing: 2px; font-weight: 700;">Visez le pied du mur</div>
     </div>
 
-    <button id="action-btn" class="btn-vertex">Marquer Point A</button>
+    <div class="laser-reticle"></div>
+
+    <button id="trigger" class="btn-vertex" style="position:absolute; bottom:50px; left:50%; transform:translateX(-50%); z-index:100; display:none;">CAPTURER</button>
 
     <div id="result-panel">
-        <h2 style="color:var(--gold-dark); margin:0;">DIAGNOSTIC VERTEX</h2>
-        <p id="final-measure" style="font-size: 24px; font-weight: bold; margin: 20px 0;">Surface : ---</p>
-        <button onclick="location.reload()" style="width:100%; padding:15px; background:black; color:white; border:none; border-radius:5px;">NOUVELLE ANALYSE</button>
+        <h2 style="margin:0 0 5px 0; letter-spacing: -1px;">Rapport Technique</h2>
+        <div style="font-size: 12px; color: #999; margin-bottom: 25px;">Analyse de faisabilité Vertex</div>
+        
+        <div class="data-row"><span>Hauteur détectée</span> <span class="data-val" id="res-h">--</span></div>
+        <div class="data-row"><span>Distance de recul</span> <span class="data-val" id="res-d">--</span></div>
+        <div class="data-row" style="border:none;"><span>Recommandation</span> <span class="data-val" id="res-prod">Double-Face 55"</span></div>
+
+        <button onclick="location.reload()" style="width:100%; margin-top:30px; padding:20px; background:black; color:white; border:none; font-weight:bold; letter-spacing:2px;">NOUVEAU SCAN</button>
     </div>
 
     <script>
-        const bubble = document.getElementById('bubble');
-        const btn = document.getElementById('action-btn');
-        const accelLabel = document.getElementById('accel-val');
-        const gyroLabel = document.getElementById('gyro-val');
-        const instr = document.getElementById('instruction');
-
-        let isLevel = false;
         let step = 0;
-        let angleA = 0;
+        let h_eye = 0;
+        let angle_ground = 0;
+        let current_beta = 0;
 
-        // Demander l'autorisation pour les capteurs (iOS 13+)
-        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-            btn.innerText = "ACTIVER CAPTEURS";
-            btn.classList.add('active');
-            btn.onclick = () => {
-                DeviceOrientationEvent.requestPermission().then(state => {
-                    if (state === 'granted') location.reload();
-                });
-            };
+        function initScanner() {
+            h_eye = document.getElementById('eye-height').value / 100;
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('trigger').style.display = 'block';
+            
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission();
+            }
         }
 
-        window.addEventListener('deviceorientation', (event) => {
-            const beta = event.beta;  // Inclinaison avant/arrière
-            const gamma = event.gamma; // Inclinaison gauche/droite
-
-            // Mise à jour visuelle du niveau à bulle
-            const moveX = Math.min(Math.max(gamma, -60), 60);
-            const moveY = Math.min(Math.max(beta - 70, -60), 60); // 70° est l'angle de lecture naturel
-            
-            bubble.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
-            
-            accelLabel.innerText = beta.toFixed(2);
-            gyroLabel.innerText = gamma.toFixed(2);
-
-            // Vérifier si le téléphone est droit
-            if (Math.abs(gamma) < 3 && Math.abs(beta - 85) < 10) {
-                isLevel = true;
-                bubble.style.background = "#00FF88";
-                if(step < 2) btn.classList.add('active');
-                if(step === 0) instr.innerText = "Appareil stable. Marquez le bord gauche.";
-            } else {
-                isLevel = false;
-                bubble.style.background = "var(--gold)";
-                btn.classList.remove('active');
-                instr.innerText = "Ajustez l'inclinaison";
-            }
+        window.addEventListener('deviceorientation', (e) => {
+            current_beta = e.beta;
+            document.getElementById('live-angle').innerText = current_beta.toFixed(1);
         });
 
-        btn.addEventListener('click', () => {
+        document.getElementById('trigger').onclick = () => {
+            if (navigator.vibrate) navigator.vibrate(50);
             step++;
+
             if (step === 1) {
-                angleA = parseFloat(gyroLabel.innerText);
-                btn.innerText = "Marquer Point B";
-                instr.innerText = "Pivotez vers le bord droit";
+                angle_ground = current_beta;
+                document.getElementById('instruction').innerText = "Visez le haut de l'espace";
+                document.getElementById('trigger').innerText = "VALIDER MESURE";
             } else if (step === 2) {
-                const angleB = parseFloat(gyroLabel.innerText);
-                const diff = Math.abs(angleB - angleA);
+                const angle_top = current_beta;
                 
-                // Calcul trigonométrique simplifié (distance supposée de 2m pour l'exemple)
-                const width = (2 * Math.tan(diff * Math.PI / 180)).toFixed(2);
+                // Calcul de la distance horizontale au mur
+                const distance = h_eye * Math.tan((90 - angle_ground) * (Math.PI / 180));
                 
-                document.getElementById('final-measure').innerText = `Largeur : ${width} m`;
-                document.getElementById('result-panel').style.transform = "translateY(0)";
-                btn.style.display = "none";
+                // Calcul de la hauteur de la zone visée
+                const height = Math.abs(distance * (Math.tan(angle_top * (Math.PI / 180)) - Math.tan(angle_ground * (Math.PI / 180))));
+
+                document.getElementById('res-h').innerText = height.toFixed(2) + " m";
+                document.getElementById('res-d').innerText = distance.toFixed(2) + " m";
+                document.getElementById('result-panel').classList.add('show-results');
+                document.getElementById('trigger').style.display = 'none';
             }
-        });
+        };
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(s => { document.getElementById('video-preview').srcObject = s; });
     </script>
 </body>
 </html>
