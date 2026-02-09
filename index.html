@@ -3,101 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Smart Diagnostic</title>
+    <title>Vertex Monaco | Smart Diagnostic AR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --accent: #00CCFF; --danger: #FF4444; }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; color: white; }
+        :root { 
+            --accent: #00CCFF; 
+            --danger: #FF4444; 
+            --glass: rgba(0, 20, 30, 0.8);
+        }
         
-        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; }
-
-        /* HUD - Interface de Scan */
-        .hud-overlay {
-            position: absolute; inset: 0;
-            display: flex; flex-direction: column; justify-content: space-between;
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.4) 100%);
-            z-index: 10; pointer-events: none;
-        }
-
-        .hud-header { padding: 40px; text-align: left; border-bottom: 1px solid rgba(0,204,255,0.2); background: rgba(0,0,0,0.5); }
-        .hud-header h1 { margin: 0; font-weight: 200; letter-spacing: 12px; font-size: 1.2rem; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Rajdhani', sans-serif; color: white; }
         
-        .scanner-line {
-            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
-            background: var(--accent); opacity: 0.5;
-            box-shadow: 0 0 15px var(--accent);
-            animation: scan 3s infinite ease-in-out;
-        }
+        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8) contrast(1.2); }
 
-        @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+        /* HUD Overlay */
+        .hud-container { position: absolute; inset: 0; z-index: 10; pointer-events: none; border: 20px solid transparent; box-sizing: border-box; }
 
-        /* Feedback Visuel */
-        .measurement-guide {
-            position: absolute; top: 50%; left: 50%;
-            width: 80vw; height: 50vh; border: 1px dashed rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            display: flex; align-items: center; justify-content: center;
+        /* Coins de visée style AR */
+        .reticle {
+            position: absolute; width: 40px; height: 40px; border: 2px solid var(--accent);
+            filter: drop-shadow(0 0 5px var(--accent)); transition: all 0.3s ease;
         }
+        .top-left { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .top-right { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .bottom-right { bottom: 20px; right: 20px; border-left: none; border-top: none; }
 
-        .point-marker {
-            position: absolute; width: 20px; height: 20px;
-            border: 2px solid var(--accent); border-radius: 50%;
-            background: rgba(0,204,255,0.3); box-shadow: 0 0 10px var(--accent);
+        /* Scanner Line */
+        .scanner-bar {
+            position: absolute; width: 100%; height: 4px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            box-shadow: 0 0 20px var(--accent); top: 0; animation: scanMove 4s infinite linear; opacity: 0.6;
         }
+        @keyframes scanMove { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
+
+        /* Header Info */
+        .hud-header {
+            position: absolute; top: 40px; left: 40px; pointer-events: auto;
+            border-left: 3px solid var(--accent); padding-left: 15px;
+        }
+        .hud-header h1 { font-family: 'Orbitron', sans-serif; margin: 0; font-size: 1.4rem; letter-spacing: 5px; color: var(--accent); }
+        .status-tag { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: flex; align-items: center; }
+        .dot { height: 6px; width: 6px; background-color: var(--accent); border-radius: 50%; display: inline-block; margin-right: 10px; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* Guide de mesure central */
+        .target-box {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 250px; height: 350px; border: 1px double rgba(0, 204, 255, 0.2);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .target-box::before { content: ''; position: absolute; width: 20px; height: 1px; background: var(--accent); top: 50%; left: -30px; }
+        .target-box::after { content: ''; position: absolute; width: 20px; height: 1px; background: var(--accent); top: 50%; right: -30px; }
 
         /* Panneau de Résultat */
         #analysis-panel {
-            position: absolute; bottom: 120px; left: 20px; right: 20px;
-            background: rgba(0,0,0,0.85); border-left: 4px solid var(--accent);
-            padding: 20px; backdrop-filter: blur(10px);
-            transform: translateY(200%); transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: absolute; bottom: 30px; left: 20px; right: 20px;
+            background: var(--glass); border: 1px solid rgba(0, 204, 255, 0.3);
+            padding: 25px; backdrop-filter: blur(15px); border-radius: 2px;
+            transform: translateY(150%); transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
             pointer-events: auto;
         }
-
         .show-panel { transform: translateY(0) !important; }
 
-        .btn-main {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: black; border: none;
-            padding: 18px 40px; border-radius: 4px; font-weight: bold;
-            text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
-            pointer-events: auto; z-index: 100;
+        /* Boutons */
+        .btn-action {
+            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+            background: transparent; color: var(--accent); border: 2px solid var(--accent);
+            padding: 15px 35px; font-family: 'Orbitron'; font-weight: bold;
+            letter-spacing: 2px; cursor: pointer; pointer-events: auto;
+            overflow: hidden; transition: 0.3s;
         }
+        .btn-action:active { background: var(--accent); color: black; transform: translateX(-50%) scale(0.95); }
 
-        .reco-item { margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .badge { padding: 4px 8px; border-radius: 3px; font-size: 0.7rem; font-weight: bold; }
-        .badge-ok { background: #00FF88; color: black; }
-        .badge-no { background: var(--danger); color: white; }
+        .reco-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); 
+        }
+        .badge { padding: 5px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; font-family: 'Orbitron'; }
+        .badge-ok { background: rgba(0, 255, 136, 0.2); color: #00FF88; border: 1px solid #00FF88; }
+        .badge-no { background: rgba(255, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
     </style>
 </head>
 <body>
 
     <video id="video-preview" autoplay playsinline></video>
-    <div class="scanner-line"></div>
+    
+    <div class="hud-container">
+        <div class="reticle top-left"></div>
+        <div class="reticle top-right"></div>
+        <div class="reticle bottom-left"></div>
+        <div class="reticle bottom-right"></div>
+        <div class="scanner-bar"></div>
 
-    <div class="hud-overlay">
         <div class="hud-header">
-            <h1>VERTEX</h1>
-            <div id="step-text" style="color:var(--accent); font-size:0.7rem; margin-top:5px;">[ SYSTÈME DE MESURE OPTIQUE PRÊT ]</div>
+            <h1>VERTEX <span style="font-weight:100; font-size: 0.8rem;">M0-01</span></h1>
+            <div class="status-tag"><span class="dot"></span> <span id="step-text">Initialisation des capteurs...</span></div>
         </div>
 
-        <div class="measurement-guide" id="guide-box">
-            <div style="font-size: 0.6rem; opacity: 0.5; text-transform: uppercase;">Alignez la zone de vitrine</div>
+        <div class="target-box" id="guide-box">
+            <div style="font-size: 0.6rem; letter-spacing: 3px; opacity: 0.7; position: absolute; top: -30px;">ZONE D'ANALYSE OPTIQUE</div>
+            <div id="distance-info" style="font-family: 'Orbitron'; font-size: 0.8rem; color: var(--accent);">-- mm</div>
         </div>
 
         <div id="analysis-panel">
-            <h2 style="margin:0 0 15px 0; font-size:1rem; letter-spacing:2px;">RÉSULTAT DU SCAN</h2>
+            <div style="font-size: 0.6rem; color: var(--accent); margin-bottom: 5px;">ANALYSE DE COMPATIBILITÉ TERMINÉE</div>
+            <h2 style="margin:0 0 20px 0; font-family: 'Orbitron'; font-size:1.1rem; letter-spacing:2px;">RÉSULTATS DE SIMULATION</h2>
+            
             <div class="reco-item">
-                <span>Vertex Double-Face 55"</span>
-                <span class="badge badge-ok">COMPATIBLE ✅</span>
+                <div>
+                    <div style="font-weight: bold;">DOUBLE-FACE 55"</div>
+                    <div style="font-size: 0.6rem; opacity: 0.6;">Série Haute Luminosité</div>
+                </div>
+                <span class="badge badge-ok">OPTIMAL</span>
             </div>
-            <div class="reco-item" style="opacity: 0.5;">
-                <span>Vertex Double-Face 65"</span>
-                <span class="badge badge-no">TROP LARGE ❌</span>
+            
+            <div class="reco-item">
+                <div>
+                    <div style="font-weight: bold;">TOTEM SLIM 65"</div>
+                    <div style="font-size: 0.6rem; opacity: 0.6;">Espace requis : +24cm</div>
+                </div>
+                <span class="badge badge-no">RESTREINT</span>
             </div>
-            <button class="btn-main" style="position:static; transform:none; width:100%; margin-top:15px; font-size:0.7rem;" onclick="location.reload()">Nouveau Scan</button>
+
+            <button class="btn-action" style="position:static; transform:none; width:100%; margin-top:20px; font-size:0.8rem;" onclick="location.reload()">RÉINITIALISER LE SCAN</button>
         </div>
 
-        <button id="action-btn" class="btn-main">MARQUER LE BAS GAUCHE</button>
+        <button id="action-btn" class="btn-action">CAPTURER POINT A</button>
     </div>
 
     <script>
@@ -105,33 +136,61 @@
         const btn = document.getElementById('action-btn');
         const stepText = document.getElementById('step-text');
         const panel = document.getElementById('analysis-panel');
-        const guide = document.getElementById('guide-box');
+        const distanceInfo = document.getElementById('distance-info');
         
         let clicks = 0;
 
-        // Activation caméra
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => { video.srcObject = stream; })
-            .catch(() => alert("Caméra requise."));
+        // Retour haptique (vibration)
+        const vibrate = () => { if (navigator.vibrate) navigator.vibrate(50); };
+
+        // Accès caméra
+        navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: "environment", focusMode: "continuous" } 
+        })
+        .then(stream => { 
+            video.srcObject = stream; 
+            stepText.innerText = "PRÊT : VISEZ LE BAS DE LA VITRINE";
+        })
+        .catch(() => {
+            stepText.innerText = "ERREUR : ACCÈS CAMÉRA REFUSÉ";
+            stepText.style.color = "var(--danger)";
+        });
 
         btn.onclick = () => {
+            vibrate();
             clicks++;
+
             if (clicks === 1) {
-                stepText.innerText = "[ POINT A ENREGISTRÉ - VISEZ LE HAUT DROIT ]";
-                btn.innerText = "MARQUER LE HAUT DROIT";
-                btn.style.background = "#fff";
+                stepText.innerText = "POINT A FIXÉ. VISEZ LE HAUT DE LA VITRINE.";
+                distanceInfo.innerText = "COORD_A: OK";
+                btn.innerText = "CAPTURER POINT B";
+                btn.style.borderColor = "#fff";
+                btn.style.color = "#fff";
             } else if (clicks === 2) {
-                stepText.innerText = "[ CALCUL DES DIMENSIONS EN COURS... ]";
+                stepText.innerText = "CALCUL DES VOLUMES EN COURS...";
                 btn.style.display = "none";
-                guide.style.borderColor = "var(--accent)";
+                distanceInfo.innerText = "CALCUL...";
                 
-                // Simulation d'une analyse IA intelligente
-                setTimeout(() => {
-                    stepText.innerText = "[ ANALYSE TERMINÉE ]";
-                    panel.classList.add('show-panel');
-                }, 1500);
+                // Simulation d'une progression de calcul
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.floor(Math.random() * 15);
+                    distanceInfo.innerText = `ANALYSE: ${progress}%`;
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        finishScan();
+                    }
+                }, 100);
             }
         };
+
+        function finishScan() {
+            vibrate();
+            vibrate(); // Double vibration pour succès
+            stepText.innerText = "ANALYSE TERMINÉE - COMPATIBILITÉ OK";
+            distanceInfo.innerText = "1920mm x 1080mm";
+            panel.classList.add('show-panel');
+        }
     </script>
 </body>
 </html>
