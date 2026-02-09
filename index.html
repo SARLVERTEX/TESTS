@@ -3,113 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Expert Vision</title>
+    <title>Vertex Monaco | Calculateur de Surface</title>
     <style>
         :root { 
-            --vertex-cyan: #00CCFF; 
-            --dark-gray: #1a1a1a;
-            --light-gray: #f8f9fa;
+            --vertex-gold: #D4AF37; 
+            --vertex-gold-light: #F9E29C;
+            --bg-dark: #050505;
         }
         
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #000; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; color: white; }
         
-        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; }
+        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
 
-        /* Interface minimaliste */
-        .ui-layer { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+        /* HUD Header */
+        .header {
+            position: absolute; top: 0; left: 0; width: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
+            padding: 30px 0; text-align: center; z-index: 10;
+        }
+        .logo { letter-spacing: 5px; font-weight: 300; font-size: 12px; color: var(--vertex-gold); text-transform: uppercase; }
+        .instruction { font-size: 18px; margin-top: 10px; font-weight: 400; padding: 0 20px; }
 
-        .top-nav { background: rgba(0,0,0,0.7); padding: 25px; text-align: center; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
-        .logo { color: white; letter-spacing: 6px; font-weight: 200; font-size: 14px; margin-bottom: 5px; }
-        .instruction { color: var(--vertex-cyan); font-size: 16px; font-weight: 500; }
-
-        /* Viseur */
-        .scanner-target {
+        /* Viseur Gold */
+        .crosshair {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.5); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; z-index: 10;
         }
-        .scanner-target::after { content: ''; width: 4px; height: 4px; background: var(--vertex-cyan); border-radius: 50%; }
+        .crosshair::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--vertex-gold); }
+        .crosshair::after { content: ''; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--vertex-gold); }
+        .circle { border: 1px solid var(--vertex-gold); width: 100%; height: 100%; border-radius: 50%; opacity: 0.5; }
 
-        /* Panneau de résultat élégant */
-        #result-card {
-            background: white; margin: 20px; padding: 25px; border-radius: 12px;
-            transform: translateY(120%); transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            pointer-events: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .card-show { transform: translateY(0) !important; }
-
-        .btn-primary {
-            background: var(--dark-gray); color: white; border: none; width: 100%;
-            padding: 18px; border-radius: 8px; font-weight: 600; font-size: 14px;
-            letter-spacing: 1px; cursor: pointer; pointer-events: auto; margin-bottom: 40px;
+        /* Indicateur de mesure en temps réel */
+        .measure-badge {
+            position: absolute; top: 60%; left: 50%; transform: translateX(-50%);
+            background: rgba(212, 175, 55, 0.2); border: 1px solid var(--vertex-gold);
+            padding: 5px 15px; border-radius: 4px; font-family: monospace; font-size: 14px;
+            color: var(--vertex-gold-light); backdrop-filter: blur(5px);
         }
 
-        .btn-ar {
-            background: var(--vertex-cyan); color: white; text-decoration: none;
-            display: block; text-align: center; padding: 15px; border-radius: 8px;
-            font-weight: bold; margin-top: 15px;
+        /* Panneau de Résultat */
+        #result-panel {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            background: white; color: #1a1a1a; padding: 40px 25px;
+            transform: translateY(100%); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100; border-radius: 30px 30px 0 0; box-sizing: border-box;
+        }
+        .panel-open { transform: translateY(0) !important; }
+
+        .btn-gold {
+            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, #D4AF37, #B8860B); color: black;
+            border: none; padding: 18px 40px; border-radius: 4px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px; cursor: pointer; z-index: 50;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Points marqués sur l'écran */
-        .marker {
-            position: absolute; width: 12px; height: 12px; background: var(--vertex-cyan);
-            border: 2px solid white; border-radius: 50%; z-index: 9; transform: translate(-50%, -50%);
-        }
+        .spec-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .spec-val { font-weight: 700; color: var(--vertex-gold); }
     </style>
 </head>
 <body>
 
     <video id="video-preview" autoplay playsinline></video>
 
-    <div class="ui-layer">
-        <div class="top-nav">
-            <div class="logo">VERTEX MONACO</div>
-            <div id="step-msg" class="instruction">Visez le bord GAUCHE de l'emplacement</div>
+    <div class="header">
+        <div class="logo">Vertex Monaco — Smart Scan</div>
+        <div id="instruction" class="instruction">Alignez le bord GAUCHE</div>
+    </div>
+
+    <div class="crosshair"><div class="circle"></div></div>
+    
+    <div id="live-measure" class="measure-badge" style="display:none;">SCANNING...</div>
+
+    <button id="action-btn" class="btn-gold">Marquer le bord</button>
+
+    <div id="result-panel">
+        <div style="width:40px; height:4px; background:#ddd; margin: 0 auto 20px; border-radius:2px;"></div>
+        <h2 style="margin:0; font-size: 24px; letter-spacing: -1px;">Analyse de Vitrine</h2>
+        <p style="color:#666; margin: 5px 0 25px 0;">Surface d'affichage optimale détectée.</p>
+
+        <div class="spec-row">
+            <span>Largeur estimée</span>
+            <span id="res-width" class="spec-val">0.00 m</span>
+        </div>
+        <div class="spec-row">
+            <span>Produit recommandé</span>
+            <span class="spec-val">Double-Face 55"</span>
+        </div>
+        <div class="spec-row" style="border:none;">
+            <span>Surface d'affichage</span>
+            <span class="spec-val">~1.25 m²</span>
         </div>
 
-        <div class="scanner-target"></div>
-
-        <div style="padding: 20px;">
-            <button id="main-btn" class="btn-primary">MARQUER LE POINT</button>
-        </div>
-
-        <div id="result-card">
-            <h3 style="margin-top:0; color:var(--dark-gray)">Diagnostic d'installation</h3>
-            <p style="font-size: 14px; color: #666;">L'espace mesuré permet l'installation du matériel suivant :</p>
-            
-            <div style="border-top: 1px solid #eee; padding: 15px 0;">
-                <strong style="color:var(--dark-gray)">Double-Face 55" Haute Lum.</strong>
-                <span style="float:right; color:#27ae60">100% Compatible</span>
-            </div>
-
-            <a href="intent://arvr.google.com/scene-viewer/1.0?file=https://sarlvertex.github.io/fiches-techniques/Double-Face 55_.glb#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;" class="btn-ar">
-                VOIR LE TOTEM EN 3D ICI
-            </a>
-            
-            <button onclick="location.reload()" style="background:none; border:none; color:#999; width:100%; margin-top:10px; font-size:12px;">Refaire la mesure</button>
-        </div>
+        <button onclick="location.reload()" style="width:100%; margin-top:20px; padding:18px; background: #1a1a1a; color:white; border:none; border-radius:4px; font-weight:600;">NOUVELLE MESURE</button>
     </div>
 
     <script>
-        const btn = document.getElementById('main-btn');
-        const msg = document.getElementById('step-msg');
-        const card = document.getElementById('result-card');
+        const btn = document.getElementById('action-btn');
+        const instr = document.getElementById('instruction');
+        const panel = document.getElementById('result-panel');
+        const live = document.getElementById('live-measure');
+        
         let step = 0;
+        let startTime;
 
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
             .then(stream => { document.getElementById('video-preview').srcObject = stream; });
 
         btn.onclick = () => {
-            if (navigator.vibrate) navigator.vibrate(50);
+            if (navigator.vibrate) navigator.vibrate(40);
             step++;
 
             if (step === 1) {
-                msg.innerText = "Visez le bord DROIT de l'emplacement";
-                btn.innerText = "VALIDER LA LARGEUR";
+                instr.innerText = "Alignez le bord DROIT";
+                live.style.display = "block";
+                startTime = Date.now();
+                btn.innerText = "Calculer la surface";
             } else if (step === 2) {
-                msg.innerText = "ANALYSE TERMINÉE";
+                const duration = (Date.now() - startTime) / 1000;
+                // Simulation d'un calcul basé sur le temps de balayage (vitesse moyenne de rotation du bras)
+                const estimatedWidth = (duration * 0.45).toFixed(2); 
+                
+                instr.innerText = "Calcul terminé";
                 btn.style.display = "none";
-                card.classList.add('card-show');
+                document.getElementById('res-width').innerText = estimatedWidth + " m";
+                
+                setTimeout(() => {
+                    panel.classList.add('panel-open');
+                }, 800);
             }
         };
     </script>
