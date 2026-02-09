@@ -3,322 +3,305 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Unified Field Tool</title>
+    <title>Vertex Monaco | Elite Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --gold-dark: #B8860B; --bg: #000000; --card: #121212; --text: #ffffff; --danger: #e74c3c; --success: #2ecc71; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .container { max-width: 600px; margin: 0 auto; padding: 10px 20px 100px 20px; }
+        :root { --gold: #D4AF37; --bg: #000; --card: #121212; --text: #fff; --danger: #ff4d4d; --success: #2ecc71; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px 20px 100px 20px; }
         
-        /* Header & Utils */
-        .header { text-align: center; padding: 20px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); margin-bottom: 20px; }
+        .header { text-align: center; padding: 15px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); margin-bottom: 20px; }
         .header h1 { letter-spacing: 5px; font-size: 14px; color: var(--gold); margin: 0; }
-        .reset-link { text-align: right; margin-bottom: 10px; }
-        .reset-link button { background: none; border: none; color: var(--danger); font-size: 10px; cursor: pointer; opacity: 0.6; }
 
-        /* Steps */
-        .step { display: none; animation: fadeIn 0.4s ease; }
+        .step { display: none; animation: fadeIn 0.3s ease; }
         .step.active { display: block; }
 
-        /* Form Elements */
-        .field-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; }
+        /* Dossiers */
+        .folder-card { background: var(--card); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #222; cursor: pointer; position: relative; }
+        .status-badge { position: absolute; right: 15px; top: 15px; font-size: 9px; padding: 4px 8px; border-radius: 10px; font-weight: bold; border: 1px solid; }
+        .status-ongoing { color: var(--gold); } .status-done { color: var(--success); }
+
+        /* Sélection Intervenants */
+        .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+        .staff-chip { background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 11px; cursor: pointer; text-align: center; transition: 0.2s; }
+        .staff-chip.selected { background: var(--gold); color: black; font-weight: bold; border-color: var(--gold); }
+
+        /* Formulaire */
+        .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
         
-        input, select, textarea { 
-            width: 100%; padding: 15px; background: var(--card); border: 1px solid #222; 
-            color: white; border-radius: 4px; font-size: 15px; box-sizing: border-box; outline: none;
-        }
-        input:focus { border-color: var(--gold); }
+        .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .tag { font-size: 10px; padding: 6px 12px; background: #222; border: 1px solid #444; border-radius: 20px; cursor: pointer; }
+        .tag:active { background: var(--gold); color: black; }
+
+        .photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .photo-item { background: #1a1a1a; padding: 5px; border-radius: 4px; border: 1px solid #333; }
+        .photo-item img { width: 100%; height: 100px; object-fit: cover; border-radius: 2px; }
+        .photo-item input { font-size: 10px; padding: 5px; margin-top: 5px; background: #000; border: none; color: var(--gold); }
+
+        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid #333; margin-top: 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
+
+        .timeline-item { border-left: 2px solid var(--gold); padding-left: 15px; margin-bottom: 30px; position: relative; }
+        #sig-canvas { background: white; width: 100%; height: 150px; border-radius: 4px; touch-action: none; margin-top: 10px; }
         
-        .checkbox-group { display: flex; align-items: center; margin-bottom: 10px; background: #161616; padding: 12px; border-radius: 4px; cursor: pointer; }
-        .checkbox-group input { width: auto; margin-right: 15px; transform: scale(1.3); }
-
-        /* Diagnostic Tools */
-        .diag-panel { background: #111; padding: 15px; border-radius: 8px; border: 1px solid #222; margin-bottom: 20px; }
-        .diag-status { font-size: 10px; color: var(--gold); font-family: monospace; margin-top: 10px; }
-
-        /* Photo & Signature */
-        .media-box { width: 100%; min-height: 180px; background: #000; border: 1px dashed #444; margin-bottom: 10px; border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; }
-        .media-box img { width: 100%; height: 100%; object-fit: contain; }
-        #sig-canvas { background: white; width: 100%; height: 150px; touch-action: none; border-radius: 4px; }
-
-        /* Buttons */
-        .btn-gold { width: 100%; padding: 20px; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: black; border: none; font-weight: 900; letter-spacing: 2px; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
-        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid #333; margin-top: 5px; cursor: pointer; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .btn-outline:active { background: var(--gold); color: black; }
-
-        /* Report View */
-        .summary-card { background: var(--card); padding: 15px; border-left: 3px solid var(--gold); margin-bottom: 8px; font-size: 14px; }
-        .summary-card strong { color: var(--gold); display: block; font-size: 11px; margin-bottom: 4px; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @media print { .btn-gold, .btn-outline, .reset-link { display: none; } body { background: white; color: black; } .summary-card { border: 1px solid #ddd; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="reset-link">
-        <button onclick="clearStorage()">× RÉINITIALISER LE FORMULAIRE</button>
-    </div>
-
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p style="font-size: 9px; opacity: 0.5; letter-spacing: 2px;">FIELD SURVEY & DIAGNOSTIC SYSTEM</p>
+        <p style="font-size: 9px; opacity: 0.5;">ELITE FIELD MANAGEMENT</p>
     </div>
 
-    <div class="step active" id="step1">
+    <div class="step active" id="step0">
+        <button class="btn-gold" onclick="startNewProject()">+ NOUVEAU DOSSIER CLIENT</button>
+        <div style="margin-top:20px; display:flex; gap:10px;">
+            <input type="text" id="searchBar" oninput="filterProjects()" placeholder="Rechercher..." style="flex:1;">
+            <button class="btn-outline" style="margin:0; width:auto;" onclick="exportFullBackup()">💾 BACKUP</button>
+        </div>
+        <div id="project-list" style="margin-top:20px;"></div>
+    </div>
+
+    <div class="step" id="step1">
+        <h3 id="current-client-display" style="color:var(--gold); margin:0 0 15px 0;"></h3>
+        
+        <label>Intervenants sur site</label>
+        <div class="staff-grid" id="staff-selection">
+            <div class="staff-chip" onclick="toggleStaff(this)">Allan PLEUTIN</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Pietro SANGUEDOLCE</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Marco VERSACE</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Osvaldo CHIAVINI</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe OUSELLY</div>
+        </div>
+
+        <div class="time-grid">
+            <div><label>Heure Arrivée</label><input type="time" id="time_in"></div>
+            <div><label>Heure Départ</label><input type="time" id="time_out"></div>
+        </div>
+
         <div class="field-group">
-            <label>Type d'intervention</label>
-            <select id="mission_type" onchange="toggleMissionFields()">
-                <option value="installation">Installation Neuve</option>
-                <option value="audit">Audit / Relevé de cotes</option>
-                <option value="SAV">Réparation / SAV</option>
-                <option value="maintenance">Maintenance Préventive</option>
+            <label>Type de Mission</label>
+            <select id="mission_type">
+                <option value="Suivi">Suivi / Reprise</option>
+                <option value="Installation">Installation Complète</option>
+                <option value="SAV">SAV / Diagnostic</option>
+                <option value="Audit">Audit / Relevé</option>
             </select>
         </div>
-        <div class="field-group">
-            <label>Projet / Client</label>
-            <input type="text" id="client_name" placeholder="ex: Monaco Yacht Club">
-        </div>
-        <div class="field-group">
-            <label>Intervenant Vertex</label>
-            <input type="text" id="staff_name" placeholder="Nom du technicien">
-        </div>
-        <button class="btn-gold" onclick="nextStep(2)">DÉMARRER</button>
+        <button class="btn-gold" onclick="nextStep(2)">CONTINUER</button>
     </div>
 
     <div class="step" id="step2">
-        <div class="diag-panel">
-            <label>Outils de Terrain Vertex</label>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn-outline" style="flex:1" onclick="checkConnection()">TEST RÉSEAU</button>
-                <button class="btn-outline" style="flex:1" onclick="getVertexLocation()">GEO-TAG GPS</button>
-            </div>
-            <div id="diag_display" class="diag-status">Diagnostic : Prêt</div>
+        <label>Observations Rapides (Vertex Tags)</label>
+        <div class="tag-cloud">
+            <div class="tag" onclick="addTag('Player Configuré')">+ Player OK</div>
+            <div class="tag" onclick="addTag('Dalle LED alignée')">+ LED Align</div>
+            <div class="tag" onclick="addTag('Fixations sécurisées')">+ Fixations OK</div>
+            <div class="tag" onclick="addTag('Câblage structuré')">+ Câblage OK</div>
+            <div class="tag" onclick="addTag('Test Luminosité effectué')">+ Test Lum</div>
+            <div class="tag" onclick="addTag('Besoin SAV Usine')">+ SAV Usine</div>
+            <div class="tag" onclick="addTag('Prévoir nacelle')">+ Nacelle</div>
         </div>
-
-        <div class="field-group">
-            <label>Dimensions Emplacement (L x H en cm)</label>
-            <input type="text" id="dimensions" placeholder="ex: 125 x 210">
-        </div>
+        <textarea id="notes" rows="6" placeholder="Observations détaillées..."></textarea>
         
-        <label>Infrastructure</label>
-        <div class="checkbox-group"><input type="checkbox" id="check_elec"><span>Alimentation électrique OK</span></div>
-        <div class="checkbox-group"><input type="checkbox" id="check_net"><span>Prise RJ45 / Wi-Fi OK</span></div>
-        <div class="checkbox-group"><input type="checkbox" id="check_nacelle"><span>Besoin Nacelle / Accès spécial</span></div>
+        <label style="margin-top:20px;">Photos (Captures multiples)</label>
+        <input type="file" id="cam" accept="image/*" capture="environment" multiple style="display:none;">
+        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border-color:var(--gold);">📸 CAPTURER PHOTOS</button>
+        <div id="photo-gallery" class="photo-gallery"></div>
 
-        <div id="install-only" class="field-group" style="margin-top:20px;">
-            <label>Luminosité requise (NITS)</label>
-            <input type="range" id="nits" min="500" max="5000" step="500" value="2500" oninput="this.nextElementSibling.value = this.value + ' NITS'">
-            <output style="display:block; text-align:center; font-weight:900; color:var(--gold); margin-top:5px;">2500 NITS</output>
-        </div>
-
-        <button class="btn-gold" onclick="nextStep(3)">SUIVANT</button>
-        <button class="btn-outline" style="width:100%" onclick="nextStep(1)">RETOUR</button>
+        <button class="btn-gold" style="margin-top:20px;" onclick="nextStep(3)">SIGNATURE</button>
     </div>
 
     <div class="step" id="step3">
-        <div id="sav-only" style="display:none;">
-            <label style="color:var(--danger)">Rapport de Panne</label>
-            <textarea id="sav_diag" rows="4" placeholder="Symptômes constatés..."></textarea>
-            <div class="checkbox-group"><input type="checkbox" id="check_reboot"><span>Redémarrage effectué</span></div>
+        <label>Signature Technicien / Client</label>
+        <canvas id="sig-canvas"></canvas>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <button class="btn-outline" style="flex:1" onclick="clearSig()">EFFACER</button>
+            <button class="btn-gold" style="flex:2" onclick="saveEntry()">ENREGISTRER</button>
         </div>
-
-        <div class="field-group">
-            <label>Matériel concerné (Modèle)</label>
-            <input type="text" id="model_ref" placeholder="ex: Double-Face 55 pouces">
-        </div>
-
-        <div class="field-group">
-            <label>Observations Générales</label>
-            <textarea id="obs" rows="4" placeholder="Notes techniques, environnement..."></textarea>
-        </div>
-
-        <button class="btn-gold" onclick="nextStep(4)">PHOTOS & SIGNATURE</button>
-        <button class="btn-outline" style="width:100%" onclick="nextStep(2)">RETOUR</button>
     </div>
 
     <div class="step" id="step4">
-        <label>Photo de l'intervention</label>
-        <div class="media-box">
-            <img id="img_prev" style="display:none;">
-            <span id="img_msg">PAS DE PHOTO CAPTURÉE</span>
+        <div style="display:flex; justify-content: space-between; align-items:center;">
+            <h2 id="view-client-name" style="color:var(--gold); margin:0;"></h2>
+            <select id="project_status" onchange="updateProjectStatus()" style="width:auto; height:30px; font-size:10px;">
+                <option value="ongoing">EN COURS</option>
+                <option value="done">TERMINÉ</option>
+            </select>
         </div>
-        <input type="file" id="cam" accept="image/*" capture="environment" style="display:none;">
-        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border-color:var(--gold); margin-bottom:30px; width:100%; font-size: 14px; padding: 15px;">📸 CAPTURER PHOTO</button>
-
-        <label>Signature Client / Validation</label>
-        <canvas id="sig-canvas"></canvas>
-        <button class="btn-outline" onclick="clearSig()" style="font-size: 10px; padding: 5px; margin-top: 5px;">EFFACER LA SIGNATURE</button>
-
-        <button class="btn-gold" style="margin-top:40px;" onclick="generateFinalReport()">GÉNÉRER LE RAPPORT</button>
-        <button class="btn-outline" style="width:100%" onclick="nextStep(3)">RETOUR</button>
-    </div>
-
-    <div class="step" id="step5">
-        <h2 style="color:var(--gold); margin:0 0 20px 0;">RAPPORT D'INTERVENTION</h2>
-        <div id="report_output"></div>
-        
-        <div class="btn-group" style="display:flex; gap:10px; margin-top:30px;">
-            <button class="btn-gold" style="flex:2;" onclick="sendMail()">ENVOYER PAR EMAIL</button>
-            <button class="btn-outline" style="flex:1;" onclick="window.print()">PDF</button>
+        <div id="timeline-content" style="margin-top:20px;"></div>
+        <div style="margin-top:30px;">
+            <button class="btn-gold" onclick="nextStep(1)">NOUVELLE INTERVENTION</button>
+            <button class="btn-outline" onclick="window.print()" style="width:100%">IMPRIMER DOSSIER PDF</button>
+            <button class="btn-outline" onclick="nextStep(0)" style="width:100%">RETOUR LISTE CLIENTS</button>
         </div>
-        <button class="btn-outline" onclick="clearStorage()" style="width:100%; margin-top:10px;">NOUVELLE MISSION</button>
     </div>
 </div>
 
 <script>
-    let photoData = "";
-    const canvas = document.getElementById('sig-canvas');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-    let currentGeo = "Non géolocalisé";
+    let projects = JSON.parse(localStorage.getItem('vertex_master_v2') || '{}');
+    let currentProjectId = null;
+    let tempPhotos = [];
+    let selectedStaff = [];
 
-    // --- NAVIGATION ---
-    function nextStep(n) {
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step' + n).classList.add('active');
-        window.scrollTo(0,0);
-        if(n === 4) resizeCanvas();
-    }
-
-    function toggleMissionFields() {
-        const type = document.getElementById('mission_type').value;
-        document.getElementById('sav-only').style.display = (type === 'SAV') ? 'block' : 'none';
-        document.getElementById('install-only').style.display = (type === 'installation') ? 'block' : 'none';
-    }
-
-    // --- DIAGNOSTIC TOOLS ---
-    function checkConnection() {
-        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        let info = "Réseau : Connecté";
-        if (conn) {
-            info = `Réseau : ${conn.effectiveType.toUpperCase()} (~${conn.rtt}ms latence)`;
-        }
-        document.getElementById('diag_display').innerText = info;
-        document.getElementById('obs').value += `\n[Diagnostic Réseau : ${info}]`;
-    }
-
-    function getVertexLocation() {
-        if (navigator.geolocation) {
-            document.getElementById('diag_display').innerText = "Recherche satellite GPS...";
-            navigator.geolocation.getCurrentPosition((pos) => {
-                currentGeo = `${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`;
-                document.getElementById('diag_display').innerText = `GPS OK : ${currentGeo}`;
-                document.getElementById('obs').value += `\n[Validation GPS : ${currentGeo}]`;
-            }, () => {
-                document.getElementById('diag_display').innerText = "GPS : Accès refusé";
-            });
+    // --- INTERVENANTS ---
+    function toggleStaff(el) {
+        el.classList.toggle('selected');
+        const name = el.innerText;
+        if(selectedStaff.includes(name)) {
+            selectedStaff = selectedStaff.filter(n => n !== name);
+        } else {
+            selectedStaff.push(name);
         }
     }
 
-    // --- SAUVEGARDE AUTO (LocalStorage) ---
-    const inputs = document.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const data = {};
-            inputs.forEach(i => {
-                data[i.id] = i.type === 'checkbox' ? i.checked : i.value;
-            });
-            localStorage.setItem('vertex_elite_backup', JSON.stringify(data));
+    // --- LOGIQUE DOSSIERS ---
+    function startNewProject() {
+        const name = prompt("Nom du Client / Chantier :");
+        if (name && !projects[name]) {
+            projects[name] = { entries: [], status: 'ongoing' };
+            saveAll(); loadProjectList();
+        }
+    }
+
+    function openProject(id) {
+        currentProjectId = id;
+        document.getElementById('current-client-display').innerText = id;
+        document.getElementById('view-client-name').innerText = id;
+        document.getElementById('project_status').value = projects[id].status || 'ongoing';
+        showTimeline();
+        nextStep(4);
+    }
+
+    function updateProjectStatus() {
+        projects[currentProjectId].status = document.getElementById('project_status').value;
+        saveAll(); loadProjectList();
+    }
+
+    // --- LOGIQUE MISSION ---
+    function addTag(text) {
+        const area = document.getElementById('notes');
+        area.value += (area.value ? ', ' : '') + text;
+    }
+
+    document.getElementById('cam').addEventListener('change', function(e) {
+        Array.from(e.target.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                tempPhotos.push({ src: ev.target.result, name: "Photo " + (tempPhotos.length + 1) });
+                renderGallery();
+            };
+            reader.readAsDataURL(file);
         });
     });
 
-    window.addEventListener('load', () => {
-        const backup = localStorage.getItem('vertex_elite_backup');
-        if (backup) {
-            const data = JSON.parse(backup);
-            Object.keys(data).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    if (el.type === 'checkbox') el.checked = data[id];
-                    else el.value = data[id];
-                }
-            });
-            toggleMissionFields();
-        }
-    });
-
-    function clearStorage() {
-        if(confirm("Action irréversible : Effacer les données et réinitialiser ?")) {
-            localStorage.removeItem('vertex_elite_backup');
-            location.reload();
-        }
+    function renderGallery() {
+        const gall = document.getElementById('photo-gallery');
+        gall.innerHTML = '';
+        tempPhotos.forEach((p, idx) => {
+            const div = document.createElement('div');
+            div.className = 'photo-item';
+            div.innerHTML = `<img src="${p.src}"><input type="text" value="${p.name}" onchange="tempPhotos[${idx}].name = this.value">`;
+            gall.appendChild(div);
+        });
     }
 
-    // --- GESTION PHOTO ---
-    document.getElementById('cam').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                photoData = event.target.result;
-                document.getElementById('img_prev').src = photoData;
-                document.getElementById('img_prev').style.display = 'block';
-                document.getElementById('img_msg').style.display = 'none';
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // --- SIGNATURE CANVAS ---
-    function resizeCanvas() {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        ctx.strokeStyle = "#000000";
-        ctx.lineWidth = 3;
-        ctx.lineCap = "round";
-    }
-    function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-        return { x: clientX - rect.left, y: clientY - rect.top };
-    }
-    function start(e) { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }
-    function draw(e) { if(!drawing) return; e.preventDefault(); const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }
-    function stop() { drawing = false; }
-    canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', draw); window.addEventListener('mouseup', stop);
-    canvas.addEventListener('touchstart', start, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false}); canvas.addEventListener('touchend', stop);
-    function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
-
-    // --- RAPPORT FINAL ---
-    function generateFinalReport() {
-        const now = new Date();
-        const data = {
-            "CLIENT": document.getElementById('client_name').value,
-            "TYPE MISSION": document.getElementById('mission_type').value.toUpperCase(),
-            "TECHNICIEN": document.getElementById('staff_name').value,
-            "DIMENSIONS": document.getElementById('dimensions').value,
-            "MODÈLE ÉCRAN": document.getElementById('model_ref').value,
-            "LUMINOSITÉ": document.getElementById('nits').value + " NITS",
-            "NOTES": document.getElementById('obs').value,
-            "DATE & HEURE": now.toLocaleString('fr-FR'),
-            "LOCALISATION": currentGeo
+    function saveEntry() {
+        if(selectedStaff.length === 0) { alert("Sélectionnez au moins un intervenant."); return; }
+        
+        const entry = {
+            date: new Date().toLocaleDateString('fr-FR'),
+            time_in: document.getElementById('time_in').value,
+            time_out: document.getElementById('time_out').value,
+            staff: selectedStaff.join(', '),
+            type: document.getElementById('mission_type').value,
+            notes: document.getElementById('notes').value,
+            photos: [...tempPhotos],
+            sig: canvas.toDataURL()
         };
 
-        let html = "";
-        for (const [key, val] of Object.entries(data)) {
-            html += `<div class="summary-card"><strong>${key}</strong>${val || '---'}</div>`;
-        }
-
-        if(photoData) html += `<div class="summary-card"><strong>PHOTO CAPTURÉE</strong><img src="${photoData}" style="width:100%; border-radius:4px; margin-top:5px;"></div>`;
-        
-        const sigData = canvas.toDataURL();
-        html += `<div class="summary-card" style="background:white; color:black;"><strong>SIGNATURE VALIDÉE</strong><img src="${sigData}" style="width:100%; margin-top:5px;"></div>`;
-
-        document.getElementById('report_output').innerHTML = html;
-        nextStep(5);
+        projects[currentProjectId].entries.push(entry);
+        saveAll();
+        // Reset
+        tempPhotos = []; selectedStaff = [];
+        document.querySelectorAll('.staff-chip').forEach(c => c.classList.remove('selected'));
+        document.getElementById('notes').value = ""; clearSig();
+        showTimeline(); nextStep(4);
     }
 
-    // --- EMAIL ---
-    function sendMail() {
-        const client = document.getElementById('client_name').value || "Client";
-        const subject = encodeURIComponent(`Vertex Monaco Rapport - ${client}`);
-        const body = encodeURIComponent(`Bonjour,\n\nVeuillez trouver ci-joint le rapport Vertex Monaco.\n\nProjet: ${client}\nTechnicien: ${document.getElementById('staff_name').value}\nDate: ${new Date().toLocaleString()}\n\nNote: Le rapport complet avec photos et signatures est disponible en version PDF via l'outil.`);
-        window.location.href = `mailto:contact@votre-domaine.com?subject=${subject}&body=${body}`;
+    function showTimeline() {
+        const cont = document.getElementById('timeline-content');
+        cont.innerHTML = '';
+        [...projects[currentProjectId].entries].reverse().forEach(e => {
+            const diff = calculateDuration(e.time_in, e.time_out);
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            item.innerHTML = `
+                <div style="font-size:10px; color:var(--gold); font-weight:bold; margin-bottom:5px;">${e.date} | ${e.time_in} - ${e.time_out} (${diff})</div>
+                <div style="font-size:12px; margin-bottom:5px;"><strong>Team :</strong> ${e.staff}</div>
+                <div style="font-size:12px; margin-bottom:10px; opacity:0.8; white-space:pre-wrap;">${e.notes}</div>
+                <div class="photo-gallery">
+                    ${e.photos.map(p => `<div class="photo-item"><img src="${p.src}"><p style="font-size:8px; margin-top:3px;">${p.name}</p></div>`).join('')}
+                </div>
+                <img src="${e.sig}" style="width:100px; background:white; margin-top:15px; border-radius:3px; padding:3px;">
+            `;
+            cont.appendChild(item);
+        });
     }
+
+    function calculateDuration(s, e) {
+        if(!s || !e) return "N/A";
+        const start = s.split(':'); const end = e.split(':');
+        let m = (parseInt(end[0])*60 + parseInt(end[1])) - (parseInt(start[0])*60 + parseInt(start[1]));
+        return Math.floor(m/60) + "h" + (m%60).toString().padStart(2,'0');
+    }
+
+    // --- SYSTEM ---
+    function nextStep(n) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + n).classList.add('active');
+        if(n === 3) resizeCanvas();
+        window.scrollTo(0,0);
+    }
+    function saveAll() { localStorage.setItem('vertex_master_v2', JSON.stringify(projects)); }
+    function filterProjects() { loadProjectList(document.getElementById('searchBar').value.toLowerCase()); }
+
+    function loadProjectList(q = '') {
+        const list = document.getElementById('project-list');
+        list.innerHTML = '';
+        Object.keys(projects).sort().forEach(id => {
+            if(id.toLowerCase().includes(q)) {
+                const div = document.createElement('div');
+                div.className = 'folder-card';
+                div.onclick = () => openProject(id);
+                div.innerHTML = `<div class="folder-name">${id}</div><div class="status-badge status-${projects[id].status}">${projects[id].status.toUpperCase()}</div>`;
+                list.appendChild(div);
+            }
+        });
+    }
+
+    function exportFullBackup() {
+        const blob = new Blob([JSON.stringify(projects)], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = "vertex_master_backup.json";
+        a.click();
+    }
+
+    const canvas = document.getElementById('sig-canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.lineWidth = 2; }
+    canvas.onpointerdown = (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
+    canvas.onpointermove = (e) => { if(drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+    window.onpointerup = () => drawing = false;
+    function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
+
+    window.onload = () => loadProjectList();
 </script>
 
 </body>
