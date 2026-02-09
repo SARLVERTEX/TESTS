@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Ultimate V10</title>
+    <title>Vertex Monaco | V12 Full Ops</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --bg: #000; --card: #121212; --text: #fff; --danger: #ff4d4d; --success: #2ecc71; --border: #282828; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.4; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.4; overflow-x: hidden; }
         .container { max-width: 500px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
         
         .header { text-align: center; padding: 15px 0; border-bottom: 2px solid var(--gold); margin-bottom: 20px; }
@@ -17,42 +17,44 @@
         .step { display: none; animation: fadeIn 0.2s ease; }
         .step.active { display: block; }
 
+        /* Tabs & Types */
         .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
         .tab-btn { flex: 1; padding: 12px; background: #111; border: 1px solid var(--border); color: #666; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
 
-        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; border: 1px solid; cursor: pointer; }
-        .status-ongoing { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-color: var(--gold); }
-        .status-done { background: rgba(46, 204, 113, 0.1); color: var(--success); border-color: var(--success); }
+        .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .type-chip { background: #111; border: 1px solid var(--border); padding: 10px; border-radius: 8px; text-align: center; font-size: 10px; font-weight: bold; color: #666; cursor: pointer; }
+        .type-chip.selected { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
 
-        .check-item { display: flex; align-items: center; background: #181818; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
-        .check-item input { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--gold); }
-        .check-item span { font-size: 13px; }
-
-        .folder-card { background: var(--card); padding: 18px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        
-        label { display: block; margin: 15px 0 5px 0; font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 12px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 15px; }
-        
         .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .staff-chip { background: #1c1c1c; border: 1px solid var(--border); padding: 12px; border-radius: 6px; font-size: 11px; text-align: center; color: #888; }
         .staff-chip.selected { background: var(--gold); color: #000; font-weight: 800; border-color: var(--gold); }
 
-        .photo-gallery { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
-        .photo-item { background: #1c1c1c; padding: 10px; border-radius: 10px; border: 1px solid var(--border); position: relative; }
-        .photo-item img { width: 100%; height: auto; border-radius: 6px; margin-bottom: 8px; }
-        .photo-comment { background: #000; border: 1px solid #333; font-size: 13px; padding: 10px; color: white; border-radius: 6px; }
+        /* Checklist */
+        .check-item { display: flex; align-items: center; background: #181818; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
+        .check-item input { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--gold); }
 
+        /* Photos Before/After with Captions */
+        .photo-box { background: #0a0a0a; border: 1px solid #222; padding: 12px; border-radius: 10px; margin-top: 15px; }
+        .photo-box h4 { margin: 0 0 10px 0; font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .photo-gallery { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        .photo-card { background: #1c1c1c; padding: 8px; border-radius: 8px; border: 1px solid #333; }
+        .photo-card img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
+        .photo-input { background: #000; border: 1px solid #333; color: white; padding: 8px; font-size: 12px; width: 100%; border-radius: 4px; }
+
+        /* Signature */
         #sig-canvas { background: #fff; border: 2px solid var(--gold); border-radius: 8px; touch-action: none; width: 100%; height: 200px; cursor: crosshair; }
 
         .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 10px; text-transform: uppercase; margin-top: 15px; cursor: pointer; }
         .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; cursor: pointer; }
-        .btn-now { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 4px; font-size: 10px; margin-top: 5px; cursor: pointer; display: block; width: 100%; text-align: center; }
+        .btn-now { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 4px; font-size: 10px; margin-top: 5px; width: 100%; }
         .btn-danger { width: 100%; padding: 12px; background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); border-radius: 8px; margin-top: 20px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        .timeline-item { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 40px; position: relative;}
-        .section-block { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 2px solid #444; }
-        .section-title { font-size: 10px; color: var(--gold); font-weight: bold; margin-bottom: 4px; }
+        label { display: block; margin: 15px 0 5px 0; font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 12px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 15px; }
+
+        .timeline-item { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 40px; position: relative; }
+        .section-block { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 2px solid #444; font-size: 13px; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media print { .no-print { display: none; } body { background: white; color: black; } }
@@ -63,7 +65,7 @@
 <div class="container">
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">ULTIMATE FIELD ARMOR V10</p>
+        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">V12 | ULTIMATE FIELD TOOL</p>
     </div>
 
     <div class="step active" id="step0">
@@ -71,42 +73,60 @@
             <button class="tab-btn active" id="tab-active" onclick="switchTab('ongoing')">EN COURS</button>
             <button class="tab-btn" id="tab-archived" onclick="switchTab('done')">ARCHIVES</button>
         </div>
-        <button class="btn-gold" onclick="startNewProject()">+ NOUVEAU CHANTIER</button>
-        <input type="text" id="searchBar" oninput="filterProjects()" placeholder="Rechercher un client..." style="margin-top:15px;">
+        <button class="btn-gold" onclick="startNewProject()">+ NOUVEAU CLIENT</button>
+        <input type="text" id="searchBar" oninput="filterProjects()" placeholder="Rechercher un dossier..." style="margin-top:15px;">
         <div id="project-list" style="margin-top:10px;"></div>
-        <div class="no-print" style="margin-top:40px; border-top:1px solid var(--border); padding-top:20px;">
-            <button class="btn-outline" onclick="exportToCSV()">📊 EXPORTER TOUT SUR EXCEL (.CSV)</button>
-        </div>
+        <button class="btn-outline" onclick="exportToCSV()" style="margin-top:40px;">📊 EXPORT EXCEL GLOBAL (.CSV)</button>
     </div>
 
     <div class="step" id="step1">
-        <h3 id="c-name" style="color:var(--gold); text-align:center;"></h3>
+        <h3 id="c-name" style="text-align:center; color:var(--gold);"></h3>
+        
+        <label>Type de mission</label>
+        <div class="type-grid">
+            <div class="type-chip" onclick="selectType(this, 'INSTALLATION')">INSTALLATION</div>
+            <div class="type-chip" onclick="selectType(this, 'MAINTENANCE')">MAINTENANCE</div>
+            <div class="type-chip" onclick="selectType(this, 'DÉPANNAGE')">DÉPANNAGE</div>
+            <div class="type-chip" onclick="selectType(this, 'AUDIT')">AUDIT</div>
+        </div>
+
         <label>Équipe sur place</label>
         <div class="staff-grid">
-            <div class="staff-chip" onclick="toggleStaff(this)">Allan PLEUTIN</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Pietro SANGUEDOLCE</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Marco VERSACE</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Osvaldo CHIAVINI</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe OUSELLY</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Allan</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Pietro</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Marco</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Osvaldo</div>
+            <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe</div>
         </div>
+
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
             <div><label>Arrivée</label><input type="time" id="time_in"><button class="btn-now" onclick="setTime('time_in')">MAINTENANT</button></div>
             <div><label>Départ</label><input type="time" id="time_out"><button class="btn-now" onclick="setTime('time_out')">MAINTENANT</button></div>
         </div>
-        <button class="btn-gold" onclick="nextStep(2)">NOTES TECHNIQUES</button>
+        <button class="btn-gold" onclick="nextStep(2)">PHOTOS & RAPPORT</button>
         <button class="btn-outline" onclick="nextStep(0)">ANNULER</button>
     </div>
 
     <div class="step" id="step2">
-        <label>1. Travaux Réalisés</label>
-        <textarea id="task_done" rows="5" placeholder="Détaillez votre intervention..."></textarea>
-        <label>2. Vigilance / SAV / Matériel</label>
-        <textarea id="task_warning" rows="3" placeholder="SAV ou matériel utilisé ?"></textarea>
+        <div class="photo-box">
+            <h4>📸 Photos AVANT l'intervention</h4>
+            <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'before')" style="display:none;" id="cam-before">
+            <button class="btn-outline" onclick="document.getElementById('cam-before').click()">+ AJOUTER AVANT</button>
+            <div id="gallery-before" class="photo-gallery"></div>
+        </div>
 
-        <label>Photos (Légendes éditables)</label>
-        <input type="file" id="cam" accept="image/*" capture="environment" multiple style="display:none;">
-        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border-style:dashed;">📸 AJOUTER DES PHOTOS</button>
-        <div id="photo-gallery" class="photo-gallery"></div>
+        <div class="photo-box">
+            <h4>📸 Photos APRÈS l'intervention</h4>
+            <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'after')" style="display:none;" id="cam-after">
+            <button class="btn-outline" onclick="document.getElementById('cam-after').click()">+ AJOUTER APRÈS</button>
+            <div id="gallery-after" class="photo-gallery"></div>
+        </div>
+
+        <label>Compte-rendu des travaux</label>
+        <textarea id="task_done" rows="5" placeholder="Description technique..."></textarea>
+        
+        <label>Points de vigilance / Matériel</label>
+        <textarea id="task_mat" rows="2" placeholder="SAV, matériel installé..."></textarea>
 
         <button class="btn-gold" onclick="nextStep(3)">SÉCURITÉ & SIGNATURE</button>
         <button class="btn-outline" onclick="nextStep(1)">RETOUR</button>
@@ -119,185 +139,153 @@
         <div class="check-item"><input type="checkbox" id="check3"><span>Alimentation & Baie verrouillées</span></div>
         <div class="check-item"><input type="checkbox" id="check4"><span>Client prévenu du départ</span></div>
 
-        <label style="margin-top:20px;">Signature (Tournez l'écran si besoin)</label>
+        <label style="margin-top:20px;">Signature (Landscape OK)</label>
         <canvas id="sig-canvas"></canvas>
-        <button class="btn-outline" onclick="clearSig()">EFFACER</button>
+        <button class="btn-outline" onclick="clearSig()">EFFACER LA SIGNATURE</button>
         <button class="btn-gold" onclick="saveEntry()">ENREGISTRER FINAL</button>
         <button class="btn-outline" onclick="nextStep(2)">RETOUR</button>
     </div>
 
     <div class="step" id="step4">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-            <h2 id="view-n" style="color:var(--gold); margin:0; font-size:18px;"></h2>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 id="view-n" style="color:var(--gold); margin:0;"></h2>
             <div id="status-toggle-container"></div>
         </div>
-        <div id="timeline"></div>
+        <div id="timeline" style="margin-top:20px;"></div>
         <div class="no-print">
-            <button class="btn-outline" style="color:#2ecc71; border-color:#2ecc71; font-weight:bold;" onclick="sendProjectMail()">✉️ ENVOYER PAR MAIL</button>
-            <button class="btn-gold" onclick="nextStep(1)">+ NOUVELLE INTERVENTION</button>
+            <button class="btn-outline" style="color:#2ecc71; border-color:#2ecc71;" onclick="sendProjectMail()">✉️ ENVOYER PAR MAIL</button>
+            <button class="btn-gold" onclick="nextStep(1)">+ NOUVEAU PASSAGE</button>
             <button class="btn-outline" onclick="window.print()">GÉNÉRER PDF</button>
             <button class="btn-outline" onclick="nextStep(0)">RETOUR ACCUEIL</button>
-            <button class="btn-danger" onclick="deleteFullProject()">⚠️ SUPPRIMER LE DOSSIER CLIENT</button>
+            <button class="btn-danger" onclick="deleteFullProject()">⚠️ SUPPRIMER CE CLIENT</button>
         </div>
     </div>
 </div>
 
 <script>
     let db = JSON.parse(localStorage.getItem('vertex_v6_db') || '{}');
-    let cur = null; let photos = []; let staff = []; let currentFilter = 'ongoing';
+    let cur = null, staff = [], photosBefore = [], photosAfter = [], selectedType = "", currentFilter = 'ongoing';
 
-    // NAVIGATION
     function nextStep(n) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step'+n).classList.add('active');
         if(n === 3) setTimeout(resizeCanvas, 200);
-        if(n === 1) document.getElementById('c-name').innerText = cur;
+        if(n === 1) { document.getElementById('c-name').innerText = cur; resetForm(); }
         if(n === 4) { document.getElementById('view-n').innerText = cur; showTimeline(); }
         window.scrollTo(0,0);
     }
 
-    // FONCTIONS TERRAIN
     function setTime(id) { const n = new Date(); document.getElementById(id).value = n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0'); }
+    function selectType(el, type) { document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); selectedType = type; }
     function toggleStaff(el) { el.classList.toggle('selected'); staff = Array.from(document.querySelectorAll('.staff-chip.selected')).map(c => c.innerText); }
-    function switchTab(status) { currentFilter = status; document.getElementById('tab-active').classList.toggle('active', status === 'ongoing'); document.getElementById('tab-archived').classList.toggle('active', status === 'done'); loadList(); }
+    function switchTab(s) { currentFilter = s; document.getElementById('tab-active').classList.toggle('active', s==='ongoing'); document.getElementById('tab-archived').classList.toggle('active', s==='done'); loadList(); }
 
-    // GESTION DES PHOTOS
-    document.getElementById('cam').addEventListener('change', e => {
-        Array.from(e.target.files).forEach(file => {
+    function handlePhotos(input, type) {
+        Array.from(input.files).forEach(file => {
             const r = new FileReader();
-            r.onload = ev => {
-                const img = new Image(); img.src = ev.target.result;
-                img.onload = () => {
-                    const cvs = document.createElement('canvas');
-                    const max = 1000; let w = img.width, h = img.height;
-                    if (w > h && w > max) { h *= max/w; w = max; } else if (h > max) { w *= max/h; h = max; }
-                    cvs.width = w; cvs.height = h;
-                    cvs.getContext('2d').drawImage(img, 0, 0, w, h);
-                    photos.push({ src: cvs.toDataURL('image/jpeg', 0.6), note: "" });
-                    renderGallery();
-                }
+            r.onload = e => {
+                const imgObj = { src: e.target.result, note: "" };
+                if(type === 'before') photosBefore.push(imgObj); else photosAfter.push(imgObj);
+                renderGalleries();
             };
             r.readAsDataURL(file);
         });
-    });
+    }
 
-    function renderGallery() {
-        const g = document.getElementById('photo-gallery'); g.innerHTML = '';
-        photos.forEach((p, i) => {
-            const div = document.createElement('div'); div.className = 'photo-item';
-            div.innerHTML = `<img src="${p.src}"><input type="text" class="photo-comment" placeholder="Ajouter une légende..." value="${p.note}" oninput="photos[${i}].note = this.value">
-                <button style="margin-top:5px; background:var(--danger); border:none; color:white; width:100%; border-radius:4px; padding:8px; font-size:10px;" onclick="photos.splice(${i},1);renderGallery()">SUPPRIMER PHOTO</button>`;
-            g.appendChild(div);
+    function renderGalleries() {
+        const rb = document.getElementById('gallery-before'); rb.innerHTML = '';
+        photosBefore.forEach((p, i) => {
+            rb.innerHTML += `<div class="photo-card"><img src="${p.src}"><input type="text" class="photo-input" placeholder="Légende..." oninput="photosBefore[${i}].note=this.value" value="${p.note}"><button class="btn-now" onclick="photosBefore.splice(${i},1);renderGalleries()">Supprimer</button></div>`;
+        });
+        const ra = document.getElementById('gallery-after'); ra.innerHTML = '';
+        photosAfter.forEach((p, i) => {
+            ra.innerHTML += `<div class="photo-card"><img src="${p.src}"><input type="text" class="photo-input" placeholder="Légende..." oninput="photosAfter[${i}].note=this.value" value="${p.note}"><button class="btn-now" onclick="photosAfter.splice(${i},1);renderGalleries()">Supprimer</button></div>`;
         });
     }
 
-    // SIGNATURE PRO (FIXED)
-    const canvas = document.getElementById('sig-canvas');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-
-    function resizeCanvas() {
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.strokeStyle = "#000";
-    }
-
-    function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return { x: clientX - rect.left, y: clientY - rect.top };
-    }
-
-    canvas.addEventListener('touchstart', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }, {passive: false});
-    canvas.addEventListener('touchmove', e => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }, {passive: false});
+    // SIGNATURE LOGIC
+    const canvas = document.getElementById('sig-canvas'); const ctx = canvas.getContext('2d'); let drawing = false;
+    function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.lineWidth = 3; ctx.lineCap = "round"; }
+    function getPos(e) { const rect = canvas.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left, y: cy - rect.top }; }
+    canvas.addEventListener('touchstart', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }, {passive:false});
+    canvas.addEventListener('touchmove', e => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }, {passive:false});
     window.addEventListener('touchend', () => drawing = false);
-    canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
-    canvas.addEventListener('mousemove', e => { if(drawing) { const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); } });
-    window.addEventListener('mouseup', () => drawing = false);
     function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
 
-    // SAUVEGARDE ET EXPORTS
     function saveEntry() {
-        if(!staff.length) return alert("Qui est intervenu ?");
-        if(!document.getElementById('check1').checked) return alert("Validez la propreté !");
+        if(!selectedType || !staff.length) return alert("Type et Équipe requis !");
+        if(!document.getElementById('check1').checked) return alert("Veuillez valider la checklist !");
         
         const entry = {
             id: Date.now(), date: new Date().toLocaleDateString('fr-FR'),
-            in: document.getElementById('time_in').value, out: document.getElementById('time_out').value,
-            staff: staff.join(', '), done: document.getElementById('task_done').value,
-            warning: document.getElementById('task_warning').value,
-            photos: [...photos], sig: canvas.toDataURL()
+            type: selectedType, in: document.getElementById('time_in').value, out: document.getElementById('time_out').value,
+            staff: staff.join(', '), done: document.getElementById('task_done').value, mat: document.getElementById('task_mat').value,
+            before: [...photosBefore], after: [...photosAfter], sig: canvas.toDataURL()
         };
         db[cur].entries.push(entry);
         localStorage.setItem('vertex_v6_db', JSON.stringify(db));
-        photos = []; staff = []; clearInputs(); nextStep(4);
-    }
-
-    function clearInputs() {
-        document.getElementById('task_done').value = ""; document.getElementById('task_warning').value = "";
-        document.querySelectorAll('.staff-chip').forEach(c => c.classList.remove('selected'));
-        document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-        clearSig();
+        nextStep(4);
     }
 
     function showTimeline() {
         const t = document.getElementById('timeline'); t.innerHTML = '';
         const isDone = db[cur].status === 'done';
         document.getElementById('status-toggle-container').innerHTML = `<button class="status-pill ${isDone?'status-done':'status-ongoing'}" onclick="toggleStatus()">${isDone?'ARCHIVÉ':'ACTIF'}</button>`;
-        
+
         [...db[cur].entries].reverse().forEach(e => {
             t.innerHTML += `<div class="timeline-item">
-                <div style="font-size:10px; color:var(--gold); font-weight:bold;">${e.date} | ${e.in}-${e.out}</div>
-                <div class="section-block"><div class="section-title">TRAVAUX</div>${e.done}</div>
-                ${e.warning ? `<div class="section-block" style="border-left-color:var(--danger)"><div class="section-title">SAV / MATÉRIEL</div>${e.warning}</div>` : ''}
-                <div class="photo-gallery">${e.photos.map(p => `<div class="photo-item"><img src="${p.src}">${p.note ? `<div class="photo-comment">${p.note}</div>` : ''}</div>`).join('')}</div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px;">
-                    <img src="${e.sig}" style="width:120px; background:white; padding:5px; border-radius:4px; border:1px solid #ddd;">
-                    <button class="no-print" style="color:var(--danger); border:none; background:none; font-size:10px;" onclick="deleteEntry(${e.id})">Supprimer ce passage</button>
+                <div style="font-size:10px; font-weight:900; color:var(--gold);">${e.date} | ${e.type}</div>
+                <div class="section-block"><strong>Equipe:</strong> ${e.staff} (${e.in} - ${e.out})<br><strong>Travaux:</strong> ${e.done}</div>
+                ${e.mat ? `<div class="section-block" style="border-left-color:var(--success)"><strong>Matériel/SAV:</strong> ${e.mat}</div>` : ''}
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin:10px 0;">
+                    <div>${e.before.map(p => `<img src="${p.src}" style="width:100%; border:1px solid #e67e22; border-radius:4px;"><div style="font-size:9px; color:#888;">${p.note}</div>`).join('')}</div>
+                    <div>${e.after.map(p => `<img src="${p.src}" style="width:100%; border:1px solid #2ecc71; border-radius:4px;"><div style="font-size:9px; color:#888;">${p.note}</div>`).join('')}</div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                    <img src="${e.sig}" style="width:100px; background:white; border-radius:4px; padding:2px;">
+                    <button class="no-print" style="color:var(--danger); border:none; background:none; font-size:10px;" onclick="deleteEntry(${e.id})">Supprimer passage</button>
                 </div>
             </div>`;
         });
     }
 
-    function deleteEntry(id) { if(confirm("Supprimer ce rapport ?")) { db[cur].entries = db[cur].entries.filter(e => e.id !== id); localStorage.setItem('vertex_v6_db', JSON.stringify(db)); showTimeline(); } }
-    function deleteFullProject() { if(confirm("⚠️ SUPPRIMER TOUT LE DOSSIER CLIENT ?")) { delete db[cur]; localStorage.setItem('vertex_v6_db', JSON.stringify(db)); nextStep(0); loadList(); } }
+    function deleteEntry(id) { if(confirm("Supprimer ?")) { db[cur].entries = db[cur].entries.filter(e => e.id !== id); localStorage.setItem('vertex_v6_db', JSON.stringify(db)); showTimeline(); } }
+    function deleteFullProject() { if(confirm("Supprimer tout le client ?")) { delete db[cur]; localStorage.setItem('vertex_v6_db', JSON.stringify(db)); nextStep(0); loadList(); } }
     function toggleStatus() { db[cur].status = (db[cur].status === 'done' ? 'ongoing' : 'done'); localStorage.setItem('vertex_v6_db', JSON.stringify(db)); showTimeline(); loadList(); }
+    
+    function startNewProject() { const n = prompt("Nom client :"); if(n && !db[n]) { db[n]={entries:[], status:'ongoing'}; localStorage.setItem('vertex_v6_db', JSON.stringify(db)); loadList(); } }
+    function filterProjects() { loadList(document.getElementById('searchBar').value.toLowerCase()); }
+    
+    function loadList(q='') {
+        const l = document.getElementById('project-list'); l.innerHTML = '';
+        Object.keys(db).sort().forEach(id => {
+            if(id.toLowerCase().includes(q) && db[id].status === currentFilter) {
+                l.innerHTML += `<div class="folder-card" onclick="cur='${id}';nextStep(4);"><div>${id}</div><div>❯</div></div>`;
+            }
+        });
+    }
 
     function exportToCSV() {
-        let csv = "\uFEFFClient;Date;Equipe;Arrivee;Depart;Travaux;SAV\n";
-        Object.keys(db).forEach(client => {
-            db[client].entries.forEach(e => {
-                csv += `"${client}";"${e.date}";"${e.staff}";"${e.in}";"${e.out}";"${e.done.replace(/"/g, '""')}";"${e.warning.replace(/"/g, '""')}"\n`;
-            });
-        });
+        let csv = "\uFEFFClient;Date;Type;Equipe;Travaux;Materiel\n";
+        Object.keys(db).forEach(c => db[c].entries.forEach(e => { csv += `"${c}";"${e.date}";"${e.type}";"${e.staff}";"${e.done.replace(/"/g, '""')}";"${e.mat}"\n`; }));
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute("download", `Vertex_Export_${new Date().toLocaleDateString()}.csv`);
-        link.click();
+        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", "Vertex_Export_Global.csv"); link.click();
     }
 
     function sendProjectMail() {
         const e = db[cur].entries[db[cur].entries.length - 1];
         if(!e) return;
         const subject = encodeURIComponent(`Rapport Vertex - ${cur} - ${e.date}`);
-        const body = encodeURIComponent(`CLIENT : ${cur}\nDATE : ${e.date}\nEQUIPE : ${e.staff}\nHEURES : ${e.in} - ${e.out}\n\nTRAVAUX :\n${e.done}\n\nSAV/MATERIEL :\n${e.warning || 'N/A'}`);
+        const body = encodeURIComponent(`CLIENT: ${cur}\nTYPE: ${e.type}\nEQUIPE: ${e.staff}\nTRAVAUX:\n${e.done}\n\nMATERIEL/SAV:\n${e.mat}`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     }
 
-    function startNewProject() { const n = prompt("Nom du chantier :"); if(n && !db[n]) { db[n]={entries:[], status:'ongoing'}; localStorage.setItem('vertex_v6_db', JSON.stringify(db)); loadList(); } }
-    function filterProjects() { loadList(document.getElementById('searchBar').value.toLowerCase()); }
-    function loadList(q='') {
-        const l = document.getElementById('project-list'); l.innerHTML = '';
-        Object.keys(db).sort().forEach(id => {
-            if(id.toLowerCase().includes(q) && db[id].status === currentFilter) {
-                l.innerHTML += `<div class="folder-card" onclick="cur='${id}';nextStep(4);">
-                    <div>${id}</div><div class="status-pill ${db[id].status==='done'?'status-done':'status-ongoing'}">${db[id].status==='done'?'ARCHIVE':'ACTIF'}</div>
-                </div>`;
-            }
-        });
+    function resetForm() {
+        staff = []; photosBefore = []; photosAfter = []; selectedType = "";
+        document.querySelectorAll('.type-chip, .staff-chip').forEach(c => c.classList.remove('selected'));
+        document.getElementById('task_done').value = ""; document.getElementById('task_mat').value = "";
+        document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+        renderGalleries(); clearSig();
     }
 
     window.onresize = () => { if(document.getElementById('step3').classList.contains('active')) resizeCanvas(); };
