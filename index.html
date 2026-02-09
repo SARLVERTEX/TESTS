@@ -3,136 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Calculateur de Surface</title>
+    <title>Vertex Monaco | Précision Certifiée</title>
     <style>
-        :root { 
-            --vertex-gold: #D4AF37; 
-            --vertex-gold-light: #F9E29C;
-            --bg-dark: #050505;
-        }
+        :root { --gold: #D4AF37; --gold-dark: #B8860B; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; color: white; }
         
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; color: white; }
-        
-        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; }
 
-        /* HUD Header */
-        .header {
-            position: absolute; top: 0; left: 0; width: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent);
-            padding: 30px 0; text-align: center; z-index: 10;
+        /* HUD Supérieur */
+        .hud-top {
+            position: absolute; top: 0; width: 100%; padding: 30px 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            text-align: center; z-index: 10;
         }
-        .logo { letter-spacing: 5px; font-weight: 300; font-size: 12px; color: var(--vertex-gold); text-transform: uppercase; }
-        .instruction { font-size: 18px; margin-top: 10px; font-weight: 400; padding: 0 20px; }
+        .data-stream { font-family: monospace; font-size: 10px; color: var(--gold); letter-spacing: 1px; }
 
-        /* Viseur Gold */
-        .crosshair {
+        /* Niveau à Bulle Gold */
+        .level-container {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 40px; height: 40px; z-index: 10;
+            width: 150px; height: 150px; border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%; pointer-events: none; z-index: 5;
         }
-        .crosshair::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--vertex-gold); }
-        .crosshair::after { content: ''; position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background: var(--vertex-gold); }
-        .circle { border: 1px solid var(--vertex-gold); width: 100%; height: 100%; border-radius: 50%; opacity: 0.5; }
-
-        /* Indicateur de mesure en temps réel */
-        .measure-badge {
-            position: absolute; top: 60%; left: 50%; transform: translateX(-50%);
-            background: rgba(212, 175, 55, 0.2); border: 1px solid var(--vertex-gold);
-            padding: 5px 15px; border-radius: 4px; font-family: monospace; font-size: 14px;
-            color: var(--vertex-gold-light); backdrop-filter: blur(5px);
+        #bubble {
+            position: absolute; top: 50%; left: 50%; width: 20px; height: 20px;
+            background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px var(--gold); transition: all 0.1s ease-out;
+        }
+        .center-target {
+            position: absolute; top: 50%; left: 50%; width: 30px; height: 30px;
+            border: 2px solid white; border-radius: 50%; transform: translate(-50%, -50%);
         }
 
-        /* Panneau de Résultat */
-        #result-panel {
-            position: absolute; bottom: 0; left: 0; width: 100%;
-            background: white; color: #1a1a1a; padding: 40px 25px;
-            transform: translateY(100%); transition: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: 100; border-radius: 30px 30px 0 0; box-sizing: border-box;
-        }
-        .panel-open { transform: translateY(0) !important; }
-
-        .btn-gold {
+        /* Bouton dynamique */
+        .btn-vertex {
             position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, #D4AF37, #B8860B); color: black;
-            border: none; padding: 18px 40px; border-radius: 4px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 2px; cursor: pointer; z-index: 50;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: var(--gold); color: black; border: none;
+            padding: 18px 40px; border-radius: 4px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+            z-index: 100; opacity: 0.3; pointer-events: none; transition: 0.3s;
         }
+        .active { opacity: 1 !important; pointer-events: auto !important; box-shadow: 0 0 20px var(--gold); }
 
-        .spec-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; }
-        .spec-val { font-weight: 700; color: var(--vertex-gold); }
+        /* Panel Résultat */
+        #result-panel {
+            position: absolute; bottom: 0; width: 100%; background: white; color: black;
+            padding: 35px; transform: translateY(100%); transition: 0.6s; z-index: 200;
+            border-radius: 20px 20px 0 0; box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
 
     <video id="video-preview" autoplay playsinline></video>
 
-    <div class="header">
-        <div class="logo">Vertex Monaco — Smart Scan</div>
-        <div id="instruction" class="instruction">Alignez le bord GAUCHE</div>
+    <div class="hud-top">
+        <div class="data-stream">ACCEL: <span id="accel-val">0.00</span> | GYRO: <span id="gyro-val">0.00</span></div>
+        <div id="instruction" style="margin-top: 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 2px;">Stabilisez l'appareil</div>
     </div>
 
-    <div class="crosshair"><div class="circle"></div></div>
-    
-    <div id="live-measure" class="measure-badge" style="display:none;">SCANNING...</div>
+    <div class="level-container">
+        <div class="center-target"></div>
+        <div id="bubble"></div>
+    </div>
 
-    <button id="action-btn" class="btn-gold">Marquer le bord</button>
+    <button id="action-btn" class="btn-vertex">Marquer Point A</button>
 
     <div id="result-panel">
-        <div style="width:40px; height:4px; background:#ddd; margin: 0 auto 20px; border-radius:2px;"></div>
-        <h2 style="margin:0; font-size: 24px; letter-spacing: -1px;">Analyse de Vitrine</h2>
-        <p style="color:#666; margin: 5px 0 25px 0;">Surface d'affichage optimale détectée.</p>
-
-        <div class="spec-row">
-            <span>Largeur estimée</span>
-            <span id="res-width" class="spec-val">0.00 m</span>
-        </div>
-        <div class="spec-row">
-            <span>Produit recommandé</span>
-            <span class="spec-val">Double-Face 55"</span>
-        </div>
-        <div class="spec-row" style="border:none;">
-            <span>Surface d'affichage</span>
-            <span class="spec-val">~1.25 m²</span>
-        </div>
-
-        <button onclick="location.reload()" style="width:100%; margin-top:20px; padding:18px; background: #1a1a1a; color:white; border:none; border-radius:4px; font-weight:600;">NOUVELLE MESURE</button>
+        <h2 style="color:var(--gold-dark); margin:0;">DIAGNOSTIC VERTEX</h2>
+        <p id="final-measure" style="font-size: 24px; font-weight: bold; margin: 20px 0;">Surface : ---</p>
+        <button onclick="location.reload()" style="width:100%; padding:15px; background:black; color:white; border:none; border-radius:5px;">NOUVELLE ANALYSE</button>
     </div>
 
     <script>
+        const bubble = document.getElementById('bubble');
         const btn = document.getElementById('action-btn');
+        const accelLabel = document.getElementById('accel-val');
+        const gyroLabel = document.getElementById('gyro-val');
         const instr = document.getElementById('instruction');
-        const panel = document.getElementById('result-panel');
-        const live = document.getElementById('live-measure');
-        
+
+        let isLevel = false;
         let step = 0;
-        let startTime;
+        let angleA = 0;
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => { document.getElementById('video-preview').srcObject = stream; });
+        // Demander l'autorisation pour les capteurs (iOS 13+)
+        if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+            btn.innerText = "ACTIVER CAPTEURS";
+            btn.classList.add('active');
+            btn.onclick = () => {
+                DeviceOrientationEvent.requestPermission().then(state => {
+                    if (state === 'granted') location.reload();
+                });
+            };
+        }
 
-        btn.onclick = () => {
-            if (navigator.vibrate) navigator.vibrate(40);
-            step++;
+        window.addEventListener('deviceorientation', (event) => {
+            const beta = event.beta;  // Inclinaison avant/arrière
+            const gamma = event.gamma; // Inclinaison gauche/droite
 
-            if (step === 1) {
-                instr.innerText = "Alignez le bord DROIT";
-                live.style.display = "block";
-                startTime = Date.now();
-                btn.innerText = "Calculer la surface";
-            } else if (step === 2) {
-                const duration = (Date.now() - startTime) / 1000;
-                // Simulation d'un calcul basé sur le temps de balayage (vitesse moyenne de rotation du bras)
-                const estimatedWidth = (duration * 0.45).toFixed(2); 
-                
-                instr.innerText = "Calcul terminé";
-                btn.style.display = "none";
-                document.getElementById('res-width').innerText = estimatedWidth + " m";
-                
-                setTimeout(() => {
-                    panel.classList.add('panel-open');
-                }, 800);
+            // Mise à jour visuelle du niveau à bulle
+            const moveX = Math.min(Math.max(gamma, -60), 60);
+            const moveY = Math.min(Math.max(beta - 70, -60), 60); // 70° est l'angle de lecture naturel
+            
+            bubble.style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
+            
+            accelLabel.innerText = beta.toFixed(2);
+            gyroLabel.innerText = gamma.toFixed(2);
+
+            // Vérifier si le téléphone est droit
+            if (Math.abs(gamma) < 3 && Math.abs(beta - 85) < 10) {
+                isLevel = true;
+                bubble.style.background = "#00FF88";
+                if(step < 2) btn.classList.add('active');
+                if(step === 0) instr.innerText = "Appareil stable. Marquez le bord gauche.";
+            } else {
+                isLevel = false;
+                bubble.style.background = "var(--gold)";
+                btn.classList.remove('active');
+                instr.innerText = "Ajustez l'inclinaison";
             }
-        };
+        });
+
+        btn.addEventListener('click', () => {
+            step++;
+            if (step === 1) {
+                angleA = parseFloat(gyroLabel.innerText);
+                btn.innerText = "Marquer Point B";
+                instr.innerText = "Pivotez vers le bord droit";
+            } else if (step === 2) {
+                const angleB = parseFloat(gyroLabel.innerText);
+                const diff = Math.abs(angleB - angleA);
+                
+                // Calcul trigonométrique simplifié (distance supposée de 2m pour l'exemple)
+                const width = (2 * Math.tan(diff * Math.PI / 180)).toFixed(2);
+                
+                document.getElementById('final-measure').innerText = `Largeur : ${width} m`;
+                document.getElementById('result-panel').style.transform = "translateY(0)";
+                btn.style.display = "none";
+            }
+        });
     </script>
 </body>
 </html>
