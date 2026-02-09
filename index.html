@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Hub Connect V7</title>
+    <title>Vertex Monaco | Hub Connect V8</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --bg: #000; --card: #121212; --text: #fff; --danger: #ff4d4d; --success: #2ecc71; --border: #282828; }
@@ -17,6 +17,7 @@
         .step { display: none; animation: fadeIn 0.2s ease; }
         .step.active { display: block; }
 
+        /* Status & Tabs */
         .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
         .tab-btn { flex: 1; padding: 10px; background: #111; border: 1px solid var(--border); color: #666; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
         .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
@@ -25,24 +26,28 @@
         .status-ongoing { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-color: var(--gold); }
         .status-done { background: rgba(46, 204, 113, 0.1); color: var(--success); border-color: var(--success); }
 
+        /* Checklist */
         .check-item { display: flex; align-items: center; background: #181818; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
         .check-item input { width: 20px; height: 20px; margin-right: 12px; accent-color: var(--gold); }
+        .check-item span { font-size: 13px; }
 
         .folder-card { background: var(--card); padding: 18px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         
         label { display: block; margin: 15px 0 5px 0; font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 12px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 15px; }
+        input, select, textarea { width: 100%; padding: 12px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 15px; }
         
         .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .staff-chip { background: #1c1c1c; border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 11px; text-align: center; color: #888; }
         .staff-chip.selected { background: var(--gold); color: #000; font-weight: 800; border-color: var(--gold); }
 
         .photo-gallery { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
-        .photo-item { background: #1c1c1c; padding: 10px; border-radius: 10px; border: 1px solid var(--border); }
-        .photo-item img { width: 100%; height: auto; border-radius: 6px; }
+        .photo-item { background: #1c1c1c; padding: 10px; border-radius: 10px; border: 1px solid var(--border); position: relative; }
+        .photo-item img { width: 100%; height: auto; border-radius: 6px; margin-bottom: 8px; }
+        .photo-comment { background: #000; border: 1px solid #333; font-size: 13px; padding: 8px; color: white; }
 
-        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 10px; text-transform: uppercase; margin-top: 15px; }
-        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; }
+        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 10px; text-transform: uppercase; margin-top: 15px; cursor: pointer;}
+        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; cursor: pointer;}
+        .btn-now { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 6px; border-radius: 4px; font-size: 10px; margin-bottom: 10px; cursor: pointer;}
         .btn-share { background: #1a1a1a; color: #2ecc71; border: 1px solid #2ecc71; padding: 14px; border-radius: 10px; font-size: 13px; font-weight: bold; width: 100%; margin-top: 10px; cursor: pointer; }
 
         .timeline-item { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 40px; position: relative;}
@@ -58,7 +63,7 @@
 <div class="container">
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">HUB CONNECT V7</p>
+        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">HUB CONNECT V8</p>
     </div>
 
     <div class="step active" id="step0">
@@ -71,8 +76,8 @@
         <div id="project-list" style="margin-top:10px;"></div>
 
         <div class="no-print" style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px;">
-            <p style="font-size: 10px; color: #666; text-align: center; letter-spacing: 1px;">ADMINISTRATION</p>
-            <button class="btn-outline" onclick="exportToCSV()" style="border-color: #555;">📊 EXPORTER TOUT SUR EXCEL (.CSV)</button>
+            <p style="font-size: 10px; color: #666; text-align: center;">ADMINISTRATION</p>
+            <button class="btn-outline" onclick="exportToCSV()">📊 EXPORTER TOUT SUR EXCEL (.CSV)</button>
         </div>
     </div>
 
@@ -87,8 +92,8 @@
             <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe OUSELLY</div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-            <div><label>Arrivée</label><input type="time" id="time_in"></div>
-            <div><label>Départ</label><input type="time" id="time_out"></div>
+            <div><label>Arrivée</label><input type="time" id="time_in"><button class="btn-now" onclick="setTime('time_in')">MAINTENANT</button></div>
+            <div><label>Départ</label><input type="time" id="time_out"><button class="btn-now" onclick="setTime('time_out')">MAINTENANT</button></div>
         </div>
         <button class="btn-gold" onclick="nextStep(2)">NOTES TECHNIQUES</button>
         <button class="btn-outline" onclick="nextStep(0)">ANNULER</button>
@@ -96,27 +101,32 @@
 
     <div class="step" id="step2">
         <label>1. Travaux Réalisés</label>
-        <textarea id="task_done" rows="4"></textarea>
+        <textarea id="task_done" rows="4" placeholder="Détaillez l'intervention..."></textarea>
         <label>2. Points de vigilance / SAV</label>
-        <textarea id="task_warning" rows="3"></textarea>
+        <textarea id="task_warning" rows="3" placeholder="Problèmes restants ?"></textarea>
         <label>3. Matériel utilisé</label>
-        <input type="text" id="task_mat">
-        <label>Photos</label>
+        <input type="text" id="task_mat" placeholder="Dalles, players, connectique...">
+
+        <label>Photos (Légendes éditables)</label>
         <input type="file" id="cam" accept="image/*" capture="environment" multiple style="display:none;">
-        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border-style:dashed;">📸 AJOUTER PHOTOS</button>
+        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border-style:dashed;">📸 CAPTURER / AJOUTER PHOTOS</button>
         <div id="photo-gallery" class="photo-gallery"></div>
+
         <button class="btn-gold" onclick="nextStep(3)">SÉCURITÉ & SIGNATURE</button>
         <button class="btn-outline" onclick="nextStep(1)">RETOUR</button>
     </div>
 
     <div class="step" id="step3">
-        <label>Checklist Sécurité</label>
-        <div class="check-item"><input type="checkbox" id="check1"><span>Chantier Propre / Nettoyé</span></div>
-        <div class="check-item"><input type="checkbox" id="check2"><span>Tests Diffusion OK</span></div>
-        <label>Signature</label>
+        <label>Checklist de fin de mission</label>
+        <div class="check-item"><input type="checkbox" id="check1"><span>Chantier nettoyé / Propreté</span></div>
+        <div class="check-item"><input type="checkbox" id="check2"><span>Tests de diffusion OK</span></div>
+        <div class="check-item"><input type="checkbox" id="check3"><span>Alimentation & Baie verrouillées</span></div>
+        <div class="check-item"><input type="checkbox" id="check4"><span>Client prévenu du départ</span></div>
+
+        <label style="margin-top:20px;">Signature</label>
         <canvas id="sig-canvas" style="border:1px solid #333; background:white; width:100%; height:150px; border-radius:8px;"></canvas>
         <button class="btn-outline" onclick="clearSig()">EFFACER</button>
-        <button class="btn-gold" onclick="saveEntry()">ENREGISTRER LE RAPPORT</button>
+        <button class="btn-gold" onclick="saveEntry()">ENREGISTRER FINAL</button>
     </div>
 
     <div class="step" id="step4">
@@ -126,10 +136,10 @@
         </div>
         <div id="timeline"></div>
         <div class="no-print">
-            <button class="btn-share" onclick="sendProjectMail()">✉️ ENVOYER CE RAPPORT PAR MAIL</button>
+            <button class="btn-share" onclick="sendProjectMail()">✉️ ENVOYER LE DERNIER RAPPORT PAR MAIL</button>
             <button class="btn-gold" onclick="nextStep(1)">+ NOUVELLE INTERVENTION</button>
-            <button class="btn-outline" onclick="window.print()">GÉNÉRER PDF</button>
-            <button class="btn-outline" onclick="nextStep(0)">RETOUR ACCUEIL</button>
+            <button class="btn-outline" onclick="window.print()">GÉNÉRER RAPPORT PDF</button>
+            <button class="btn-outline" onclick="nextStep(0)">RETOUR LISTE</button>
         </div>
     </div>
 </div>
@@ -138,19 +148,11 @@
     let db = JSON.parse(localStorage.getItem('vertex_v6_db') || '{}');
     let cur = null; let photos = []; let staff = []; let currentFilter = 'ongoing';
 
-    // NAVIGATION & STAFF
-    function nextStep(n) {
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step'+n).classList.add('active');
-        if(n === 3) resizeCanvas(); 
-        if(n === 1) document.getElementById('c-name').innerText = cur;
-        if(n === 4) { document.getElementById('view-n').innerText = cur; showTimeline(); }
-        window.scrollTo(0,0);
-    }
+    function setTime(id) { const n = new Date(); document.getElementById(id).value = n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0'); }
     function toggleStaff(el) { el.classList.toggle('selected'); staff = Array.from(document.querySelectorAll('.staff-chip.selected')).map(c => c.innerText); }
     function switchTab(status) { currentFilter = status; document.getElementById('tab-active').classList.toggle('active', status === 'ongoing'); document.getElementById('tab-archived').classList.toggle('active', status === 'done'); loadList(); }
 
-    // PHOTOS
+    // PHOTOS AVEC COMPRESSION ET LÉGENDES
     document.getElementById('cam').addEventListener('change', e => {
         Array.from(e.target.files).forEach(file => {
             const r = new FileReader();
@@ -169,39 +171,44 @@
             r.readAsDataURL(file);
         });
     });
+
     function renderGallery() {
         const g = document.getElementById('photo-gallery'); g.innerHTML = '';
         photos.forEach((p, i) => {
-            g.innerHTML += `<div class="photo-item"><img src="${p.src}"><input type="text" placeholder="Légende..." oninput="photos[${i}].note = this.value" style="margin-top:5px;"></div>`;
+            const div = document.createElement('div'); div.className = 'photo-item';
+            div.innerHTML = `<img src="${p.src}"><input type="text" class="photo-comment" placeholder="Légende..." value="${p.note}" oninput="photos[${i}].note = this.value">
+                <button style="margin-top:5px; background:var(--danger); border:none; color:white; width:100%; border-radius:4px; padding:8px;" onclick="photos.splice(${i},1);renderGallery()">Supprimer</button>`;
+            g.appendChild(div);
         });
     }
 
-    // EXPORT EXCEL (CSV)
+    // EXPORT EXCEL
     function exportToCSV() {
         let csv = "\uFEFFClient;Statut;Date;Intervenants;Arrivee;Depart;Travaux;Vigilance;Materiel\n";
         Object.keys(db).forEach(client => {
             db[client].entries.forEach(e => {
-                csv += `"${client}";"${db[client].status}";"${e.date}";"${e.staff}";"${e.in}";"${e.out}";"${e.done.replace(/\n/g, ' ')}";"${e.warning.replace(/\n/g, ' ')}";"${e.mat}"\n`;
+                csv += `"${client}";"${db[client].status}";"${e.date}";"${e.staff}";"${e.in}";"${e.out}";"${e.done.replace(/"/g, '""')}";"${e.warning.replace(/"/g, '""')}";"${e.mat}"\n`;
             });
         });
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.setAttribute("download", `Vertex_Export_${new Date().toLocaleDateString()}.csv`);
+        link.setAttribute("download", `Vertex_Global_${new Date().toLocaleDateString()}.csv`);
         link.click();
     }
 
     // ENVOI MAIL
     function sendProjectMail() {
         const e = db[cur].entries[db[cur].entries.length - 1];
-        if(!e) return alert("Aucune donnée.");
-        const subject = encodeURIComponent(`Rapport Vertex Monaco - ${cur} - ${e.date}`);
-        const body = encodeURIComponent(`RAPPORT D'INTERVENTION VERTEX\n\nClient: ${cur}\nDate: ${e.date}\nÉquipe: ${e.staff}\nHoraires: ${e.in} - ${e.out}\n\nTRAVAUX:\n${e.done}\n\nVIGILANCE:\n${e.warning || 'N/A'}\n\nMATÉRIEL:\n${e.mat || 'N/A'}\n\nLien vers PDF : (Voir pièce jointe si générée)`);
+        if(!e) return alert("Pas de rapport.");
+        const subject = encodeURIComponent(`Rapport Vertex - ${cur} - ${e.date}`);
+        const body = encodeURIComponent(`RAPPORT VERTEX MONACO\n\nClient: ${cur}\nDate: ${e.date}\nÉquipe: ${e.staff}\n\nTRAVAUX:\n${e.done}\n\nVIGILANCE:\n${e.warning || 'N/A'}\n\nMATÉRIEL:\n${e.mat || 'N/A'}`);
         window.location.href = `mailto:?subject=${subject}&body=${body}`;
     }
 
-    // GESTION DATA
+    // SAUVEGARDE ET TIMELINE
     function saveEntry() {
+        if(!staff.length) return alert("Sélectionnez l'équipe");
         const entry = {
             id: Date.now(), date: new Date().toLocaleDateString('fr-FR'),
             in: document.getElementById('time_in').value, out: document.getElementById('time_out').value,
@@ -211,35 +218,58 @@
         };
         db[cur].entries.push(entry);
         localStorage.setItem('vertex_v6_db', JSON.stringify(db));
-        photos = []; staff = []; nextStep(4);
+        photos = []; staff = []; clearInputs(); nextStep(4);
+    }
+
+    function clearInputs() {
+        document.getElementById('task_done').value = ""; document.getElementById('task_warning').value = ""; 
+        document.getElementById('task_mat').value = ""; document.querySelectorAll('.staff-chip').forEach(c => c.classList.remove('selected'));
+        document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+        clearSig();
     }
 
     function showTimeline() {
         const t = document.getElementById('timeline'); t.innerHTML = '';
         const isDone = db[cur].status === 'done';
-        document.getElementById('status-toggle-container').innerHTML = `<button class="status-pill ${isDone?'status-done':'status-ongoing'}" onclick="toggleStatus()">${isDone?'TERMINÉ':'ACTIF'}</button>`;
+        document.getElementById('status-toggle-container').innerHTML = `<button class="status-pill ${isDone?'status-done':'status-ongoing'}" onclick="toggleStatus()">${isDone?'TERMINÉ':'EN COURS'}</button>`;
         [...db[cur].entries].reverse().forEach(e => {
             t.innerHTML += `<div class="timeline-item">
                 <div style="font-size:10px; color:var(--gold); font-weight:bold;">${e.date} | ${e.in}-${e.out}</div>
-                <div class="section-block"><strong>${e.staff}</strong><br>${e.done}</div>
-                ${e.warning ? `<div class="section-block" style="border-left-color:var(--danger)">${e.warning}</div>` : ''}
-                <div class="photo-gallery">${e.photos.map(p => `<img src="${p.src}" style="width:100%; border-radius:8px; margin-bottom:5px;">`).join('')}</div>
-                <img src="${e.sig}" style="width:80px; background:white; padding:5px; border-radius:4px; margin-top:10px;">
+                <div class="section-block"><div class="section-title">TRAVAUX</div>${e.done}</div>
+                ${e.warning ? `<div class="section-block" style="border-left-color:var(--danger)"><div class="section-title">VIGILANCE</div>${e.warning}</div>` : ''}
+                ${e.mat ? `<div class="section-block" style="border-left-color:var(--success)"><div class="section-title">MATÉRIEL</div>${e.mat}</div>` : ''}
+                <div class="photo-gallery">${e.photos.map(p => `<div class="photo-item"><img src="${p.src}">${p.note ? `<div style="font-size:11px; padding:5px; background:#111;">${p.note}</div>` : ''}</div>`).join('')}</div>
+                <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+                    <img src="${e.sig}" style="width:100px; background:white; padding:5px; border-radius:4px;">
+                    <button class="no-print" style="color:var(--danger); border:none; background:none; font-size:10px;" onclick="deleteEntry(${e.id})">Supprimer passage</button>
+                </div>
             </div>`;
         });
     }
 
+    function deleteEntry(id) { if(confirm("Supprimer ?")) { db[cur].entries = db[cur].entries.filter(e => e.id !== id); localStorage.setItem('vertex_v6_db', JSON.stringify(db)); showTimeline(); } }
     function toggleStatus() { db[cur].status = (db[cur].status === 'done' ? 'ongoing' : 'done'); localStorage.setItem('vertex_v6_db', JSON.stringify(db)); showTimeline(); loadList(); }
     function startNewProject() { const n = prompt("Nom client :"); if(n && !db[n]) { db[n]={entries:[], status:'ongoing'}; localStorage.setItem('vertex_v6_db', JSON.stringify(db)); loadList(); } }
-    function loadList() {
+    
+    function filterProjects() { loadList(document.getElementById('searchBar').value.toLowerCase()); }
+    function loadList(q='') {
         const l = document.getElementById('project-list'); l.innerHTML = '';
         Object.keys(db).sort().forEach(id => {
-            if(db[id].status === currentFilter) {
+            if(id.toLowerCase().includes(q) && db[id].status === currentFilter) {
                 l.innerHTML += `<div class="folder-card" onclick="cur='${id}';nextStep(4);">
-                    <div>${id}</div><div class="status-pill ${db[id].status==='done'?'status-done':'status-ongoing'}">${db[id].status==='done'?'ARCHIVE':'ACTIF'}</div>
+                    <div>${id}</div><div class="status-pill ${db[id].status==='done'?'status-done':'status-ongoing'}">${db[id].status==='done'?'ARCHIVÉ':'ACTIF'}</div>
                 </div>`;
             }
         });
+    }
+
+    function nextStep(n) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step'+n).classList.add('active');
+        if(n === 3) resizeCanvas(); 
+        if(n === 1) document.getElementById('c-name').innerText = cur;
+        if(n === 4) { document.getElementById('view-n').innerText = cur; showTimeline(); }
+        window.scrollTo(0,0);
     }
 
     // SIGNATURE
