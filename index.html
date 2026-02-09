@@ -3,49 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | V5 Final</title>
+    <title>Vertex Monaco | Structured Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --gold: #D4AF37; --bg: #000; --card: #121212; --text: #fff; --danger: #ff4d4d; --success: #2ecc71; --border: #282828; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.4; overflow-x: hidden; }
-        
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.4; }
         .container { max-width: 500px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
-        .header { text-align: center; padding: 20px 0; border-bottom: 2px solid var(--gold); margin-bottom: 20px; }
+        
+        .header { text-align: center; padding: 15px 0; border-bottom: 2px solid var(--gold); margin-bottom: 20px; }
         .header h1 { letter-spacing: 4px; font-size: 16px; color: var(--gold); margin: 0; font-weight: 900; }
 
-        .step { display: none; animation: fadeIn 0.3s ease; }
+        .step { display: none; animation: fadeIn 0.2s ease; }
         .step.active { display: block; }
 
-        /* Dossier & UI */
-        .folder-card { background: var(--card); padding: 18px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); position: relative; display: flex; justify-content: space-between; align-items: center; }
-        .folder-name { color: var(--gold); font-weight: 700; text-transform: uppercase; font-size: 15px; }
+        /* Status Badges */
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; border: 1px solid; }
+        .status-ongoing { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-color: var(--gold); }
+        .status-done { background: rgba(46, 204, 113, 0.1); color: var(--success); border-color: var(--success); }
+
+        /* Dossiers */
+        .folder-card { background: var(--card); padding: 20px; border-radius: 12px; margin-bottom: 10px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         
-        input, select, textarea { width: 100%; padding: 14px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 16px; margin-bottom: 10px; }
+        /* Formulaire */
+        label { display: block; margin: 15px 0 5px 0; font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 15px; }
+        textarea { resize: none; border-left: 3px solid var(--gold); }
         
-        .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .staff-chip { background: #1c1c1c; border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-size: 11px; text-align: center; color: #888; }
+        .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .staff-chip { background: #1c1c1c; border: 1px solid var(--border); padding: 10px; border-radius: 6px; font-size: 11px; text-align: center; color: #888; }
         .staff-chip.selected { background: var(--gold); color: #000; font-weight: 800; border-color: var(--gold); }
 
-        /* Photo & Tags */
-        .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
-        .tag { font-size: 10px; padding: 8px 12px; background: #222; border: 1px solid var(--border); border-radius: 6px; color: #ddd; }
+        /* Photo & Commentaires */
+        .photo-gallery { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 15px; }
+        .photo-item { background: #1c1c1c; padding: 10px; border-radius: 10px; border: 1px solid var(--border); }
+        .photo-item img { width: 100%; height: auto; border-radius: 6px; margin-bottom: 8px; }
+        .photo-comment { background: #000; border: 1px solid #333; font-size: 13px; padding: 8px; }
 
-        .photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .photo-item { background: #1c1c1c; padding: 4px; border-radius: 8px; border: 1px solid var(--border); position: relative; }
-        .photo-item img { width: 100%; height: 110px; object-fit: cover; border-radius: 5px; }
+        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 10px; text-transform: uppercase; margin-top: 15px; }
+        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; }
+        .btn-now { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 6px; border-radius: 4px; font-size: 10px; margin-bottom: 10px; }
 
-        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 12px; cursor: pointer; text-transform: uppercase; font-size: 14px; margin-top: 10px; }
-        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 10px; font-size: 12px; margin-top: 8px; }
-        .btn-now { background: #1a1a1a; color: var(--gold); border: 1px solid var(--gold); padding: 6px; border-radius: 5px; font-size: 9px; margin-bottom: 10px; font-weight: bold; }
-        
-        #sig-canvas { background: white; width: 100%; height: 180px; border-radius: 12px; touch-action: none; border: 2px solid var(--gold); }
-        
-        .timeline-item { border-left: 2px solid var(--gold); padding-left: 15px; margin-bottom: 30px; position: relative; }
-        .copy-badge { background: #333; color: var(--gold); font-size: 9px; padding: 4px 8px; border-radius: 4px; float: right; cursor: pointer; }
-
-        /* Status Bar Mobile */
-        .status-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #0a0a0a; border-top: 1px solid var(--border); padding: 8px 15px; font-size: 9px; display: flex; justify-content: space-between; z-index: 1000; color: #666; }
+        .timeline-item { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 40px; }
+        .section-block { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 2px solid #444; }
+        .section-title { font-size: 10px; color: var(--gold); font-weight: bold; margin-bottom: 4px; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media print { .no-print { display: none; } body { background: white; color: black; } }
@@ -56,18 +57,17 @@
 <div class="container">
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p style="font-size: 8px; color: var(--gold); opacity: 0.7; letter-spacing: 2px;">V5 ELITE FIELD UNIT</p>
+        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">TECHNICAL FIELD REPORT</p>
     </div>
 
     <div class="step active" id="step0">
         <button class="btn-gold" onclick="startNewProject()">+ NOUVEAU CHANTIER</button>
-        <input type="text" id="searchBar" oninput="filterProjects()" placeholder="Rechercher..." style="margin-top:20px; border-radius: 10px;">
+        <input type="text" id="searchBar" oninput="filterProjects()" placeholder="Rechercher un client..." style="margin-top:20px;">
         <div id="project-list"></div>
-        <button class="btn-outline no-print" onclick="exportFullBackup()">💾 BACKUP COMPLET (JSON)</button>
     </div>
 
     <div class="step" id="step1">
-        <h3 id="c-name" style="color:var(--gold); text-align:center; font-size:14px;"></h3>
+        <h3 id="c-name" style="color:var(--gold); text-align:center;"></h3>
         <label>Intervenants</label>
         <div class="staff-grid">
             <div class="staff-chip" onclick="toggleStaff(this)">Allan PLEUTIN</div>
@@ -76,77 +76,58 @@
             <div class="staff-chip" onclick="toggleStaff(this)">Osvaldo CHIAVINI</div>
             <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe OUSELLY</div>
         </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
             <div><label>Arrivée</label><input type="time" id="time_in"><button class="btn-now" onclick="setTime('time_in')">MAINTENANT</button></div>
             <div><label>Départ</label><input type="time" id="time_out"><button class="btn-now" onclick="setTime('time_out')">MAINTENANT</button></div>
         </div>
-        
-        <label>Type de Mission</label>
-        <select id="m-type">
-            <option>Suivi / Reprise</option>
-            <option>Installation</option>
-            <option>SAV / Dépannage</option>
-            <option>Audit / Relevé</option>
-        </select>
-        <button class="btn-gold" onclick="nextStep(2)">NOTES & MÉDIAS</button>
+        <button class="btn-gold" onclick="nextStep(2)">DÉTAILS TECHNIQUES</button>
         <button class="btn-outline" onclick="nextStep(0)">RETOUR</button>
     </div>
 
     <div class="step" id="step2">
-        <label>Observations Rapides</label>
-        <div class="tag-cloud">
-            <span class="tag" onclick="addTag('Dalle LED OK')">+ Dalle OK</span>
-            <span class="tag" onclick="addTag('Player OK')">+ Player OK</span>
-            <span class="tag" onclick="addTag('Câblage OK')">+ Câblage</span>
-            <span class="tag" onclick="addTag('SAV requis')">+ SAV</span>
-            <span class="tag" onclick="addTag('Site Propre')">+ Propreté</span>
-        </div>
-        <textarea id="obs" rows="5" placeholder="Détails de l'intervention..."></textarea>
+        <label>1. Travaux Réalisés</label>
+        <textarea id="task_done" rows="4" placeholder="Qu'avez-vous fait aujourd'hui ?"></textarea>
         
-        <label>Photos</label>
+        <label>2. Points de vigilance / SAV à prévoir</label>
+        <textarea id="task_warning" rows="3" placeholder="Un problème à signaler ?"></textarea>
+
+        <label>3. Matériel posé / nécessaire</label>
+        <input type="text" id="task_mat" placeholder="Ex: 2 Dalles P2, 1 répartiteur...">
+
+        <label>Photos & Commentaires</label>
         <input type="file" id="cam" accept="image/*" capture="environment" multiple style="display:none;">
-        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="border-style:dashed; color:var(--gold);">📸 AJOUTER PHOTOS</button>
+        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border-style:dashed;">📸 AJOUTER DES PHOTOS</button>
         <div id="photo-gallery" class="photo-gallery"></div>
 
-        <button class="btn-gold" onclick="nextStep(3)" style="margin-top:20px;">SIGNATURE</button>
+        <button class="btn-gold" onclick="nextStep(3)">SIGNATURE</button>
         <button class="btn-outline" onclick="nextStep(1)">RETOUR</button>
     </div>
 
     <div class="step" id="step3">
-        <label>Signature</label>
+        <label>Validation</label>
         <canvas id="sig-canvas"></canvas>
         <button class="btn-outline" onclick="clearSig()">EFFACER</button>
-        <button class="btn-gold" onclick="saveEntry()">ENREGISTRER</button>
+        <button class="btn-gold" onclick="saveEntry()">ENREGISTRER LE RAPPORT</button>
     </div>
 
     <div class="step" id="step4">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 id="view-n" style="color:var(--gold); margin:0; font-size:16px;"></h2>
-            <select id="p-status" onchange="updateStatus()" style="width:auto; height:30px; font-size:10px; margin:0;">
-                <option value="ongoing">EN COURS</option>
-                <option value="done">TERMINE</option>
-            </select>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 id="view-n" style="color:var(--gold); margin:0; font-size:18px;"></h2>
+            <div id="status-toggle-container"></div>
         </div>
-        <div id="timeline" style="margin-top:20px;"></div>
+        <div id="timeline"></div>
         <div class="no-print">
-            <button class="btn-gold" onclick="nextStep(1)">+ NOUVELLE NOTE</button>
-            <button class="btn-outline" onclick="window.print()">EXPORTER PDF</button>
+            <button class="btn-gold" onclick="nextStep(1)">+ NOUVELLE INTERVENTION</button>
+            <button class="btn-outline" onclick="window.print()">EXPORTER EN PDF</button>
             <button class="btn-outline" onclick="nextStep(0)">RETOUR ACCUEIL</button>
         </div>
     </div>
 </div>
 
-<div class="status-bar no-print">
-    <span id="storage-info">Stockage : OK</span>
-    <span>Vertex Monaco © 2026</span>
-</div>
-
 <script>
-    let db = JSON.parse(localStorage.getItem('vertex_v5') || '{}');
+    let db = JSON.parse(localStorage.getItem('vertex_pro_v1') || '{}');
     let cur = null; let photos = []; let staff = [];
 
-    // --- UTILS ---
     function setTime(id) { 
         const n = new Date(); 
         document.getElementById(id).value = n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0'); 
@@ -155,9 +136,7 @@
         el.classList.toggle('selected'); 
         staff = Array.from(document.querySelectorAll('.staff-chip.selected')).map(c => c.innerText); 
     }
-    function addTag(t) { const a = document.getElementById('obs'); a.value += (a.value ? ', ' : '') + t; }
 
-    // --- PHOTOS ---
     document.getElementById('cam').addEventListener('change', e => {
         Array.from(e.target.files).forEach(file => {
             const r = new FileReader();
@@ -165,97 +144,117 @@
                 const img = new Image(); img.src = ev.target.result;
                 img.onload = () => {
                     const cvs = document.createElement('canvas');
-                    const ctx = cvs.getContext('2d');
                     const max = 1000; let w = img.width, h = img.height;
                     if (w > h && w > max) { h *= max/w; w = max; } else if (h > max) { w *= max/h; h = max; }
                     cvs.width = w; cvs.height = h;
-                    ctx.drawImage(img, 0, 0, w, h);
-                    // Filigrane discret
-                    ctx.fillStyle = "rgba(212, 175, 55, 0.5)"; ctx.font = "bold 20px Inter";
-                    ctx.fillText("VERTEX MONACO", 20, h - 20);
-                    photos.push({ src: cvs.toDataURL('image/jpeg', 0.7) });
+                    cvs.getContext('2d').drawImage(img, 0, 0, w, h);
+                    photos.push({ src: cvs.toDataURL('image/jpeg', 0.7), note: "" });
                     renderGallery();
                 }
             };
             r.readAsDataURL(file);
         });
     });
+
     function renderGallery() {
         const g = document.getElementById('photo-gallery'); g.innerHTML = '';
         photos.forEach((p, i) => {
-            g.innerHTML += `<div class="photo-item"><img src="${p.src}"><button style="position:absolute;top:0;right:0;background:red;color:white;border:none;border-radius:50%;" onclick="photos.splice(${i},1);renderGallery()">×</button></div>`;
+            const div = document.createElement('div');
+            div.className = 'photo-item';
+            div.innerHTML = `
+                <img src="${p.src}">
+                <input type="text" class="photo-comment" placeholder="Légende de la photo..." value="${p.note}" oninput="photos[${i}].note = this.value">
+                <button style="margin-top:5px; background:var(--danger); border:none; color:white; width:100%; border-radius:4px; font-size:10px; padding:5px;" onclick="photos.splice(${i},1);renderGallery()">Supprimer la photo</button>
+            `;
+            g.appendChild(div);
         });
     }
 
-    // --- CORE ---
     function saveEntry() {
-        if(!staff.length) return alert("Qui est sur place ?");
+        if(!staff.length) return alert("Sélectionnez les intervenants");
         const entry = {
             id: Date.now(), date: new Date().toLocaleDateString('fr-FR'),
             in: document.getElementById('time_in').value, out: document.getElementById('time_out').value,
-            staff: staff.join(', '), type: document.getElementById('m-type').value,
-            obs: document.getElementById('obs').value, photos: [...photos], sig: canvas.toDataURL()
+            staff: staff.join(', '), 
+            done: document.getElementById('task_done').value,
+            warning: document.getElementById('task_warning').value,
+            mat: document.getElementById('task_mat').value,
+            photos: [...photos], sig: canvas.toDataURL()
         };
         db[cur].entries.push(entry);
-        localStorage.setItem('vertex_v5', JSON.stringify(db));
+        saveAll();
         photos = []; staff = []; nextStep(4); showTimeline();
-        checkStorage();
     }
 
     function showTimeline() {
         const t = document.getElementById('timeline'); t.innerHTML = '';
+        const toggleBox = document.getElementById('status-toggle-container');
+        
+        // UI du Statut
+        const isDone = db[cur].status === 'done';
+        toggleBox.innerHTML = `<button class="status-pill ${isDone?'status-done':'status-ongoing'}" onclick="toggleProjStatus()">
+            ${isDone ? '● TERMINÉ' : '○ EN COURS'}
+        </button>`;
+
         [...db[cur].entries].reverse().forEach(e => {
             t.innerHTML += `
                 <div class="timeline-item">
-                    <span class="copy-badge" onclick="copyTxt('${e.obs}')">COPIER</span>
                     <div style="font-size:10px; color:var(--gold); font-weight:bold;">${e.date} | ${e.in} - ${e.out}</div>
-                    <div style="font-size:13px; margin:5px 0;"><strong>${e.staff}</strong> (${e.type})</div>
-                    <div style="font-size:12px; opacity:0.8; white-space:pre-wrap;">${e.obs}</div>
-                    <div class="photo-gallery">${e.photos.map(p => `<div class="photo-item"><img src="${p.src}"></div>`).join('')}</div>
-                    <img src="${e.sig}" style="width:80px; background:white; margin-top:10px; border-radius:4px;">
+                    <div style="font-size:13px; margin:5px 0;"><strong>${e.staff}</strong></div>
+                    
+                    <div class="section-block"><div class="section-title">TRAVAUX</div>${e.done || 'N/A'}</div>
+                    ${e.warning ? `<div class="section-block" style="border-left-color:var(--danger)"><div class="section-title">VIGILANCE / SAV</div>${e.warning}</div>` : ''}
+                    ${e.mat ? `<div class="section-block" style="border-left-color:var(--success)"><div class="section-title">MATÉRIEL</div>${e.mat}</div>` : ''}
+                    
+                    <div class="photo-gallery">
+                        ${e.photos.map(p => `
+                            <div class="photo-item">
+                                <img src="${p.src}">
+                                ${p.note ? `<div style="font-size:11px; padding:5px; background:#222; border-radius:4px;">${p.note}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <img src="${e.sig}" style="width:80px; background:white; margin-top:15px; border-radius:4px;">
+                    <button class="no-print" style="background:none; border:none; color:var(--danger); font-size:10px; display:block; margin-top:10px;" onclick="deleteEntry(${e.id})">Supprimer cette note</button>
                 </div>`;
         });
     }
 
-    function copyTxt(txt) { navigator.clipboard.writeText(txt); alert("Texte copié !"); }
-
-    function checkStorage() {
-        const used = JSON.stringify(localStorage).length;
-        const limit = 5 * 1024 * 1024; // 5MB approx
-        const perc = Math.round((used / limit) * 100);
-        document.getElementById('storage-info').innerText = `Stockage : ${perc}% utilisé`;
-        if(perc > 80) document.getElementById('storage-info').style.color = "red";
+    function toggleProjStatus() {
+        db[cur].status = (db[cur].status === 'done') ? 'ongoing' : 'done';
+        saveAll(); showTimeline(); loadList();
     }
 
-    // --- NAV ---
+    function startNewProject() {
+        const n = prompt("Nom du client / Chantier :");
+        if(n && !db[n]) { db[n] = {entries:[], status:'ongoing'}; saveAll(); loadList(); }
+    }
+
     function nextStep(n) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step'+n).classList.add('active');
         if(n === 3) resizeCanvas(); if(n === 1) document.getElementById('c-name').innerText = cur;
+        if(n === 4) document.getElementById('view-n').innerText = cur;
         window.scrollTo(0,0);
     }
-    function startNewProject() { 
-        const n = prompt("Nom du client :"); 
-        if(n && !db[n]) { db[n] = {entries:[], status:'ongoing'}; localStorage.setItem('vertex_v5', JSON.stringify(db)); loadList(); }
-    }
+
     function loadList(q='') {
         const l = document.getElementById('project-list'); l.innerHTML = '';
         Object.keys(db).sort().forEach(id => {
             if(id.toLowerCase().includes(q)) {
+                const isDone = db[id].status === 'done';
                 l.innerHTML += `<div class="folder-card" onclick="cur='${id}';nextStep(4);showTimeline();">
-                    <div><div class="folder-name">${id}</div><div style="font-size:9px; color:${db[id].status==='done'?'#2ecc71':'#D4AF37'}">${db[id].status.toUpperCase()}</div></div>
-                    <button class="btn-delete" style="background:none; border:none; color:red;" onclick="event.stopPropagation();if(confirm('Supprimer ${id}?')){delete db['${id}'];localStorage.setItem('vertex_v5',JSON.stringify(db));loadList();}">🗑️</button>
+                    <div class="folder-name">${id}</div>
+                    <div class="status-pill ${isDone?'status-done':'status-ongoing'}">${isDone?'TERMINE':'EN COURS'}</div>
                 </div>`;
             }
         });
-        checkStorage();
-    }
-    function filterProjects() { loadList(document.getElementById('searchBar').value.toLowerCase()); }
-    function exportFullBackup() {
-        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(db)], {type:"application/json"})); a.download = "Vertex_V5_Backup.json"; a.click();
     }
 
-    // SIG
+    function deleteEntry(id) { if(confirm("Supprimer ?")) { db[cur].entries = db[cur].entries.filter(e => e.id !== id); saveAll(); showTimeline(); } }
+    function saveAll() { localStorage.setItem('vertex_pro_v1', JSON.stringify(db)); }
+    function filterProjects() { loadList(document.getElementById('searchBar').value.toLowerCase()); }
+
     const canvas = document.getElementById('sig-canvas'); const ctx = canvas.getContext('2d'); let drawing = false;
     function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.lineWidth = 3; ctx.lineCap="round"; }
     canvas.onpointerdown = e => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
