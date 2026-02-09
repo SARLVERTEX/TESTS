@@ -3,194 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Smart Diagnostic AR</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>Vertex Monaco | Expert Vision</title>
     <style>
         :root { 
-            --accent: #00CCFF; 
-            --danger: #FF4444; 
-            --glass: rgba(0, 20, 30, 0.8);
+            --vertex-cyan: #00CCFF; 
+            --dark-gray: #1a1a1a;
+            --light-gray: #f8f9fa;
         }
         
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Rajdhani', sans-serif; color: white; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background: #000; }
         
-        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8) contrast(1.2); }
+        #video-preview { position: absolute; width: 100%; height: 100%; object-fit: cover; }
 
-        /* HUD Overlay */
-        .hud-container { position: absolute; inset: 0; z-index: 10; pointer-events: none; border: 20px solid transparent; box-sizing: border-box; }
+        /* Interface minimaliste */
+        .ui-layer { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
 
-        /* Coins de visée style AR */
-        .reticle {
-            position: absolute; width: 40px; height: 40px; border: 2px solid var(--accent);
-            filter: drop-shadow(0 0 5px var(--accent)); transition: all 0.3s ease;
-        }
-        .top-left { top: 20px; left: 20px; border-right: none; border-bottom: none; }
-        .top-right { top: 20px; right: 20px; border-left: none; border-bottom: none; }
-        .bottom-left { bottom: 20px; left: 20px; border-right: none; border-top: none; }
-        .bottom-right { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+        .top-nav { background: rgba(0,0,0,0.7); padding: 25px; text-align: center; border-bottom: 0.5px solid rgba(255,255,255,0.1); }
+        .logo { color: white; letter-spacing: 6px; font-weight: 200; font-size: 14px; margin-bottom: 5px; }
+        .instruction { color: var(--vertex-cyan); font-size: 16px; font-weight: 500; }
 
-        /* Scanner Line */
-        .scanner-bar {
-            position: absolute; width: 100%; height: 4px; background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            box-shadow: 0 0 20px var(--accent); top: 0; animation: scanMove 4s infinite linear; opacity: 0.6;
-        }
-        @keyframes scanMove { 0% { top: 0%; } 50% { top: 100%; } 100% { top: 0%; } }
-
-        /* Header Info */
-        .hud-header {
-            position: absolute; top: 40px; left: 40px; pointer-events: auto;
-            border-left: 3px solid var(--accent); padding-left: 15px;
-        }
-        .hud-header h1 { font-family: 'Orbitron', sans-serif; margin: 0; font-size: 1.4rem; letter-spacing: 5px; color: var(--accent); }
-        .status-tag { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: flex; align-items: center; }
-        .dot { height: 6px; width: 6px; background-color: var(--accent); border-radius: 50%; display: inline-block; margin-right: 10px; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        /* Guide de mesure central */
-        .target-box {
+        /* Viseur */
+        .scanner-target {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 250px; height: 350px; border: 1px double rgba(0, 204, 255, 0.2);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.5); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
         }
-        .target-box::before { content: ''; position: absolute; width: 20px; height: 1px; background: var(--accent); top: 50%; left: -30px; }
-        .target-box::after { content: ''; position: absolute; width: 20px; height: 1px; background: var(--accent); top: 50%; right: -30px; }
+        .scanner-target::after { content: ''; width: 4px; height: 4px; background: var(--vertex-cyan); border-radius: 50%; }
 
-        /* Panneau de Résultat */
-        #analysis-panel {
-            position: absolute; bottom: 30px; left: 20px; right: 20px;
-            background: var(--glass); border: 1px solid rgba(0, 204, 255, 0.3);
-            padding: 25px; backdrop-filter: blur(15px); border-radius: 2px;
-            transform: translateY(150%); transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
-            pointer-events: auto;
+        /* Panneau de résultat élégant */
+        #result-card {
+            background: white; margin: 20px; padding: 25px; border-radius: 12px;
+            transform: translateY(120%); transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            pointer-events: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
-        .show-panel { transform: translateY(0) !important; }
+        .card-show { transform: translateY(0) !important; }
 
-        /* Boutons */
-        .btn-action {
-            position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%);
-            background: transparent; color: var(--accent); border: 2px solid var(--accent);
-            padding: 15px 35px; font-family: 'Orbitron'; font-weight: bold;
-            letter-spacing: 2px; cursor: pointer; pointer-events: auto;
-            overflow: hidden; transition: 0.3s;
+        .btn-primary {
+            background: var(--dark-gray); color: white; border: none; width: 100%;
+            padding: 18px; border-radius: 8px; font-weight: 600; font-size: 14px;
+            letter-spacing: 1px; cursor: pointer; pointer-events: auto; margin-bottom: 40px;
         }
-        .btn-action:active { background: var(--accent); color: black; transform: translateX(-50%) scale(0.95); }
 
-        .reco-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); 
+        .btn-ar {
+            background: var(--vertex-cyan); color: white; text-decoration: none;
+            display: block; text-align: center; padding: 15px; border-radius: 8px;
+            font-weight: bold; margin-top: 15px;
         }
-        .badge { padding: 5px 10px; border-radius: 2px; font-size: 0.75rem; font-weight: bold; font-family: 'Orbitron'; }
-        .badge-ok { background: rgba(0, 255, 136, 0.2); color: #00FF88; border: 1px solid #00FF88; }
-        .badge-no { background: rgba(255, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+
+        /* Points marqués sur l'écran */
+        .marker {
+            position: absolute; width: 12px; height: 12px; background: var(--vertex-cyan);
+            border: 2px solid white; border-radius: 50%; z-index: 9; transform: translate(-50%, -50%);
+        }
     </style>
 </head>
 <body>
 
     <video id="video-preview" autoplay playsinline></video>
-    
-    <div class="hud-container">
-        <div class="reticle top-left"></div>
-        <div class="reticle top-right"></div>
-        <div class="reticle bottom-left"></div>
-        <div class="reticle bottom-right"></div>
-        <div class="scanner-bar"></div>
 
-        <div class="hud-header">
-            <h1>VERTEX <span style="font-weight:100; font-size: 0.8rem;">M0-01</span></h1>
-            <div class="status-tag"><span class="dot"></span> <span id="step-text">Initialisation des capteurs...</span></div>
+    <div class="ui-layer">
+        <div class="top-nav">
+            <div class="logo">VERTEX MONACO</div>
+            <div id="step-msg" class="instruction">Visez le bord GAUCHE de l'emplacement</div>
         </div>
 
-        <div class="target-box" id="guide-box">
-            <div style="font-size: 0.6rem; letter-spacing: 3px; opacity: 0.7; position: absolute; top: -30px;">ZONE D'ANALYSE OPTIQUE</div>
-            <div id="distance-info" style="font-family: 'Orbitron'; font-size: 0.8rem; color: var(--accent);">-- mm</div>
+        <div class="scanner-target"></div>
+
+        <div style="padding: 20px;">
+            <button id="main-btn" class="btn-primary">MARQUER LE POINT</button>
         </div>
 
-        <div id="analysis-panel">
-            <div style="font-size: 0.6rem; color: var(--accent); margin-bottom: 5px;">ANALYSE DE COMPATIBILITÉ TERMINÉE</div>
-            <h2 style="margin:0 0 20px 0; font-family: 'Orbitron'; font-size:1.1rem; letter-spacing:2px;">RÉSULTATS DE SIMULATION</h2>
+        <div id="result-card">
+            <h3 style="margin-top:0; color:var(--dark-gray)">Diagnostic d'installation</h3>
+            <p style="font-size: 14px; color: #666;">L'espace mesuré permet l'installation du matériel suivant :</p>
             
-            <div class="reco-item">
-                <div>
-                    <div style="font-weight: bold;">DOUBLE-FACE 55"</div>
-                    <div style="font-size: 0.6rem; opacity: 0.6;">Série Haute Luminosité</div>
-                </div>
-                <span class="badge badge-ok">OPTIMAL</span>
-            </div>
-            
-            <div class="reco-item">
-                <div>
-                    <div style="font-weight: bold;">TOTEM SLIM 65"</div>
-                    <div style="font-size: 0.6rem; opacity: 0.6;">Espace requis : +24cm</div>
-                </div>
-                <span class="badge badge-no">RESTREINT</span>
+            <div style="border-top: 1px solid #eee; padding: 15px 0;">
+                <strong style="color:var(--dark-gray)">Double-Face 55" Haute Lum.</strong>
+                <span style="float:right; color:#27ae60">100% Compatible</span>
             </div>
 
-            <button class="btn-action" style="position:static; transform:none; width:100%; margin-top:20px; font-size:0.8rem;" onclick="location.reload()">RÉINITIALISER LE SCAN</button>
+            <a href="intent://arvr.google.com/scene-viewer/1.0?file=https://sarlvertex.github.io/fiches-techniques/Double-Face 55_.glb#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;" class="btn-ar">
+                VOIR LE TOTEM EN 3D ICI
+            </a>
+            
+            <button onclick="location.reload()" style="background:none; border:none; color:#999; width:100%; margin-top:10px; font-size:12px;">Refaire la mesure</button>
         </div>
-
-        <button id="action-btn" class="btn-action">CAPTURER POINT A</button>
     </div>
 
     <script>
-        const video = document.getElementById('video-preview');
-        const btn = document.getElementById('action-btn');
-        const stepText = document.getElementById('step-text');
-        const panel = document.getElementById('analysis-panel');
-        const distanceInfo = document.getElementById('distance-info');
-        
-        let clicks = 0;
+        const btn = document.getElementById('main-btn');
+        const msg = document.getElementById('step-msg');
+        const card = document.getElementById('result-card');
+        let step = 0;
 
-        // Retour haptique (vibration)
-        const vibrate = () => { if (navigator.vibrate) navigator.vibrate(50); };
-
-        // Accès caméra
-        navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "environment", focusMode: "continuous" } 
-        })
-        .then(stream => { 
-            video.srcObject = stream; 
-            stepText.innerText = "PRÊT : VISEZ LE BAS DE LA VITRINE";
-        })
-        .catch(() => {
-            stepText.innerText = "ERREUR : ACCÈS CAMÉRA REFUSÉ";
-            stepText.style.color = "var(--danger)";
-        });
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => { document.getElementById('video-preview').srcObject = stream; });
 
         btn.onclick = () => {
-            vibrate();
-            clicks++;
+            if (navigator.vibrate) navigator.vibrate(50);
+            step++;
 
-            if (clicks === 1) {
-                stepText.innerText = "POINT A FIXÉ. VISEZ LE HAUT DE LA VITRINE.";
-                distanceInfo.innerText = "COORD_A: OK";
-                btn.innerText = "CAPTURER POINT B";
-                btn.style.borderColor = "#fff";
-                btn.style.color = "#fff";
-            } else if (clicks === 2) {
-                stepText.innerText = "CALCUL DES VOLUMES EN COURS...";
+            if (step === 1) {
+                msg.innerText = "Visez le bord DROIT de l'emplacement";
+                btn.innerText = "VALIDER LA LARGEUR";
+            } else if (step === 2) {
+                msg.innerText = "ANALYSE TERMINÉE";
                 btn.style.display = "none";
-                distanceInfo.innerText = "CALCUL...";
-                
-                // Simulation d'une progression de calcul
-                let progress = 0;
-                const interval = setInterval(() => {
-                    progress += Math.floor(Math.random() * 15);
-                    distanceInfo.innerText = `ANALYSE: ${progress}%`;
-                    if (progress >= 100) {
-                        clearInterval(interval);
-                        finishScan();
-                    }
-                }, 100);
+                card.classList.add('card-show');
             }
         };
-
-        function finishScan() {
-            vibrate();
-            vibrate(); // Double vibration pour succès
-            stepText.innerText = "ANALYSE TERMINÉE - COMPATIBILITÉ OK";
-            distanceInfo.innerText = "1920mm x 1080mm";
-            panel.classList.add('show-panel');
-        }
     </script>
 </body>
 </html>
