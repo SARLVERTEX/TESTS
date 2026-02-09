@@ -3,50 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | Elite Management</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <title>Vertex Monaco | Elite Mobile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --bg: #000; --card: #121212; --text: #fff; --danger: #ff4d4d; --success: #2ecc71; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px 20px 100px 20px; }
+        :root { --gold: #D4AF37; --bg: #000; --card: #121212; --text: #fff; --danger: #ff4d4d; --border: #282828; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.4; }
         
-        .header { text-align: center; padding: 15px 0; border-bottom: 1px solid rgba(212, 175, 55, 0.2); margin-bottom: 20px; }
-        .header h1 { letter-spacing: 5px; font-size: 14px; color: var(--gold); margin: 0; }
+        .container { max-width: 500px; margin: 0 auto; padding: 15px; padding-bottom: 60px; }
+        .header { text-align: center; padding: 20px 0; border-bottom: 1px solid var(--gold); margin-bottom: 20px; }
+        .header h1 { letter-spacing: 4px; font-size: 16px; color: var(--gold); margin: 0; font-weight: 900; }
 
-        .step { display: none; animation: fadeIn 0.3s ease; }
+        .step { display: none; animation: slideUp 0.3s ease; }
         .step.active { display: block; }
 
-        /* Dossiers */
-        .folder-card { background: var(--card); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #222; cursor: pointer; position: relative; }
-        .status-badge { position: absolute; right: 15px; top: 15px; font-size: 9px; padding: 4px 8px; border-radius: 10px; font-weight: bold; border: 1px solid; }
-        .status-ongoing { color: var(--gold); } .status-done { color: var(--success); }
+        /* Dossiers & Recherche */
+        .search-container { margin-bottom: 15px; }
+        .search-input { width: 100%; padding: 16px; background: var(--card); border: 1px solid var(--border); color: white; border-radius: 12px; font-size: 16px; }
+        
+        .folder-card { background: var(--card); padding: 20px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); position: relative; display: flex; justify-content: space-between; align-items: center; }
+        .folder-info { flex: 1; }
+        .folder-name { color: var(--gold); font-weight: 700; font-size: 16px; text-transform: uppercase; }
+        .folder-status { font-size: 10px; margin-top: 4px; letter-spacing: 1px; }
 
-        /* Sélection Intervenants */
+        /* Boutons d'action rapides */
+        .btn-now { background: #333; color: var(--gold); border: none; padding: 8px 12px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 5px; width: 100%; }
+        .btn-delete { background: none; border: none; color: var(--danger); padding: 10px; font-size: 18px; opacity: 0.7; }
+
+        /* Équipe */
         .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
-        .staff-chip { background: #1a1a1a; border: 1px solid #333; padding: 10px; border-radius: 4px; font-size: 11px; cursor: pointer; text-align: center; transition: 0.2s; }
-        .staff-chip.selected { background: var(--gold); color: black; font-weight: bold; border-color: var(--gold); }
+        .staff-chip { background: #1c1c1c; border: 1px solid var(--border); padding: 14px; border-radius: 10px; font-size: 12px; text-align: center; color: #aaa; transition: 0.2s; }
+        .staff-chip.selected { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 800; }
 
         /* Formulaire */
-        .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+        .field-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 14px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 16px; }
         
         .tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-        .tag { font-size: 10px; padding: 6px 12px; background: #222; border: 1px solid #444; border-radius: 20px; cursor: pointer; }
-        .tag:active { background: var(--gold); color: black; }
+        .tag { font-size: 11px; padding: 10px 14px; background: #222; border: 1px solid var(--border); border-radius: 8px; color: #ddd; }
 
-        .photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
-        .photo-item { background: #1a1a1a; padding: 5px; border-radius: 4px; border: 1px solid #333; }
-        .photo-item img { width: 100%; height: 100px; object-fit: cover; border-radius: 2px; }
-        .photo-item input { font-size: 10px; padding: 5px; margin-top: 5px; background: #000; border: none; color: var(--gold); }
+        .photo-gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .photo-item { background: #1c1c1c; padding: 6px; border-radius: 10px; border: 1px solid var(--border); position: relative; }
+        .photo-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 6px; }
 
-        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
-        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid #333; margin-top: 10px; border-radius: 4px; cursor: pointer; font-size: 11px; }
-
-        .timeline-item { border-left: 2px solid var(--gold); padding-left: 15px; margin-bottom: 30px; position: relative; }
-        #sig-canvas { background: white; width: 100%; height: 150px; border-radius: 4px; touch-action: none; margin-top: 10px; }
+        /* Boutons fixes en bas */
+        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 12px; cursor: pointer; text-transform: uppercase; font-size: 15px; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); }
+        .btn-outline { width: 100%; padding: 14px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; margin-top: 12px; }
         
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        #sig-canvas { background: white; width: 100%; height: 200px; border-radius: 12px; touch-action: none; border: 2px solid var(--gold); margin-top: 10px; }
+        
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media print { .no-print { display: none; } body { background: white; color: black; } }
     </style>
 </head>
 <body>
@@ -54,22 +62,22 @@
 <div class="container">
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p style="font-size: 9px; opacity: 0.5;">ELITE FIELD MANAGEMENT</p>
+        <p style="font-size: 9px; color: var(--gold); opacity: 0.6;">SERVICE MANAGEMENT SYSTEM</p>
     </div>
 
     <div class="step active" id="step0">
-        <button class="btn-gold" onclick="startNewProject()">+ NOUVEAU DOSSIER CLIENT</button>
-        <div style="margin-top:20px; display:flex; gap:10px;">
-            <input type="text" id="searchBar" oninput="filterProjects()" placeholder="Rechercher..." style="flex:1;">
-            <button class="btn-outline" style="margin:0; width:auto;" onclick="exportFullBackup()">💾 BACKUP</button>
+        <button class="btn-gold" onclick="startNewProject()">+ NOUVEAU DOSSIER</button>
+        <div class="search-container" style="margin-top:20px;">
+            <input type="text" id="searchBar" oninput="filterProjects()" class="search-input" placeholder="Rechercher client/lieu...">
         </div>
-        <div id="project-list" style="margin-top:20px;"></div>
+        <div id="project-list"></div>
+        <button class="btn-outline no-print" onclick="exportFullBackup()">💾 SAUVEGARDE TOTALE (JSON)</button>
     </div>
 
     <div class="step" id="step1">
-        <h3 id="current-client-display" style="color:var(--gold); margin:0 0 15px 0;"></h3>
+        <h3 id="current-client-display" style="color:var(--gold); text-align:center; margin-bottom:20px;"></h3>
         
-        <label>Intervenants sur site</label>
+        <label>Intervenants</label>
         <div class="staff-grid" id="staff-selection">
             <div class="staff-chip" onclick="toggleStaff(this)">Allan PLEUTIN</div>
             <div class="staff-chip" onclick="toggleStaff(this)">Pietro SANGUEDOLCE</div>
@@ -78,122 +86,113 @@
             <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe OUSELLY</div>
         </div>
 
-        <div class="time-grid">
-            <div><label>Heure Arrivée</label><input type="time" id="time_in"></div>
-            <div><label>Heure Départ</label><input type="time" id="time_out"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
+            <div>
+                <label>Arrivée</label>
+                <input type="time" id="time_in">
+                <button class="btn-now" onclick="setTime('time_in')">MAINTENANT</button>
+            </div>
+            <div>
+                <label>Départ</label>
+                <input type="time" id="time_out">
+                <button class="btn-now" onclick="setTime('time_out')">MAINTENANT</button>
+            </div>
         </div>
 
-        <div class="field-group">
-            <label>Type de Mission</label>
-            <select id="mission_type">
-                <option value="Suivi">Suivi / Reprise</option>
-                <option value="Installation">Installation Complète</option>
-                <option value="SAV">SAV / Diagnostic</option>
-                <option value="Audit">Audit / Relevé</option>
-            </select>
-        </div>
-        <button class="btn-gold" onclick="nextStep(2)">CONTINUER</button>
+        <label>Mission</label>
+        <select id="mission_type">
+            <option value="Suivi">Suivi / Reprise</option>
+            <option value="Installation">Installation</option>
+            <option value="SAV">SAV / Dépannage</option>
+            <option value="Audit">Audit Technique</option>
+        </select>
+        
+        <button class="btn-gold" onclick="nextStep(2)" style="margin-top:20px;">SUIVANT</button>
+        <button class="btn-outline" onclick="nextStep(0)">ANNULER</button>
     </div>
 
     <div class="step" id="step2">
-        <label>Observations Rapides (Vertex Tags)</label>
+        <label>Tags Rapides</label>
         <div class="tag-cloud">
-            <div class="tag" onclick="addTag('Player Configuré')">+ Player OK</div>
-            <div class="tag" onclick="addTag('Dalle LED alignée')">+ LED Align</div>
-            <div class="tag" onclick="addTag('Fixations sécurisées')">+ Fixations OK</div>
-            <div class="tag" onclick="addTag('Câblage structuré')">+ Câblage OK</div>
-            <div class="tag" onclick="addTag('Test Luminosité effectué')">+ Test Lum</div>
-            <div class="tag" onclick="addTag('Besoin SAV Usine')">+ SAV Usine</div>
-            <div class="tag" onclick="addTag('Prévoir nacelle')">+ Nacelle</div>
+            <span class="tag" onclick="addTag('Dalle OK')">+ Dalle OK</span>
+            <span class="tag" onclick="addTag('Player OK')">+ Player OK</span>
+            <span class="tag" onclick="addTag('Fixations OK')">+ Fixations OK</span>
+            <span class="tag" onclick="addTag('Câblage Propre')">+ Câblage OK</span>
+            <span class="tag" onclick="addTag('SAV requis')">+ SAV requis</span>
+            <span class="tag" onclick="addTag('Besoin Nacelle')">+ Nacelle</span>
         </div>
         <textarea id="notes" rows="6" placeholder="Observations détaillées..."></textarea>
         
-        <label style="margin-top:20px;">Photos (Captures multiples)</label>
+        <label style="margin-top:20px;">Photos</label>
         <input type="file" id="cam" accept="image/*" capture="environment" multiple style="display:none;">
-        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border-color:var(--gold);">📸 CAPTURER PHOTOS</button>
+        <button class="btn-outline" onclick="document.getElementById('cam').click()" style="color:var(--gold); border: 2px dashed var(--gold); padding:20px;">📸 PRENDRE DES PHOTOS</button>
         <div id="photo-gallery" class="photo-gallery"></div>
 
-        <button class="btn-gold" style="margin-top:20px;" onclick="nextStep(3)">SIGNATURE</button>
+        <button class="btn-gold" onclick="nextStep(3)" style="margin-top:25px;">SIGNATURE</button>
+        <button class="btn-outline" onclick="nextStep(1)">RETOUR</button>
     </div>
 
     <div class="step" id="step3">
-        <label>Signature Technicien / Client</label>
+        <label>Signature (Technicien ou Client)</label>
         <canvas id="sig-canvas"></canvas>
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <button class="btn-outline" style="flex:1" onclick="clearSig()">EFFACER</button>
-            <button class="btn-gold" style="flex:2" onclick="saveEntry()">ENREGISTRER</button>
-        </div>
+        <button class="btn-outline" onclick="clearSig()">EFFACER</button>
+        <button class="btn-gold" onclick="saveEntry()" style="margin-top:20px;">ENREGISTRER AU DOSSIER</button>
     </div>
 
     <div class="step" id="step4">
-        <div style="display:flex; justify-content: space-between; align-items:center;">
-            <h2 id="view-client-name" style="color:var(--gold); margin:0;"></h2>
-            <select id="project_status" onchange="updateProjectStatus()" style="width:auto; height:30px; font-size:10px;">
-                <option value="ongoing">EN COURS</option>
-                <option value="done">TERMINÉ</option>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 id="view-client-name" style="color:var(--gold); margin:0; text-transform:uppercase; font-size:18px;"></h2>
+            <select id="project_status" onchange="updateProjectStatus()" style="width:auto; height:35px; padding:0 10px;">
+                <option value="ongoing">A SUIVRE</option>
+                <option value="done">TERMINE</option>
             </select>
         </div>
-        <div id="timeline-content" style="margin-top:20px;"></div>
-        <div style="margin-top:30px;">
-            <button class="btn-gold" onclick="nextStep(1)">NOUVELLE INTERVENTION</button>
-            <button class="btn-outline" onclick="window.print()" style="width:100%">IMPRIMER DOSSIER PDF</button>
-            <button class="btn-outline" onclick="nextStep(0)" style="width:100%">RETOUR LISTE CLIENTS</button>
+        <div id="timeline-content"></div>
+        <div class="no-print" style="margin-top:30px;">
+            <button class="btn-gold" onclick="nextStep(1)">+ NOUVELLE NOTE</button>
+            <button class="btn-outline" onclick="window.print()">EXPORTER EN PDF</button>
+            <button class="btn-outline" onclick="nextStep(0)">RETOUR ACCUEIL</button>
         </div>
     </div>
 </div>
 
 <script>
-    let projects = JSON.parse(localStorage.getItem('vertex_master_v2') || '{}');
+    let projects = JSON.parse(localStorage.getItem('vertex_master_v3') || '{}');
     let currentProjectId = null;
     let tempPhotos = [];
     let selectedStaff = [];
 
-    // --- INTERVENANTS ---
+    // --- TEMPS ---
+    function setTime(id) {
+        const now = new Date();
+        document.getElementById(id).value = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+    }
+
+    // --- EQUIPE ---
     function toggleStaff(el) {
         el.classList.toggle('selected');
         const name = el.innerText;
-        if(selectedStaff.includes(name)) {
-            selectedStaff = selectedStaff.filter(n => n !== name);
-        } else {
-            selectedStaff.push(name);
-        }
+        selectedStaff = selectedStaff.includes(name) ? selectedStaff.filter(n => n !== name) : [...selectedStaff, name];
     }
 
-    // --- LOGIQUE DOSSIERS ---
-    function startNewProject() {
-        const name = prompt("Nom du Client / Chantier :");
-        if (name && !projects[name]) {
-            projects[name] = { entries: [], status: 'ongoing' };
-            saveAll(); loadProjectList();
-        }
-    }
-
-    function openProject(id) {
-        currentProjectId = id;
-        document.getElementById('current-client-display').innerText = id;
-        document.getElementById('view-client-name').innerText = id;
-        document.getElementById('project_status').value = projects[id].status || 'ongoing';
-        showTimeline();
-        nextStep(4);
-    }
-
-    function updateProjectStatus() {
-        projects[currentProjectId].status = document.getElementById('project_status').value;
-        saveAll(); loadProjectList();
-    }
-
-    // --- LOGIQUE MISSION ---
-    function addTag(text) {
-        const area = document.getElementById('notes');
-        area.value += (area.value ? ', ' : '') + text;
-    }
-
+    // --- PHOTOS ---
     document.getElementById('cam').addEventListener('change', function(e) {
         Array.from(e.target.files).forEach(file => {
             const reader = new FileReader();
             reader.onload = (ev) => {
-                tempPhotos.push({ src: ev.target.result, name: "Photo " + (tempPhotos.length + 1) });
-                renderGallery();
+                const img = new Image();
+                img.src = ev.target.result;
+                img.onload = () => {
+                    const canvasImg = document.createElement('canvas');
+                    const max = 800;
+                    let w = img.width, h = img.height;
+                    if (w > h && w > max) { h *= max/w; w = max; }
+                    else if (h > max) { w *= max/h; h = max; }
+                    canvasImg.width = w; canvasImg.height = h;
+                    canvasImg.getContext('2d').drawImage(img, 0, 0, w, h);
+                    tempPhotos.push({ src: canvasImg.toDataURL('image/jpeg', 0.7), name: "Photo " + (tempPhotos.length + 1) });
+                    renderGallery();
+                };
             };
             reader.readAsDataURL(file);
         });
@@ -205,15 +204,34 @@
         tempPhotos.forEach((p, idx) => {
             const div = document.createElement('div');
             div.className = 'photo-item';
-            div.innerHTML = `<img src="${p.src}"><input type="text" value="${p.name}" onchange="tempPhotos[${idx}].name = this.value">`;
+            div.innerHTML = `<img src="${p.src}"><button style="position:absolute; top:-5px; right:-5px; background:var(--danger); border:none; border-radius:50%; color:white; width:24px; height:24px;" onclick="removePhoto(${idx})">×</button>`;
             gall.appendChild(div);
         });
     }
+    function removePhoto(idx) { tempPhotos.splice(idx, 1); renderGallery(); }
+
+    // --- GESTION DOSSIERS ---
+    function startNewProject() {
+        const name = prompt("NOM DU DOSSIER CLIENT :");
+        if (name && !projects[name]) {
+            projects[name] = { entries: [], status: 'ongoing' };
+            saveAll(); loadProjectList();
+        }
+    }
+
+    function deleteFullProject(e, id) {
+        e.stopPropagation();
+        if(confirm(`Supprimer définitivement le dossier ${id} et tout son historique ?`)) {
+            delete projects[id];
+            saveAll();
+            loadProjectList();
+        }
+    }
 
     function saveEntry() {
-        if(selectedStaff.length === 0) { alert("Sélectionnez au moins un intervenant."); return; }
-        
+        if(selectedStaff.length === 0) return alert("Qui intervient ?");
         const entry = {
+            id: Date.now(),
             date: new Date().toLocaleDateString('fr-FR'),
             time_in: document.getElementById('time_in').value,
             time_out: document.getElementById('time_out').value,
@@ -223,7 +241,6 @@
             photos: [...tempPhotos],
             sig: canvas.toDataURL()
         };
-
         projects[currentProjectId].entries.push(entry);
         saveAll();
         // Reset
@@ -233,41 +250,41 @@
         showTimeline(); nextStep(4);
     }
 
+    function deleteNote(noteId) {
+        if(confirm("Supprimer cette intervention de l'historique ?")) {
+            projects[currentProjectId].entries = projects[currentProjectId].entries.filter(e => e.id !== noteId);
+            saveAll(); showTimeline();
+        }
+    }
+
     function showTimeline() {
         const cont = document.getElementById('timeline-content');
         cont.innerHTML = '';
         [...projects[currentProjectId].entries].reverse().forEach(e => {
-            const diff = calculateDuration(e.time_in, e.time_out);
-            const item = document.createElement('div');
-            item.className = 'timeline-item';
-            item.innerHTML = `
-                <div style="font-size:10px; color:var(--gold); font-weight:bold; margin-bottom:5px;">${e.date} | ${e.time_in} - ${e.time_out} (${diff})</div>
-                <div style="font-size:12px; margin-bottom:5px;"><strong>Team :</strong> ${e.staff}</div>
-                <div style="font-size:12px; margin-bottom:10px; opacity:0.8; white-space:pre-wrap;">${e.notes}</div>
-                <div class="photo-gallery">
-                    ${e.photos.map(p => `<div class="photo-item"><img src="${p.src}"><p style="font-size:8px; margin-top:3px;">${p.name}</p></div>`).join('')}
-                </div>
-                <img src="${e.sig}" style="width:100px; background:white; margin-top:15px; border-radius:3px; padding:3px;">
+            const div = document.createElement('div');
+            div.style = "border-left: 2px solid var(--gold); padding-left: 15px; margin-bottom: 30px; position:relative;";
+            div.innerHTML = `
+                <div style="font-size:10px; color:var(--gold); font-weight:bold;">${e.date} | ${e.time_in} - ${e.time_out}</div>
+                <div style="font-size:14px; margin:5px 0;"><strong>${e.staff}</strong> (${e.type})</div>
+                <div style="font-size:13px; opacity:0.8; white-space:pre-wrap; margin-bottom:10px;">${e.notes}</div>
+                <div class="photo-gallery">${e.photos.map(p => `<div class="photo-item"><img src="${p.src}"></div>`).join('')}</div>
+                <img src="${e.sig}" style="width:100px; background:white; margin-top:15px; border-radius:4px; padding:2px;">
+                <button class="no-print" onclick="deleteNote(${e.id})" style="display:block; margin-top:10px; background:none; border:none; color:var(--danger); font-size:10px;">× Supprimer cette note</button>
             `;
-            cont.appendChild(item);
+            cont.appendChild(div);
         });
     }
 
-    function calculateDuration(s, e) {
-        if(!s || !e) return "N/A";
-        const start = s.split(':'); const end = e.split(':');
-        let m = (parseInt(end[0])*60 + parseInt(end[1])) - (parseInt(start[0])*60 + parseInt(start[1]));
-        return Math.floor(m/60) + "h" + (m%60).toString().padStart(2,'0');
-    }
-
-    // --- SYSTEM ---
+    // --- NAVIGATION ---
     function nextStep(n) {
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
         document.getElementById('step' + n).classList.add('active');
         if(n === 3) resizeCanvas();
         window.scrollTo(0,0);
     }
-    function saveAll() { localStorage.setItem('vertex_master_v2', JSON.stringify(projects)); }
+
+    function openProject(id) { currentProjectId = id; nextStep(4); }
+    function saveAll() { localStorage.setItem('vertex_master_v3', JSON.stringify(projects)); }
     function filterProjects() { loadProjectList(document.getElementById('searchBar').value.toLowerCase()); }
 
     function loadProjectList(q = '') {
@@ -278,24 +295,33 @@
                 const div = document.createElement('div');
                 div.className = 'folder-card';
                 div.onclick = () => openProject(id);
-                div.innerHTML = `<div class="folder-name">${id}</div><div class="status-badge status-${projects[id].status}">${projects[id].status.toUpperCase()}</div>`;
+                div.innerHTML = `
+                    <div class="folder-info">
+                        <div class="folder-name">${id}</div>
+                        <div class="folder-status" style="color:${projects[id].status === 'done' ? 'var(--success)' : 'var(--gold)'}">
+                            ${projects[id].status === 'done' ? '● TERMINE' : '○ EN COURS'}
+                        </div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteFullProject(event, '${id}')">🗑️</button>
+                `;
                 list.appendChild(div);
             }
         });
     }
 
+    function addTag(t) { const a = document.getElementById('notes'); a.value += (a.value ? ', ' : '') + t; }
+    function updateProjectStatus() { projects[currentProjectId].status = document.getElementById('project_status').value; saveAll(); loadProjectList(); }
     function exportFullBackup() {
-        const blob = new Blob([JSON.stringify(projects)], {type: "application/json"});
-        const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = "vertex_master_backup.json";
-        a.click();
+        a.href = URL.createObjectURL(new Blob([JSON.stringify(projects)], {type:"application/json"}));
+        a.download = "Vertex_Backup.json"; a.click();
     }
 
+    // SIGNATURE
     const canvas = document.getElementById('sig-canvas');
     const ctx = canvas.getContext('2d');
     let drawing = false;
-    function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.lineWidth = 2; }
+    function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.lineWidth = 3; ctx.lineCap="round"; ctx.strokeStyle="#000"; }
     canvas.onpointerdown = (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); };
     canvas.onpointermove = (e) => { if(drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
     window.onpointerup = () => drawing = false;
