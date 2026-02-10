@@ -3,58 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Vertex Monaco | V12 Full Ops</title>
+    <title>Vertex Monaco | V13 Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #D4AF37; --bg: #000; --card: #121212; --text: #fff; --danger: #ff4d4d; --success: #2ecc71; --border: #282828; }
+        :root { 
+            --gold: #D4AF37; 
+            --bg: #000; 
+            --card: #121212; 
+            --text: #fff; 
+            --danger: #ff4d4d; 
+            --success: #2ecc71; 
+            --border: #282828;
+            --warning: #f39c12;
+        }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.4; overflow-x: hidden; }
         .container { max-width: 500px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
         
-        .header { text-align: center; padding: 15px 0; border-bottom: 2px solid var(--gold); margin-bottom: 20px; }
+        .header { text-align: center; padding: 15px 0; border-bottom: 2px solid var(--gold); margin-bottom: 20px; position: relative; }
         .header h1 { letter-spacing: 4px; font-size: 16px; color: var(--gold); margin: 0; font-weight: 900; }
+        .version-badge { position: absolute; top: 10px; right: 10px; font-size: 8px; background: var(--gold); color: black; padding: 3px 8px; border-radius: 10px; font-weight: bold; }
+
+        /* Toast notifications */
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 15px 25px; border-radius: 8px; font-size: 13px; font-weight: bold; z-index: 9999; animation: slideDown 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--warning); }
+        @keyframes slideDown { from { transform: translateX(-50%) translateY(-100px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
+
+        /* Progress indicator */
+        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .progress-step { flex: 1; text-align: center; position: relative; }
+        .progress-step::before { content: ''; position: absolute; top: 15px; left: 0; right: 0; height: 2px; background: var(--border); z-index: -1; }
+        .progress-step:first-child::before { left: 50%; }
+        .progress-step:last-child::before { right: 50%; }
+        .progress-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--border); margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
+        .progress-step.active .progress-dot { background: var(--gold); color: black; }
+        .progress-step.completed .progress-dot { background: var(--success); color: white; }
+        .progress-label { font-size: 9px; color: #666; }
 
         .step { display: none; animation: fadeIn 0.2s ease; }
         .step.active { display: block; }
 
+        /* Loading spinner */
+        .spinner { border: 3px solid var(--border); border-top: 3px solid var(--gold); border-radius: 50%; width: 30px; height: 30px; animation: spin 0.8s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         /* Tabs & Types */
         .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
-        .tab-btn { flex: 1; padding: 12px; background: #111; border: 1px solid var(--border); color: #666; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .tab-btn { flex: 1; padding: 12px; background: #111; border: 1px solid var(--border); color: #666; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
         .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+        .tab-btn:active { transform: scale(0.98); }
 
         .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .type-chip { background: #111; border: 1px solid var(--border); padding: 10px; border-radius: 8px; text-align: center; font-size: 10px; font-weight: bold; color: #666; cursor: pointer; }
+        .type-chip { background: #111; border: 1px solid var(--border); padding: 10px; border-radius: 8px; text-align: center; font-size: 10px; font-weight: bold; color: #666; cursor: pointer; transition: all 0.2s; }
         .type-chip.selected { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
+        .type-chip:active { transform: scale(0.95); }
 
         .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .staff-chip { background: #1c1c1c; border: 1px solid var(--border); padding: 12px; border-radius: 6px; font-size: 11px; text-align: center; color: #888; }
+        .staff-chip { background: #1c1c1c; border: 1px solid var(--border); padding: 12px; border-radius: 6px; font-size: 11px; text-align: center; color: #888; cursor: pointer; transition: all 0.2s; }
         .staff-chip.selected { background: var(--gold); color: #000; font-weight: 800; border-color: var(--gold); }
+        .staff-chip:active { transform: scale(0.95); }
 
         /* Checklist */
-        .check-item { display: flex; align-items: center; background: #181818; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); }
-        .check-item input { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--gold); }
+        .check-item { display: flex; align-items: center; background: #181818; padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); transition: all 0.2s; }
+        .check-item:has(input:checked) { background: rgba(46, 204, 113, 0.1); border-color: var(--success); }
+        .check-item input { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--gold); cursor: pointer; }
 
         /* Photos Before/After with Captions */
         .photo-box { background: #0a0a0a; border: 1px solid #222; padding: 12px; border-radius: 10px; margin-top: 15px; }
         .photo-box h4 { margin: 0 0 10px 0; font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
         .photo-gallery { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-        .photo-card { background: #1c1c1c; padding: 8px; border-radius: 8px; border: 1px solid #333; }
-        .photo-card img { width: 100%; border-radius: 4px; margin-bottom: 8px; }
-        .photo-input { background: #000; border: 1px solid #333; color: white; padding: 8px; font-size: 12px; width: 100%; border-radius: 4px; }
+        .photo-card { background: #1c1c1c; padding: 8px; border-radius: 8px; border: 1px solid #333; position: relative; }
+        .photo-card img { width: 100%; border-radius: 4px; margin-bottom: 8px; max-height: 300px; object-fit: cover; }
+        .photo-input { background: #000; border: 1px solid #333; color: white; padding: 8px; font-size: 12px; width: 100%; border-radius: 4px; margin-bottom: 5px; }
+        .photo-size { font-size: 9px; color: #666; margin-bottom: 5px; }
 
         /* Signature */
         #sig-canvas { background: #fff; border: 2px solid var(--gold); border-radius: 8px; touch-action: none; width: 100%; height: 200px; cursor: crosshair; }
 
-        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 10px; text-transform: uppercase; margin-top: 15px; cursor: pointer; }
-        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; cursor: pointer; }
-        .btn-now { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 4px; font-size: 10px; margin-top: 5px; width: 100%; }
-        .btn-danger { width: 100%; padding: 12px; background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); border-radius: 8px; margin-top: 20px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 10px; text-transform: uppercase; margin-top: 15px; cursor: pointer; transition: all 0.2s; }
+        .btn-gold:active { transform: scale(0.98); }
+        .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-outline { width: 100%; padding: 12px; background: transparent; color: white; border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; cursor: pointer; transition: all 0.2s; }
+        .btn-outline:active { transform: scale(0.98); }
+        .btn-now { background: #111; color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 4px; font-size: 10px; margin-top: 5px; width: 100%; cursor: pointer; transition: all 0.2s; }
+        .btn-now:active { transform: scale(0.95); }
+        .btn-danger { width: 100%; padding: 12px; background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); border-radius: 8px; margin-top: 20px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-danger:active { transform: scale(0.98); }
 
         label { display: block; margin: 15px 0 5px 0; font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 12px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 15px; }
+        input, textarea, select { width: 100%; padding: 12px; background: #181818; border: 1px solid var(--border); color: white; border-radius: 8px; font-size: 15px; }
+        textarea { font-family: 'Inter', sans-serif; resize: vertical; }
 
         .timeline-item { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 40px; position: relative; }
         .section-block { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 2px solid #444; font-size: 13px; }
+
+        /* Folder cards */
+        .folder-card { background: #181818; border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s; }
+        .folder-card:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
+        .folder-card:active { transform: scale(0.98); }
+        .folder-info { flex: 1; }
+        .folder-name { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        .folder-meta { font-size: 10px; color: #666; }
+        .folder-arrow { color: var(--gold); font-size: 20px; }
+
+        /* Stats cards */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .stat-card { background: #181818; border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 900; color: var(--gold); }
+        .stat-label { font-size: 9px; color: #666; text-transform: uppercase; margin-top: 5px; }
+
+        /* Advanced search */
+        .search-filters { background: #181818; border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-top: 10px; }
+        .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+
+        /* Status pill */
+        .status-pill { padding: 6px 12px; border-radius: 20px; font-size: 9px; font-weight: bold; cursor: pointer; border: none; transition: all 0.2s; }
+        .status-ongoing { background: var(--success); color: white; }
+        .status-done { background: #666; color: white; }
+        .status-pill:active { transform: scale(0.95); }
+
+        /* GPS indicator */
+        .gps-indicator { font-size: 9px; color: var(--success); margin-top: 5px; }
+
+        /* Confirmation modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; animation: fadeIn 0.2s; }
+        .modal-content { background: var(--card); border: 1px solid var(--gold); border-radius: 10px; padding: 25px; max-width: 400px; width: 90%; }
+        .modal-title { font-size: 16px; font-weight: 900; color: var(--gold); margin-bottom: 15px; }
+        .modal-body { font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
+        .modal-actions { display: flex; gap: 10px; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+        .modal-btn.confirm { background: var(--gold); color: black; }
+        .modal-btn.cancel { background: transparent; color: white; border: 1px solid var(--border); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media print { .no-print { display: none; } body { background: white; color: black; } }
@@ -65,24 +146,88 @@
 <div class="container">
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">V12 | ULTIMATE FIELD TOOL</p>
+        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">V13 PRO | FIELD OPS SYSTEM</p>
+        <div class="version-badge">v13.0</div>
     </div>
 
+    <!-- HOME / PROJECT LIST -->
     <div class="step active" id="step0">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="stat-active">0</div>
+                <div class="stat-label">Actifs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="stat-total">0</div>
+                <div class="stat-label">Total missions</div>
+            </div>
+        </div>
+
         <div class="tabs">
             <button class="tab-btn active" id="tab-active" onclick="switchTab('ongoing')">EN COURS</button>
             <button class="tab-btn" id="tab-archived" onclick="switchTab('done')">ARCHIVES</button>
         </div>
+        
         <button class="btn-gold" onclick="startNewProject()">+ NOUVEAU CLIENT</button>
-        <input type="text" id="searchBar" oninput="filterProjects()" placeholder="Rechercher un dossier..." style="margin-top:15px;">
+        
+        <input type="text" id="searchBar" oninput="filterProjects()" placeholder="🔍 Rechercher un dossier..." style="margin-top:15px;">
+        
+        <div class="search-filters" id="advancedFilters" style="display:none;">
+            <div class="filter-row">
+                <select id="filterType" onchange="filterProjects()">
+                    <option value="">Tous types</option>
+                    <option value="INSTALLATION">Installation</option>
+                    <option value="MAINTENANCE">Maintenance</option>
+                    <option value="DÉPANNAGE">Dépannage</option>
+                    <option value="AUDIT">Audit</option>
+                </select>
+                <select id="filterStaff" onchange="filterProjects()">
+                    <option value="">Toute équipe</option>
+                    <option value="Allan">Allan</option>
+                    <option value="Pietro">Pietro</option>
+                    <option value="Marco">Marco</option>
+                    <option value="Osvaldo">Osvaldo</option>
+                    <option value="Jean-Christophe">Jean-Christophe</option>
+                </select>
+            </div>
+            <div class="filter-row">
+                <input type="date" id="filterDateFrom" onchange="filterProjects()" placeholder="Du">
+                <input type="date" id="filterDateTo" onchange="filterProjects()" placeholder="Au">
+            </div>
+        </div>
+        
+        <button class="btn-outline" onclick="toggleAdvancedFilters()" style="margin-top:10px; font-size:10px;">
+            🔎 FILTRES AVANCÉS
+        </button>
+        
         <div id="project-list" style="margin-top:10px;"></div>
-        <button class="btn-outline" onclick="exportToCSV()" style="margin-top:40px;">📊 EXPORT EXCEL GLOBAL (.CSV)</button>
+        
+        <button class="btn-outline" onclick="exportToCSV()" style="margin-top:40px;">📊 EXPORT EXCEL (.CSV)</button>
+        <button class="btn-outline" onclick="exportBackup()">💾 SAUVEGARDER DONNÉES</button>
+        <button class="btn-outline" onclick="document.getElementById('import-file').click()">📥 RESTAURER DONNÉES</button>
+        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(this)">
     </div>
 
+    <!-- STEP 1: MISSION INFO -->
     <div class="step" id="step1">
+        <div class="progress-bar">
+            <div class="progress-step active">
+                <div class="progress-dot">1</div>
+                <div class="progress-label">Mission</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-dot">2</div>
+                <div class="progress-label">Photos</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-dot">3</div>
+                <div class="progress-label">Signature</div>
+            </div>
+        </div>
+
         <h3 id="c-name" style="text-align:center; color:var(--gold);"></h3>
         
-        <label>Type de mission</label>
+        <label>Type de mission *</label>
         <div class="type-grid">
             <div class="type-chip" onclick="selectType(this, 'INSTALLATION')">INSTALLATION</div>
             <div class="type-chip" onclick="selectType(this, 'MAINTENANCE')">MAINTENANCE</div>
@@ -90,7 +235,7 @@
             <div class="type-chip" onclick="selectType(this, 'AUDIT')">AUDIT</div>
         </div>
 
-        <label>Équipe sur place</label>
+        <label>Équipe sur place *</label>
         <div class="staff-grid">
             <div class="staff-chip" onclick="toggleStaff(this)">Allan</div>
             <div class="staff-chip" onclick="toggleStaff(this)">Pietro</div>
@@ -100,14 +245,41 @@
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-            <div><label>Arrivée</label><input type="time" id="time_in"><button class="btn-now" onclick="setTime('time_in')">MAINTENANT</button></div>
-            <div><label>Départ</label><input type="time" id="time_out"><button class="btn-now" onclick="setTime('time_out')">MAINTENANT</button></div>
+            <div>
+                <label>Arrivée *</label>
+                <input type="time" id="time_in">
+                <button class="btn-now" onclick="setTime('time_in')">MAINTENANT</button>
+            </div>
+            <div>
+                <label>Départ</label>
+                <input type="time" id="time_out">
+                <button class="btn-now" onclick="setTime('time_out')">MAINTENANT</button>
+            </div>
         </div>
-        <button class="btn-gold" onclick="nextStep(2)">PHOTOS & RAPPORT</button>
-        <button class="btn-outline" onclick="nextStep(0)">ANNULER</button>
+
+        <div id="gps-info" class="gps-indicator"></div>
+
+        <button class="btn-gold" onclick="validateStep1()">SUIVANT : PHOTOS & RAPPORT</button>
+        <button class="btn-outline" onclick="confirmCancel()">ANNULER</button>
     </div>
 
+    <!-- STEP 2: PHOTOS & REPORT -->
     <div class="step" id="step2">
+        <div class="progress-bar">
+            <div class="progress-step completed">
+                <div class="progress-dot">✓</div>
+                <div class="progress-label">Mission</div>
+            </div>
+            <div class="progress-step active">
+                <div class="progress-dot">2</div>
+                <div class="progress-label">Photos</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-dot">3</div>
+                <div class="progress-label">Signature</div>
+            </div>
+        </div>
+
         <div class="photo-box">
             <h4>📸 Photos AVANT l'intervention</h4>
             <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'before')" style="display:none;" id="cam-before">
@@ -122,174 +294,956 @@
             <div id="gallery-after" class="photo-gallery"></div>
         </div>
 
-        <label>Compte-rendu des travaux</label>
-        <textarea id="task_done" rows="5" placeholder="Description technique..."></textarea>
+        <label>Compte-rendu des travaux *</label>
+        <textarea id="task_done" rows="5" placeholder="Description technique détaillée de l'intervention..."></textarea>
         
         <label>Points de vigilance / Matériel</label>
-        <textarea id="task_mat" rows="2" placeholder="SAV, matériel installé..."></textarea>
+        <textarea id="task_mat" rows="2" placeholder="SAV, matériel installé, recommandations..."></textarea>
 
-        <button class="btn-gold" onclick="nextStep(3)">SÉCURITÉ & SIGNATURE</button>
+        <button class="btn-gold" onclick="validateStep2()">SUIVANT : SÉCURITÉ & SIGNATURE</button>
         <button class="btn-outline" onclick="nextStep(1)">RETOUR</button>
     </div>
 
+    <!-- STEP 3: CHECKLIST & SIGNATURE -->
     <div class="step" id="step3">
-        <label>Checklist de fin de mission</label>
+        <div class="progress-bar">
+            <div class="progress-step completed">
+                <div class="progress-dot">✓</div>
+                <div class="progress-label">Mission</div>
+            </div>
+            <div class="progress-step completed">
+                <div class="progress-dot">✓</div>
+                <div class="progress-label">Photos</div>
+            </div>
+            <div class="progress-step active">
+                <div class="progress-dot">3</div>
+                <div class="progress-label">Signature</div>
+            </div>
+        </div>
+
+        <label>Checklist de fin de mission *</label>
         <div class="check-item"><input type="checkbox" id="check1"><span>Chantier nettoyé / Propreté</span></div>
         <div class="check-item"><input type="checkbox" id="check2"><span>Tests de diffusion OK</span></div>
         <div class="check-item"><input type="checkbox" id="check3"><span>Alimentation & Baie verrouillées</span></div>
         <div class="check-item"><input type="checkbox" id="check4"><span>Client prévenu du départ</span></div>
 
-        <label style="margin-top:20px;">Signature (Landscape OK)</label>
+        <label style="margin-top:20px;">Signature client (tactile ou souris) *</label>
         <canvas id="sig-canvas"></canvas>
         <button class="btn-outline" onclick="clearSig()">EFFACER LA SIGNATURE</button>
-        <button class="btn-gold" onclick="saveEntry()">ENREGISTRER FINAL</button>
+        
+        <div id="save-spinner" style="display:none;">
+            <div class="spinner"></div>
+            <p style="text-align:center; font-size:12px; color:#666;">Enregistrement en cours...</p>
+        </div>
+        
+        <button class="btn-gold" id="btn-save" onclick="saveEntry()">✓ ENREGISTRER FINAL</button>
         <button class="btn-outline" onclick="nextStep(2)">RETOUR</button>
     </div>
 
+    <!-- STEP 4: VIEW PROJECT -->
     <div class="step" id="step4">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2 id="view-n" style="color:var(--gold); margin:0;"></h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h2 id="view-n" style="color:var(--gold); margin:0; font-size:18px;"></h2>
             <div id="status-toggle-container"></div>
         </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="project-interventions">0</div>
+                <div class="stat-label">Interventions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="project-hours">0h</div>
+                <div class="stat-label">Temps total</div>
+            </div>
+        </div>
+
         <div id="timeline" style="margin-top:20px;"></div>
+        
         <div class="no-print">
             <button class="btn-outline" style="color:#2ecc71; border-color:#2ecc71;" onclick="sendProjectMail()">✉️ ENVOYER PAR MAIL</button>
-            <button class="btn-gold" onclick="nextStep(1)">+ NOUVEAU PASSAGE</button>
-            <button class="btn-outline" onclick="window.print()">GÉNÉRER PDF</button>
+            <button class="btn-gold" onclick="newIntervention()">+ NOUVELLE INTERVENTION</button>
+            <button class="btn-outline" onclick="window.print()">🖨️ GÉNÉRER PDF</button>
             <button class="btn-outline" onclick="nextStep(0)">RETOUR ACCUEIL</button>
-            <button class="btn-danger" onclick="deleteFullProject()">⚠️ SUPPRIMER CE CLIENT</button>
+            <button class="btn-danger" onclick="confirmDeleteProject()">⚠️ SUPPRIMER CE CLIENT</button>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal" id="confirmModal">
+    <div class="modal-content">
+        <div class="modal-title" id="modalTitle">Confirmation</div>
+        <div class="modal-body" id="modalBody">Êtes-vous sûr ?</div>
+        <div class="modal-actions">
+            <button class="modal-btn cancel" onclick="closeModal()">Annuler</button>
+            <button class="modal-btn confirm" id="modalConfirm" onclick="modalConfirmAction()">Confirmer</button>
         </div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('vertex_v6_db') || '{}');
-    let cur = null, staff = [], photosBefore = [], photosAfter = [], selectedType = "", currentFilter = 'ongoing';
+    // ========== CONFIGURATION & STATE ==========
+    const CONFIG = {
+        DB_KEY: 'vertex_v13_db',
+        DB_VERSION: 2,
+        MAX_IMAGE_SIZE: 1200,
+        IMAGE_QUALITY: 0.7,
+        STORAGE_WARNING_THRESHOLD: 0.8
+    };
 
-    function nextStep(n) {
-        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step'+n).classList.add('active');
-        if(n === 3) setTimeout(resizeCanvas, 200);
-        if(n === 1) { document.getElementById('c-name').innerText = cur; resetForm(); }
-        if(n === 4) { document.getElementById('view-n').innerText = cur; showTimeline(); }
-        window.scrollTo(0,0);
+    let db = {};
+    let cur = null;
+    let staff = [];
+    let photosBefore = [];
+    let photosAfter = [];
+    let selectedType = "";
+    let currentFilter = 'ongoing';
+    let gpsCoords = null;
+    let hasUnsavedChanges = false;
+    let modalCallback = null;
+
+    // ========== INITIALIZATION ==========
+    window.onload = function() {
+        loadDatabase();
+        checkStorageSpace();
+        requestGeolocation();
+        setupBeforeUnload();
+        loadList();
+    };
+
+    function loadDatabase() {
+        try {
+            const stored = localStorage.getItem(CONFIG.DB_KEY);
+            if (stored) {
+                db = JSON.parse(stored);
+                // Migration if needed
+                if (!db._version || db._version < CONFIG.DB_VERSION) {
+                    db = migrateDatabase(db);
+                }
+            } else {
+                db = { _version: CONFIG.DB_VERSION };
+            }
+        } catch (e) {
+            showToast('Erreur de chargement des données', 'error');
+            db = { _version: CONFIG.DB_VERSION };
+        }
     }
 
-    function setTime(id) { const n = new Date(); document.getElementById(id).value = n.getHours().toString().padStart(2,'0')+":"+n.getMinutes().toString().padStart(2,'0'); }
-    function selectType(el, type) { document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected')); el.classList.add('selected'); selectedType = type; }
-    function toggleStaff(el) { el.classList.toggle('selected'); staff = Array.from(document.querySelectorAll('.staff-chip.selected')).map(c => c.innerText); }
-    function switchTab(s) { currentFilter = s; document.getElementById('tab-active').classList.toggle('active', s==='ongoing'); document.getElementById('tab-archived').classList.toggle('active', s==='done'); loadList(); }
-
-    function handlePhotos(input, type) {
-        Array.from(input.files).forEach(file => {
-            const r = new FileReader();
-            r.onload = e => {
-                const imgObj = { src: e.target.result, note: "" };
-                if(type === 'before') photosBefore.push(imgObj); else photosAfter.push(imgObj);
-                renderGalleries();
-            };
-            r.readAsDataURL(file);
-        });
-    }
-
-    function renderGalleries() {
-        const rb = document.getElementById('gallery-before'); rb.innerHTML = '';
-        photosBefore.forEach((p, i) => {
-            rb.innerHTML += `<div class="photo-card"><img src="${p.src}"><input type="text" class="photo-input" placeholder="Légende..." oninput="photosBefore[${i}].note=this.value" value="${p.note}"><button class="btn-now" onclick="photosBefore.splice(${i},1);renderGalleries()">Supprimer</button></div>`;
-        });
-        const ra = document.getElementById('gallery-after'); ra.innerHTML = '';
-        photosAfter.forEach((p, i) => {
-            ra.innerHTML += `<div class="photo-card"><img src="${p.src}"><input type="text" class="photo-input" placeholder="Légende..." oninput="photosAfter[${i}].note=this.value" value="${p.note}"><button class="btn-now" onclick="photosAfter.splice(${i},1);renderGalleries()">Supprimer</button></div>`;
-        });
-    }
-
-    // SIGNATURE LOGIC
-    const canvas = document.getElementById('sig-canvas'); const ctx = canvas.getContext('2d'); let drawing = false;
-    function resizeCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; ctx.lineWidth = 3; ctx.lineCap = "round"; }
-    function getPos(e) { const rect = canvas.getBoundingClientRect(); const cx = e.touches ? e.touches[0].clientX : e.clientX; const cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - rect.left, y: cy - rect.top }; }
-    canvas.addEventListener('touchstart', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }, {passive:false});
-    canvas.addEventListener('touchmove', e => { if(!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }, {passive:false});
-    window.addEventListener('touchend', () => drawing = false);
-    function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
-
-    function saveEntry() {
-        if(!selectedType || !staff.length) return alert("Type et Équipe requis !");
-        if(!document.getElementById('check1').checked) return alert("Veuillez valider la checklist !");
+    function migrateDatabase(oldDb) {
+        // Add version and metadata
+        const newDb = { _version: CONFIG.DB_VERSION };
         
-        const entry = {
-            id: Date.now(), date: new Date().toLocaleDateString('fr-FR'),
-            type: selectedType, in: document.getElementById('time_in').value, out: document.getElementById('time_out').value,
-            staff: staff.join(', '), done: document.getElementById('task_done').value, mat: document.getElementById('task_mat').value,
-            before: [...photosBefore], after: [...photosAfter], sig: canvas.toDataURL()
-        };
-        db[cur].entries.push(entry);
-        localStorage.setItem('vertex_v6_db', JSON.stringify(db));
-        nextStep(4);
-    }
-
-    function showTimeline() {
-        const t = document.getElementById('timeline'); t.innerHTML = '';
-        const isDone = db[cur].status === 'done';
-        document.getElementById('status-toggle-container').innerHTML = `<button class="status-pill ${isDone?'status-done':'status-ongoing'}" onclick="toggleStatus()">${isDone?'ARCHIVÉ':'ACTIF'}</button>`;
-
-        [...db[cur].entries].reverse().forEach(e => {
-            t.innerHTML += `<div class="timeline-item">
-                <div style="font-size:10px; font-weight:900; color:var(--gold);">${e.date} | ${e.type}</div>
-                <div class="section-block"><strong>Equipe:</strong> ${e.staff} (${e.in} - ${e.out})<br><strong>Travaux:</strong> ${e.done}</div>
-                ${e.mat ? `<div class="section-block" style="border-left-color:var(--success)"><strong>Matériel/SAV:</strong> ${e.mat}</div>` : ''}
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin:10px 0;">
-                    <div>${e.before.map(p => `<img src="${p.src}" style="width:100%; border:1px solid #e67e22; border-radius:4px;"><div style="font-size:9px; color:#888;">${p.note}</div>`).join('')}</div>
-                    <div>${e.after.map(p => `<img src="${p.src}" style="width:100%; border:1px solid #2ecc71; border-radius:4px;"><div style="font-size:9px; color:#888;">${p.note}</div>`).join('')}</div>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-                    <img src="${e.sig}" style="width:100px; background:white; border-radius:4px; padding:2px;">
-                    <button class="no-print" style="color:var(--danger); border:none; background:none; font-size:10px;" onclick="deleteEntry(${e.id})">Supprimer passage</button>
-                </div>
-            </div>`;
+        // Migrate existing projects
+        Object.keys(oldDb).forEach(key => {
+            if (key !== '_version') {
+                newDb[key] = {
+                    entries: oldDb[key].entries || [],
+                    status: oldDb[key].status || 'ongoing',
+                    created: oldDb[key].created || new Date().toISOString()
+                };
+            }
         });
+        
+        saveDatabase();
+        showToast('Base de données mise à jour', 'success');
+        return newDb;
     }
 
-    function deleteEntry(id) { if(confirm("Supprimer ?")) { db[cur].entries = db[cur].entries.filter(e => e.id !== id); localStorage.setItem('vertex_v6_db', JSON.stringify(db)); showTimeline(); } }
-    function deleteFullProject() { if(confirm("Supprimer tout le client ?")) { delete db[cur]; localStorage.setItem('vertex_v6_db', JSON.stringify(db)); nextStep(0); loadList(); } }
-    function toggleStatus() { db[cur].status = (db[cur].status === 'done' ? 'ongoing' : 'done'); localStorage.setItem('vertex_v6_db', JSON.stringify(db)); showTimeline(); loadList(); }
-    
-    function startNewProject() { const n = prompt("Nom client :"); if(n && !db[n]) { db[n]={entries:[], status:'ongoing'}; localStorage.setItem('vertex_v6_db', JSON.stringify(db)); loadList(); } }
-    function filterProjects() { loadList(document.getElementById('searchBar').value.toLowerCase()); }
-    
-    function loadList(q='') {
-        const l = document.getElementById('project-list'); l.innerHTML = '';
-        Object.keys(db).sort().forEach(id => {
-            if(id.toLowerCase().includes(q) && db[id].status === currentFilter) {
-                l.innerHTML += `<div class="folder-card" onclick="cur='${id}';nextStep(4);"><div>${id}</div><div>❯</div></div>`;
+    function saveDatabase() {
+        try {
+            localStorage.setItem(CONFIG.DB_KEY, JSON.stringify(db));
+            checkStorageSpace();
+        } catch (e) {
+            if (e.name === 'QuotaExceededError') {
+                showToast('Stockage saturé ! Supprimez des photos ou exportez les données.', 'error');
+            } else {
+                showToast('Erreur de sauvegarde', 'error');
+            }
+            throw e;
+        }
+    }
+
+    function checkStorageSpace() {
+        if (navigator.storage && navigator.storage.estimate) {
+            navigator.storage.estimate().then(estimate => {
+                const percentUsed = estimate.usage / estimate.quota;
+                if (percentUsed > CONFIG.STORAGE_WARNING_THRESHOLD) {
+                    showToast(`Stockage à ${Math.round(percentUsed * 100)}% - Pensez à exporter !`, 'warning');
+                }
+            });
+        }
+    }
+
+    function setupBeforeUnload() {
+        window.addEventListener('beforeunload', (e) => {
+            if (hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = '';
+                return '';
             }
         });
     }
 
+    // ========== TOAST NOTIFICATIONS ==========
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.animation = 'slideDown 0.3s ease reverse';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // ========== MODAL SYSTEM ==========
+    function showModal(title, body, confirmText, callback) {
+        document.getElementById('modalTitle').textContent = title;
+        document.getElementById('modalBody').textContent = body;
+        document.getElementById('modalConfirm').textContent = confirmText;
+        modalCallback = callback;
+        document.getElementById('confirmModal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('confirmModal').classList.remove('active');
+        modalCallback = null;
+    }
+
+    function modalConfirmAction() {
+        if (modalCallback) {
+            modalCallback();
+        }
+        closeModal();
+    }
+
+    // ========== NAVIGATION ==========
+    function nextStep(n) {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + n).classList.add('active');
+        
+        if (n === 3) setTimeout(resizeCanvas, 200);
+        if (n === 1) {
+            document.getElementById('c-name').textContent = cur;
+            resetForm();
+            hasUnsavedChanges = true;
+        }
+        if (n === 4) {
+            document.getElementById('view-n').textContent = cur;
+            showTimeline();
+            hasUnsavedChanges = false;
+        }
+        if (n === 0) {
+            hasUnsavedChanges = false;
+            loadList();
+        }
+        
+        window.scrollTo(0, 0);
+    }
+
+    function confirmCancel() {
+        if (hasUnsavedChanges) {
+            showModal(
+                'Annuler la mission',
+                'Les données non enregistrées seront perdues. Continuer ?',
+                'Oui, annuler',
+                () => nextStep(0)
+            );
+        } else {
+            nextStep(0);
+        }
+    }
+
+    // ========== STEP 1: MISSION INFO ==========
+    function setTime(id) {
+        const n = new Date();
+        document.getElementById(id).value = n.getHours().toString().padStart(2, '0') + ':' + n.getMinutes().toString().padStart(2, '0');
+    }
+
+    function selectType(el, type) {
+        document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedType = type;
+    }
+
+    function toggleStaff(el) {
+        el.classList.toggle('selected');
+        staff = Array.from(document.querySelectorAll('.staff-chip.selected')).map(c => c.textContent);
+    }
+
+    function requestGeolocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    gpsCoords = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    const gpsInfo = document.getElementById('gps-info');
+                    if (gpsInfo) {
+                        gpsInfo.textContent = `📍 Position enregistrée (${gpsCoords.lat.toFixed(5)}, ${gpsCoords.lng.toFixed(5)})`;
+                    }
+                },
+                (error) => {
+                    console.log('GPS non disponible:', error);
+                }
+            );
+        }
+    }
+
+    function validateStep1() {
+        if (!selectedType) {
+            showToast('Veuillez sélectionner un type de mission', 'error');
+            return;
+        }
+        if (staff.length === 0) {
+            showToast('Veuillez sélectionner au moins un membre de l\'équipe', 'error');
+            return;
+        }
+        if (!document.getElementById('time_in').value) {
+            showToast('Veuillez indiquer l\'heure d\'arrivée', 'error');
+            return;
+        }
+        nextStep(2);
+    }
+
+    // ========== STEP 2: PHOTOS & REPORT ==========
+    function handlePhotos(input, type) {
+        const files = Array.from(input.files);
+        let processed = 0;
+        
+        files.forEach(file => {
+            compressImage(file, (compressedDataUrl, originalSize, compressedSize) => {
+                const imgObj = {
+                    src: compressedDataUrl,
+                    note: "",
+                    originalSize: originalSize,
+                    compressedSize: compressedSize
+                };
+                
+                if (type === 'before') {
+                    photosBefore.push(imgObj);
+                } else {
+                    photosAfter.push(imgObj);
+                }
+                
+                processed++;
+                if (processed === files.length) {
+                    renderGalleries();
+                    showToast(`${files.length} photo(s) ajoutée(s)`, 'success');
+                }
+            });
+        });
+        
+        // Reset input
+        input.value = '';
+    }
+
+    function compressImage(file, callback) {
+        const reader = new FileReader();
+        const originalSize = file.size;
+        
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+                
+                // Resize if too large
+                if (width > CONFIG.MAX_IMAGE_SIZE || height > CONFIG.MAX_IMAGE_SIZE) {
+                    if (width > height) {
+                        height = Math.round((height * CONFIG.MAX_IMAGE_SIZE) / width);
+                        width = CONFIG.MAX_IMAGE_SIZE;
+                    } else {
+                        width = Math.round((width * CONFIG.MAX_IMAGE_SIZE) / height);
+                        height = CONFIG.MAX_IMAGE_SIZE;
+                    }
+                }
+                
+                canvas.width = width;
+                canvas.height = height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                const compressedDataUrl = canvas.toDataURL('image/jpeg', CONFIG.IMAGE_QUALITY);
+                const compressedSize = Math.round((compressedDataUrl.length * 3) / 4); // Approximate size
+                
+                callback(compressedDataUrl, originalSize, compressedSize);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function renderGalleries() {
+        const rb = document.getElementById('gallery-before');
+        rb.innerHTML = '';
+        photosBefore.forEach((p, i) => {
+            const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB (${(p.originalSize / 1024).toFixed(1)} KB original)`;
+            rb.innerHTML += `
+                <div class="photo-card">
+                    <img src="${escapeHtml(p.src)}">
+                    <div class="photo-size">📦 ${sizeInfo}</div>
+                    <input type="text" class="photo-input" placeholder="Légende..." 
+                           oninput="photosBefore[${i}].note=this.value" 
+                           value="${escapeHtml(p.note)}">
+                    <button class="btn-now" onclick="removePhoto('before', ${i})">🗑️ Supprimer</button>
+                </div>
+            `;
+        });
+        
+        const ra = document.getElementById('gallery-after');
+        ra.innerHTML = '';
+        photosAfter.forEach((p, i) => {
+            const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB (${(p.originalSize / 1024).toFixed(1)} KB original)`;
+            ra.innerHTML += `
+                <div class="photo-card">
+                    <img src="${escapeHtml(p.src)}">
+                    <div class="photo-size">📦 ${sizeInfo}</div>
+                    <input type="text" class="photo-input" placeholder="Légende..." 
+                           oninput="photosAfter[${i}].note=this.value" 
+                           value="${escapeHtml(p.note)}">
+                    <button class="btn-now" onclick="removePhoto('after', ${i})">🗑️ Supprimer</button>
+                </div>
+            `;
+        });
+    }
+
+    function removePhoto(type, index) {
+        if (type === 'before') {
+            photosBefore.splice(index, 1);
+        } else {
+            photosAfter.splice(index, 1);
+        }
+        renderGalleries();
+        showToast('Photo supprimée', 'success');
+    }
+
+    function validateStep2() {
+        const taskDone = document.getElementById('task_done').value.trim();
+        if (!taskDone) {
+            showToast('Veuillez remplir le compte-rendu des travaux', 'error');
+            return;
+        }
+        nextStep(3);
+    }
+
+    // ========== STEP 3: SIGNATURE ==========
+    const canvas = document.getElementById('sig-canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function resizeCanvas() {
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        tempCtx.drawImage(canvas, 0, 0);
+        
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+        
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    }
+
+    function startDrawing(e) {
+        drawing = true;
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        e.preventDefault();
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        e.preventDefault();
+    }
+
+    function stopDrawing() {
+        drawing = false;
+    }
+
+    // Touch events
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+
+    // Mouse events for desktop
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    function clearSig() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        showToast('Signature effacée', 'success');
+    }
+
+    function isCanvasBlank(canvas) {
+        const blank = document.createElement('canvas');
+        blank.width = canvas.width;
+        blank.height = canvas.height;
+        return canvas.toDataURL() === blank.toDataURL();
+    }
+
+    // ========== SAVE ENTRY ==========
+    function saveEntry() {
+        // Validation
+        if (!selectedType || !staff.length) {
+            showToast('Type et Équipe requis !', 'error');
+            return;
+        }
+        
+        const checks = [
+            document.getElementById('check1'),
+            document.getElementById('check2'),
+            document.getElementById('check3'),
+            document.getElementById('check4')
+        ];
+        
+        if (!checks.every(c => c.checked)) {
+            showToast('Veuillez valider tous les points de la checklist', 'error');
+            return;
+        }
+        
+        if (isCanvasBlank(canvas)) {
+            showToast('Veuillez faire signer le client', 'error');
+            return;
+        }
+        
+        // Show loading
+        document.getElementById('save-spinner').style.display = 'block';
+        document.getElementById('btn-save').disabled = true;
+        
+        setTimeout(() => {
+            try {
+                const entry = {
+                    id: Date.now(),
+                    date: new Date().toLocaleDateString('fr-FR'),
+                    timestamp: new Date().toISOString(),
+                    type: selectedType,
+                    in: document.getElementById('time_in').value,
+                    out: document.getElementById('time_out').value,
+                    staff: staff.join(', '),
+                    done: document.getElementById('task_done').value,
+                    mat: document.getElementById('task_mat').value,
+                    before: [...photosBefore],
+                    after: [...photosAfter],
+                    sig: canvas.toDataURL('image/png', 0.5),
+                    gps: gpsCoords ? { lat: gpsCoords.lat, lng: gpsCoords.lng } : null
+                };
+                
+                db[cur].entries.push(entry);
+                saveDatabase();
+                
+                document.getElementById('save-spinner').style.display = 'none';
+                document.getElementById('btn-save').disabled = false;
+                
+                showToast('✓ Mission enregistrée avec succès', 'success');
+                nextStep(4);
+            } catch (e) {
+                document.getElementById('save-spinner').style.display = 'none';
+                document.getElementById('btn-save').disabled = false;
+                showToast('Erreur lors de l\'enregistrement', 'error');
+            }
+        }, 500);
+    }
+
+    // ========== STEP 4: VIEW PROJECT ==========
+    function showTimeline() {
+        const t = document.getElementById('timeline');
+        t.innerHTML = '';
+        
+        const isDone = db[cur].status === 'done';
+        document.getElementById('status-toggle-container').innerHTML = `
+            <button class="status-pill ${isDone ? 'status-done' : 'status-ongoing'}" 
+                    onclick="toggleStatus()">
+                ${isDone ? '📦 ARCHIVÉ' : '✓ ACTIF'}
+            </button>
+        `;
+        
+        // Calculate stats
+        const entries = db[cur].entries;
+        document.getElementById('project-interventions').textContent = entries.length;
+        
+        let totalMinutes = 0;
+        entries.forEach(e => {
+            if (e.in && e.out) {
+                const [inH, inM] = e.in.split(':').map(Number);
+                const [outH, outM] = e.out.split(':').map(Number);
+                const minutes = (outH * 60 + outM) - (inH * 60 + inM);
+                if (minutes > 0) totalMinutes += minutes;
+            }
+        });
+        
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        document.getElementById('project-hours').textContent = `${hours}h${minutes > 0 ? minutes : ''}`;
+        
+        // Render timeline
+        [...entries].reverse().forEach(e => {
+            const gpsInfo = e.gps ? `📍 ${e.gps.lat.toFixed(5)}, ${e.gps.lng.toFixed(5)}` : '';
+            
+            t.innerHTML += `
+                <div class="timeline-item">
+                    <div style="font-size:10px; font-weight:900; color:var(--gold); margin-bottom:5px;">
+                        ${escapeHtml(e.date)} | ${escapeHtml(e.type)}
+                    </div>
+                    <div class="section-block">
+                        <strong>Équipe:</strong> ${escapeHtml(e.staff)} (${escapeHtml(e.in)} - ${escapeHtml(e.out)})
+                        ${gpsInfo ? `<br><span style="font-size:9px; color:#888;">${gpsInfo}</span>` : ''}
+                        <br><strong>Travaux:</strong> ${escapeHtml(e.done)}
+                    </div>
+                    ${e.mat ? `<div class="section-block" style="border-left-color:var(--success)">
+                        <strong>Matériel/SAV:</strong> ${escapeHtml(e.mat)}
+                    </div>` : ''}
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin:10px 0;">
+                        <div>
+                            ${e.before.map(p => `
+                                <img src="${escapeHtml(p.src)}" 
+                                     style="width:100%; border:2px solid #e67e22; border-radius:4px; margin-bottom:5px;">
+                                ${p.note ? `<div style="font-size:9px; color:#888; margin-bottom:10px;">${escapeHtml(p.note)}</div>` : ''}
+                            `).join('')}
+                        </div>
+                        <div>
+                            ${e.after.map(p => `
+                                <img src="${escapeHtml(p.src)}" 
+                                     style="width:100%; border:2px solid #2ecc71; border-radius:4px; margin-bottom:5px;">
+                                ${p.note ? `<div style="font-size:9px; color:#888; margin-bottom:10px;">${escapeHtml(p.note)}</div>` : ''}
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px;">
+                        <img src="${escapeHtml(e.sig)}" 
+                             style="width:120px; background:white; border-radius:4px; padding:3px; border:1px solid #ddd;">
+                        <button class="no-print" 
+                                style="color:var(--danger); border:none; background:none; font-size:10px; cursor:pointer; padding:5px;" 
+                                onclick="confirmDeleteEntry(${e.id})">
+                            🗑️ Supprimer
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function confirmDeleteEntry(id) {
+        showModal(
+            'Supprimer l\'intervention',
+            'Cette action est irréversible. Continuer ?',
+            'Supprimer',
+            () => deleteEntry(id)
+        );
+    }
+
+    function deleteEntry(id) {
+        db[cur].entries = db[cur].entries.filter(e => e.id !== id);
+        saveDatabase();
+        showTimeline();
+        showToast('Intervention supprimée', 'success');
+    }
+
+    function newIntervention() {
+        nextStep(1);
+    }
+
+    function toggleStatus() {
+        db[cur].status = (db[cur].status === 'done' ? 'ongoing' : 'done');
+        saveDatabase();
+        showTimeline();
+        loadList();
+        showToast(`Client ${db[cur].status === 'done' ? 'archivé' : 'réactivé'}`, 'success');
+    }
+
+    // ========== PROJECT MANAGEMENT ==========
+    function startNewProject() {
+        const name = prompt('Nom du client :');
+        if (!name) return;
+        
+        if (db[name]) {
+            showToast('Ce client existe déjà', 'error');
+            return;
+        }
+        
+        db[name] = {
+            entries: [],
+            status: 'ongoing',
+            created: new Date().toISOString()
+        };
+        
+        saveDatabase();
+        loadList();
+        showToast('Nouveau client créé', 'success');
+    }
+
+    function confirmDeleteProject() {
+        showModal(
+            'Supprimer le client',
+            `Toutes les interventions pour "${cur}" seront définitivement supprimées. Cette action est irréversible.`,
+            'Supprimer définitivement',
+            deleteFullProject
+        );
+    }
+
+    function deleteFullProject() {
+        delete db[cur];
+        saveDatabase();
+        showToast('Client supprimé', 'success');
+        nextStep(0);
+    }
+
+    function switchTab(status) {
+        currentFilter = status;
+        document.getElementById('tab-active').classList.toggle('active', status === 'ongoing');
+        document.getElementById('tab-archived').classList.toggle('active', status === 'done');
+        loadList();
+    }
+
+    function toggleAdvancedFilters() {
+        const filters = document.getElementById('advancedFilters');
+        filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function filterProjects() {
+        const query = document.getElementById('searchBar').value.toLowerCase();
+        const filterType = document.getElementById('filterType').value;
+        const filterStaff = document.getElementById('filterStaff').value;
+        const filterDateFrom = document.getElementById('filterDateFrom').value;
+        const filterDateTo = document.getElementById('filterDateTo').value;
+        
+        loadList(query, filterType, filterStaff, filterDateFrom, filterDateTo);
+    }
+
+    function loadList(query = '', filterType = '', filterStaff = '', dateFrom = '', dateTo = '') {
+        const list = document.getElementById('project-list');
+        list.innerHTML = '';
+        
+        let activeCount = 0;
+        let totalInterventions = 0;
+        
+        const projects = Object.keys(db)
+            .filter(key => key !== '_version')
+            .sort();
+        
+        projects.forEach(id => {
+            const project = db[id];
+            
+            // Status filter
+            if (project.status !== currentFilter) return;
+            
+            // Search query filter
+            if (query && !id.toLowerCase().includes(query)) return;
+            
+            // Advanced filters
+            if (filterType || filterStaff || dateFrom || dateTo) {
+                const matchesFilters = project.entries.some(e => {
+                    const typeMatch = !filterType || e.type === filterType;
+                    const staffMatch = !filterStaff || e.staff.includes(filterStaff);
+                    
+                    let dateMatch = true;
+                    if (dateFrom || dateTo) {
+                        const entryDate = new Date(e.timestamp || e.date);
+                        if (dateFrom) dateMatch = dateMatch && entryDate >= new Date(dateFrom);
+                        if (dateTo) dateMatch = dateMatch && entryDate <= new Date(dateTo);
+                    }
+                    
+                    return typeMatch && staffMatch && dateMatch;
+                });
+                
+                if (!matchesFilters) return;
+            }
+            
+            // Count stats
+            if (project.status === 'ongoing') activeCount++;
+            totalInterventions += project.entries.length;
+            
+            // Get last entry info
+            const lastEntry = project.entries[project.entries.length - 1];
+            const lastDate = lastEntry ? lastEntry.date : 'Aucune intervention';
+            const entryCount = project.entries.length;
+            
+            list.innerHTML += `
+                <div class="folder-card" onclick="cur='${escapeHtml(id)}';nextStep(4);">
+                    <div class="folder-info">
+                        <div class="folder-name">${escapeHtml(id)}</div>
+                        <div class="folder-meta">
+                            ${entryCount} intervention${entryCount > 1 ? 's' : ''} • Dernière: ${escapeHtml(lastDate)}
+                        </div>
+                    </div>
+                    <div class="folder-arrow">❯</div>
+                </div>
+            `;
+        });
+        
+        if (list.innerHTML === '') {
+            list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun dossier trouvé</p>';
+        }
+        
+        // Update stats
+        document.getElementById('stat-active').textContent = activeCount;
+        document.getElementById('stat-total').textContent = totalInterventions;
+    }
+
+    // ========== EXPORT / IMPORT ==========
     function exportToCSV() {
-        let csv = "\uFEFFClient;Date;Type;Equipe;Travaux;Materiel\n";
-        Object.keys(db).forEach(c => db[c].entries.forEach(e => { csv += `"${c}";"${e.date}";"${e.type}";"${e.staff}";"${e.done.replace(/"/g, '""')}";"${e.mat}"\n`; }));
+        let csv = '\uFEFFClient;Date;Type;Equipe;Arrivee;Depart;Travaux;Materiel;GPS\n';
+        
+        Object.keys(db).forEach(client => {
+            if (client === '_version') return;
+            
+            db[client].entries.forEach(e => {
+                const gps = e.gps ? `${e.gps.lat},${e.gps.lng}` : '';
+                csv += `"${escapeCSV(client)}";`;
+                csv += `"${escapeCSV(e.date)}";`;
+                csv += `"${escapeCSV(e.type)}";`;
+                csv += `"${escapeCSV(e.staff)}";`;
+                csv += `"${escapeCSV(e.in)}";`;
+                csv += `"${escapeCSV(e.out)}";`;
+                csv += `"${escapeCSV(e.done)}";`;
+                csv += `"${escapeCSV(e.mat)}";`;
+                csv += `"${escapeCSV(gps)}"\n`;
+            });
+        });
+        
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.setAttribute("download", "Vertex_Export_Global.csv"); link.click();
+        const link = document.createElement('a');
+        const filename = `Vertex_Export_${new Date().toISOString().split('T')[0]}.csv`;
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', filename);
+        link.click();
+        
+        showToast('Export CSV généré', 'success');
+    }
+
+    function exportBackup() {
+        const backup = {
+            version: CONFIG.DB_VERSION,
+            exportDate: new Date().toISOString(),
+            data: db
+        };
+        
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        const filename = `Vertex_Backup_${new Date().toISOString().split('T')[0]}.json`;
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', filename);
+        link.click();
+        
+        showToast('Sauvegarde complète générée', 'success');
+    }
+
+    function importBackup(input) {
+        const file = input.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const backup = JSON.parse(e.target.result);
+                
+                if (!backup.data || !backup.version) {
+                    throw new Error('Format invalide');
+                }
+                
+                showModal(
+                    'Restaurer les données',
+                    'Cette action remplacera toutes les données actuelles. Continuer ?',
+                    'Restaurer',
+                    () => {
+                        db = backup.data;
+                        saveDatabase();
+                        loadList();
+                        showToast('Données restaurées avec succès', 'success');
+                    }
+                );
+            } catch (err) {
+                showToast('Erreur: fichier invalide', 'error');
+            }
+        };
+        reader.readAsText(file);
+        
+        input.value = '';
     }
 
     function sendProjectMail() {
-        const e = db[cur].entries[db[cur].entries.length - 1];
-        if(!e) return;
-        const subject = encodeURIComponent(`Rapport Vertex - ${cur} - ${e.date}`);
-        const body = encodeURIComponent(`CLIENT: ${cur}\nTYPE: ${e.type}\nEQUIPE: ${e.staff}\nTRAVAUX:\n${e.done}\n\nMATERIEL/SAV:\n${e.mat}`);
-        window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        const entries = db[cur].entries;
+        if (!entries.length) return;
+        
+        const lastEntry = entries[entries.length - 1];
+        
+        const subject = encodeURIComponent(`Rapport Vertex - ${cur} - ${lastEntry.date}`);
+        let body = `CLIENT: ${cur}\n\n`;
+        body += `TYPE: ${lastEntry.type}\n`;
+        body += `DATE: ${lastEntry.date}\n`;
+        body += `ÉQUIPE: ${lastEntry.staff}\n`;
+        body += `HORAIRES: ${lastEntry.in} - ${lastEntry.out}\n\n`;
+        body += `TRAVAUX RÉALISÉS:\n${lastEntry.done}\n\n`;
+        if (lastEntry.mat) {
+            body += `MATÉRIEL/SAV:\n${lastEntry.mat}\n\n`;
+        }
+        if (lastEntry.gps) {
+            body += `POSITION GPS: ${lastEntry.gps.lat}, ${lastEntry.gps.lng}\n`;
+        }
+        body += `\n--- Rapport généré par Vertex Monaco V13 ---`;
+        
+        window.location.href = `mailto:?subject=${subject}&body=${encodeURIComponent(body)}`;
     }
 
+    // ========== UTILITY FUNCTIONS ==========
     function resetForm() {
-        staff = []; photosBefore = []; photosAfter = []; selectedType = "";
+        staff = [];
+        photosBefore = [];
+        photosAfter = [];
+        selectedType = '';
+        
         document.querySelectorAll('.type-chip, .staff-chip').forEach(c => c.classList.remove('selected'));
-        document.getElementById('task_done').value = ""; document.getElementById('task_mat').value = "";
+        document.getElementById('task_done').value = '';
+        document.getElementById('task_mat').value = '';
+        document.getElementById('time_in').value = '';
+        document.getElementById('time_out').value = '';
         document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-        renderGalleries(); clearSig();
+        
+        renderGalleries();
+        clearSig();
     }
 
-    window.onresize = () => { if(document.getElementById('step3').classList.contains('active')) resizeCanvas(); };
-    window.onload = loadList;
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function escapeCSV(text) {
+        if (!text) return '';
+        return text.replace(/"/g, '""');
+    }
+
+    window.onresize = () => {
+        if (document.getElementById('step3').classList.contains('active')) {
+            resizeCanvas();
+        }
+    };
 </script>
 </body>
 </html>
