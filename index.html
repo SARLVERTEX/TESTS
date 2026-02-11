@@ -2,62 +2,31 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#D4AF37">
-    <meta name="description" content="Vertex Monaco - Système de gestion technico-commercial Digital Signage">
-    <title>Vertex Monaco | Digital Signage PRO V3.0</title>
-    
-    <!-- Fonts -->
+    <title>VERTEX MONACO | V4.0 ULTIMATE</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Darker+Grotesque:wght@400;600;800;900&display=swap" rel="stylesheet">
-    
-    <!-- ZXing Barcode Scanner -->
     <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
-    
-    <!-- QR Code Generator -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
     <style>
-        /* ========== VARIABLES ========== */
         :root { 
             --gold: #D4AF37; 
-            --gold-dark: #B8941F;
-            --gold-light: #F5E6B3;
             --bg: #000; 
             --card: #121212; 
             --text: #fff; 
-            --danger: #ff4d4d; 
             --success: #2ecc71; 
-            --border: #282828;
+            --danger: #ff4d4d; 
             --warning: #f39c12;
             --info: #3498db;
-            --accent: #e74c3c;
-            --purple: #9b59b6;
-            --shadow: rgba(212, 175, 55, 0.15);
+            --border: #282828;
         }
         
-        [data-theme="light"] {
-            --bg: #fafafa;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --border: #e0e0e0;
-            --shadow: rgba(0, 0, 0, 0.1);
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* ========== RESET & BASE ========== */
-        * { 
-            box-sizing: border-box; 
-            -webkit-tap-highlight-color: transparent; 
-        }
-        
-        body { 
-            margin: 0; 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Darker Grotesque', sans-serif; 
-            line-height: 1.5; 
-            overflow-x: hidden; 
-            transition: background 0.3s, color 0.3s;
-            font-size: 16px;
+        body {
+            font-family: 'Darker Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
         }
         
         .container { 
@@ -67,171 +36,32 @@
             padding-bottom: 100px; 
         }
         
-        /* ========== TYPOGRAPHY ========== */
-        h1, h2, h3 { 
-            font-weight: 900; 
-            letter-spacing: -0.02em; 
-            margin: 0;
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 3px solid var(--gold);
+            margin-bottom: 30px;
         }
         
-        h1 { font-size: 2.5rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.5rem; }
-        
-        .mono { 
-            font-family: 'Space Mono', monospace; 
-            letter-spacing: 0.05em;
-        }
-        
-        /* ========== HEADER ========== */
-        .header { 
-            text-align: center; 
-            padding: 30px 0; 
-            border-bottom: 3px solid var(--gold); 
-            margin-bottom: 30px; 
-            position: relative;
-            background: linear-gradient(135deg, var(--card) 0%, var(--bg) 100%);
-        }
-        
-        .header h1 { 
-            letter-spacing: 8px; 
-            font-size: 24px; 
-            color: var(--gold); 
-            margin: 0; 
+        .header h1 {
+            letter-spacing: 8px;
+            font-size: 24px;
+            color: var(--gold);
             font-weight: 900;
-            text-shadow: 2px 2px 8px var(--shadow);
         }
         
         .header-subtitle {
             font-size: 11px;
-            color: var(--gold-light);
+            color: var(--gold);
             letter-spacing: 3px;
             margin-top: 8px;
-            font-weight: 600;
             opacity: 0.8;
         }
         
-        .version-badge { 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            font-size: 9px; 
-            background: var(--gold); 
-            color: black; 
-            padding: 5px 12px; 
-            border-radius: 20px; 
-            font-weight: bold;
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-        
-        .theme-toggle { 
-            position: absolute; 
-            top: 20px; 
-            left: 20px; 
-            background: none; 
-            border: 2px solid var(--gold); 
-            color: var(--gold); 
-            padding: 8px 15px; 
-            border-radius: 25px; 
-            cursor: pointer; 
-            font-size: 14px;
-            font-weight: 700;
-            transition: all 0.3s;
-        }
-        
-        .theme-toggle:hover {
-            background: var(--gold);
-            color: black;
-            transform: rotate(180deg);
-        }
-        
-        /* ========== AUTO-SAVE INDICATOR ========== */
-        .autosave-indicator {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            background: var(--success);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: bold;
-            z-index: 9999;
-            display: none;
-            animation: slideInRight 0.3s;
-        }
-        
-        .autosave-indicator.active {
-            display: block;
-        }
-        
-        .autosave-indicator.saving {
-            background: var(--info);
-        }
-        
-        /* ========== INDICATORS ========== */
-        .offline-indicator { 
-            position: fixed; 
-            bottom: 30px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: var(--danger); 
-            color: white; 
-            padding: 12px 20px; 
-            border-radius: 30px; 
-            font-size: 13px; 
-            font-weight: bold; 
-            z-index: 10000; 
-            display: none;
-            box-shadow: 0 6px 20px rgba(255, 77, 77, 0.4);
-        }
-        
-        .offline-indicator.active { 
-            display: block; 
-            animation: pulse 2s infinite; 
-        }
-        
-        @keyframes pulse { 
-            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); } 
-            50% { opacity: 0.8; transform: translateX(-50%) scale(1.02); } 
-        }
-        
-        @keyframes slideInRight {
-            from { transform: translateX(150px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        /* ========== TOAST ========== */
-        .toast { 
-            position: fixed; 
-            top: 30px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: var(--success); 
-            color: white; 
-            padding: 16px 30px; 
-            border-radius: 12px; 
-            font-size: 14px; 
-            font-weight: bold; 
-            z-index: 9999; 
-            animation: toastSlide 0.3s ease;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-        
-        .toast.error { background: var(--danger); }
-        .toast.warning { background: var(--warning); }
-        .toast.info { background: var(--info); }
-        
-        @keyframes toastSlide { 
-            from { transform: translateX(-50%) translateY(-100px); opacity: 0; } 
-            to { transform: translateX(-50%) translateY(0); opacity: 1; } 
-        }
-        
-        /* ========== MAIN NAVIGATION ========== */
+        /* MAIN NAVIGATION */
         .main-nav {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin-bottom: 30px;
         }
@@ -244,186 +74,45 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .nav-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--gold);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-        
-        .nav-card:hover::before {
-            transform: scaleX(1);
         }
         
         .nav-card:hover {
             border-color: var(--gold);
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px var(--shadow);
         }
         
-        .nav-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
+        .nav-icon { font-size: 48px; margin-bottom: 10px; }
+        .nav-title { font-size: 18px; font-weight: 900; color: var(--gold); margin-bottom: 5px; }
+        .nav-subtitle { font-size: 12px; color: #888; }
         
-        .nav-title {
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--gold);
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        
-        .nav-subtitle {
-            font-size: 12px;
-            color: #888;
-            font-weight: 600;
-        }
-        
-        .nav-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--danger);
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
+        /* TABS */
+        .tabs {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 900;
-        }
-        
-        /* ========== PROGRESS BAR ========== */
-        .progress-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-bottom: 30px;
-            position: relative;
-        }
-        
-        .progress-bar::before {
-            content: '';
-            position: absolute;
-            top: 18px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--border);
-            z-index: 0;
-        }
-        
-        .progress-step { 
-            flex: 1; 
-            text-align: center; 
-            position: relative;
-            z-index: 1;
-        }
-        
-        .progress-dot { 
-            width: 36px; 
-            height: 36px; 
-            border-radius: 50%; 
-            background: var(--card); 
-            border: 3px solid var(--border);
-            margin: 0 auto 8px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 12px; 
-            font-weight: 900;
-            transition: all 0.3s;
-        }
-        
-        .progress-step.active .progress-dot { 
-            background: var(--gold); 
-            color: black; 
-            border-color: var(--gold);
-            box-shadow: 0 0 20px var(--shadow);
-            transform: scale(1.1);
-        }
-        
-        .progress-step.completed .progress-dot { 
-            background: var(--success); 
-            color: white; 
-            border-color: var(--success);
-        }
-        
-        .progress-label { 
-            font-size: 11px; 
-            color: #666;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        /* ========== LOADING SPINNER ========== */
-        .spinner-container {
-            text-align: center;
-            padding: 40px 0;
-        }
-        
-        .spinner { 
-            border: 4px solid var(--border); 
-            border-top: 4px solid var(--gold); 
-            border-radius: 50%; 
-            width: 40px; 
-            height: 40px; 
-            animation: spin 0.8s linear infinite; 
-            margin: 0 auto 15px;
-        }
-        
-        @keyframes spin { 
-            0% { transform: rotate(0deg); } 
-            100% { transform: rotate(360deg); } 
-        }
-        
-        .spinner-text {
-            font-size: 13px;
-            color: #666;
-            font-weight: 600;
-        }
-        
-        /* ========== TABS ========== */
-        .tabs { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
             border-bottom: 2px solid var(--border);
             padding-bottom: 10px;
         }
         
-        .tab-btn { 
-            flex: 1; 
-            min-width: 100px; 
-            padding: 14px 20px; 
-            background: transparent; 
+        .tab-btn {
+            flex: 1;
+            padding: 14px 20px;
+            background: transparent;
             border: none;
-            color: #666; 
-            border-radius: 0;
-            font-size: 13px; 
-            font-weight: 800; 
-            cursor: pointer; 
+            color: #666;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
             transition: all 0.3s;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
             position: relative;
         }
         
-        .tab-btn::after {
+        .tab-btn.active {
+            color: var(--gold);
+        }
+        
+        .tab-btn.active::after {
             content: '';
             position: absolute;
             bottom: -12px;
@@ -431,915 +120,418 @@
             right: 0;
             height: 3px;
             background: var(--gold);
-            transform: scaleX(0);
-            transition: transform 0.3s;
         }
         
-        .tab-btn.active { 
-            color: var(--gold);
-        }
-        
-        .tab-btn.active::after {
-            transform: scaleX(1);
-        }
-        
-        .tab-btn:hover {
-            color: var(--gold-light);
-        }
-        
-        /* ========== TYPE CHIPS ========== */
-        .type-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 12px; 
-            margin-bottom: 20px; 
-        }
-        
-        .type-chip { 
-            background: var(--card); 
-            border: 2px solid var(--border); 
-            padding: 16px; 
-            border-radius: 12px; 
-            text-align: center; 
-            font-size: 12px; 
-            font-weight: 900; 
-            color: #666; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .type-chip.selected { 
-            border-color: var(--gold); 
-            color: var(--gold); 
-            background: rgba(212, 175, 55, 0.15);
-            box-shadow: 0 0 20px var(--shadow);
-            transform: translateY(-2px);
-        }
-        
-        .type-chip:hover {
-            border-color: var(--gold-light);
-            transform: translateY(-2px);
-        }
-        
-        .type-chip:active { 
-            transform: scale(0.95); 
-        }
-        
-        /* ========== STAFF GRID ========== */
-        .staff-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-            gap: 10px; 
-        }
-        
-        .staff-chip { 
-            background: var(--card); 
-            border: 2px solid var(--border); 
-            padding: 14px; 
-            border-radius: 10px; 
-            font-size: 13px; 
-            text-align: center; 
-            color: #888; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            font-weight: 700;
-        }
-        
-        .staff-chip.selected { 
-            background: var(--gold); 
-            color: #000; 
-            font-weight: 900; 
-            border-color: var(--gold);
-            box-shadow: 0 4px 15px var(--shadow);
-            transform: translateY(-2px);
-        }
-        
-        .staff-chip:hover {
-            border-color: var(--gold);
-            transform: translateY(-2px);
-        }
-
-        /* ========== CHECKLIST ========== */
-        .check-item { 
-            display: flex; 
-            align-items: center; 
-            background: var(--card); 
-            padding: 16px; 
-            border-radius: 10px; 
-            margin-bottom: 10px; 
-            border: 2px solid var(--border); 
-            transition: all 0.3s;
-        }
-        
-        .check-item:has(input:checked) { 
-            background: rgba(46, 204, 113, 0.15); 
-            border-color: var(--success);
-            box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
-        }
-        
-        .check-item input { 
-            width: 24px; 
-            height: 24px; 
-            margin-right: 15px; 
-            accent-color: var(--gold); 
-            cursor: pointer;
-        }
-        
-        .check-item label {
-            flex: 1;
-            cursor: pointer;
-            user-select: none;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        /* ========== PHOTO SYSTEM ========== */
-        .photo-box { 
-            background: var(--card); 
-            border: 2px solid var(--border); 
-            padding: 20px; 
-            border-radius: 15px; 
-            margin-top: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .photo-box h4 { 
-            margin: 0 0 15px 0; 
-            font-size: 12px; 
-            color: var(--gold); 
-            text-transform: uppercase; 
-            letter-spacing: 2px;
+        /* BUTTONS */
+        .btn-gold {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--gold) 0%, #B8941F 100%);
+            color: black;
+            border: none;
             font-weight: 900;
-        }
-
-        .photo-gallery { 
-            display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 15px; 
-            margin-top: 15px; 
-        }
-
-        .photo-card { 
-            background: var(--bg); 
-            padding: 12px; 
-            border-radius: 12px; 
-            border: 2px solid var(--border); 
-            position: relative;
-            transition: all 0.3s;
-        }
-
-        .photo-card:hover {
-            border-color: var(--gold);
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        .photo-card img { 
-            width: 100%; 
-            border-radius: 8px; 
-            margin-bottom: 10px; 
-            max-height: 400px; 
-            object-fit: contain; 
-            cursor: pointer; 
-            transition: transform 0.3s;
-            background: #1a1a1a;
-        }
-
-        .photo-input { 
-            background: var(--bg); 
-            border: 1px solid var(--border); 
-            color: var(--text); 
-            padding: 10px; 
-            font-size: 13px; 
-            width: 100%; 
-            border-radius: 6px; 
-            margin-bottom: 8px;
-            font-family: 'Darker Grotesque', sans-serif;
-            font-weight: 600;
-        }
-
-        .photo-size { 
-            font-size: 10px; 
-            color: #666; 
-            margin-bottom: 8px;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .photo-controls { 
-            display: flex; 
-            gap: 8px; 
-            margin-top: 8px;
-            flex-wrap: wrap;
-        }
-
-        .photo-controls button { 
-            flex: 1; 
-            min-width: 80px;
-            padding: 8px 12px; 
-            font-size: 10px; 
-            border-radius: 6px; 
-            border: 1px solid var(--border); 
-            background: var(--card); 
-            color: var(--text); 
-            cursor: pointer;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.2s;
-        }
-
-        .photo-controls button:hover {
-            border-color: var(--gold);
-            background: rgba(212, 175, 55, 0.1);
-        }
-
-        /* ========== DRAG & DROP ZONE ========== */
-        .drop-zone {
-            border: 3px dashed var(--border);
             border-radius: 12px;
-            padding: 40px 20px;
-            text-align: center;
-            transition: all 0.3s;
+            text-transform: uppercase;
+            margin-top: 20px;
             cursor: pointer;
-            margin-bottom: 15px;
-        }
-        
-        .drop-zone:hover, .drop-zone.dragover {
-            border-color: var(--gold);
-            background: rgba(212, 175, 55, 0.05);
-        }
-        
-        .drop-zone-icon {
-            font-size: 48px;
-            margin-bottom: 10px;
-        }
-        
-        .drop-zone-text {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--gold);
-            margin-bottom: 5px;
-        }
-        
-        .drop-zone-hint {
-            font-size: 11px;
-            color: #666;
-        }
-
-        /* ========== SIGNATURE ========== */
-        #sig-canvas { 
-            background: #fff; 
-            border: 3px solid var(--gold); 
-            border-radius: 12px; 
-            touch-action: none; 
-            width: 100%; 
-            height: 250px; 
-            cursor: crosshair;
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        /* ========== BUTTONS ========== */
-        .btn-gold { 
-            width: 100%; 
-            padding: 20px; 
-            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-            color: black; 
-            border: none; 
-            font-weight: 900; 
-            border-radius: 12px; 
-            text-transform: uppercase; 
-            margin-top: 20px; 
-            cursor: pointer; 
             transition: all 0.3s;
             font-size: 15px;
-            letter-spacing: 0.1em;
-            box-shadow: 0 6px 20px var(--shadow);
         }
-
+        
         .btn-gold:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px var(--shadow);
         }
-
-        .btn-gold:active { 
-            transform: scale(0.98); 
-        }
-
-        .btn-gold:disabled { 
-            opacity: 0.5; 
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-outline { 
-            width: 100%; 
-            padding: 14px 20px; 
-            background: transparent; 
-            color: var(--text); 
-            border: 2px solid var(--border); 
-            border-radius: 10px; 
-            margin-top: 10px; 
-            cursor: pointer; 
-            transition: all 0.3s;
+        
+        .btn-outline {
+            width: 100%;
+            padding: 14px 20px;
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
             font-weight: 700;
             font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
-
+        
         .btn-outline:hover {
             border-color: var(--gold);
             background: rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
         }
-
-        .btn-now { 
-            background: var(--card); 
-            color: var(--gold); 
-            border: 2px solid var(--gold); 
-            padding: 10px; 
-            border-radius: 8px; 
-            font-size: 11px; 
-            margin-top: 8px; 
-            width: 100%; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            font-weight: 700;
+        
+        /* FORMS */
+        label {
+            display: block;
+            margin: 20px 0 8px 0;
+            font-size: 12px;
+            font-weight: 900;
+            color: var(--gold);
             text-transform: uppercase;
         }
-
-        .btn-now:hover {
-            background: var(--gold);
-            color: black;
-        }
-
-        .btn-danger { 
-            width: 100%; 
-            padding: 14px 20px; 
-            background: rgba(255, 77, 77, 0.1); 
-            color: var(--danger); 
-            border: 2px solid var(--danger); 
-            border-radius: 10px; 
-            margin-top: 30px; 
-            font-size: 12px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: all 0.3s;
-            text-transform: uppercase;
-        }
-
-        .btn-danger:hover {
-            background: var(--danger);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* ========== FORM INPUTS ========== */
-        label { 
-            display: block; 
-            margin: 20px 0 8px 0; 
-            font-size: 12px; 
-            font-weight: 900; 
-            color: var(--gold); 
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        input:not([type="checkbox"]):not([type="file"]):not([type="radio"]), 
-        textarea, 
-        select { 
-            width: 100%; 
-            padding: 14px; 
-            background: var(--card); 
-            border: 2px solid var(--border); 
-            color: var(--text); 
-            border-radius: 10px; 
+        
+        input:not([type="checkbox"]):not([type="file"]),
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 10px;
             font-size: 15px;
             font-family: 'Darker Grotesque', sans-serif;
             font-weight: 600;
-            transition: all 0.3s;
         }
-
+        
         input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--gold);
-            box-shadow: 0 0 20px var(--shadow);
         }
-
-        textarea { 
+        
+        textarea {
             resize: vertical;
             min-height: 120px;
-            line-height: 1.6;
         }
-
-        /* ========== CARDS ========== */
-        .folder-card { 
-            background: var(--card); 
-            border: 2px solid var(--border); 
-            padding: 20px; 
-            border-radius: 12px; 
-            margin-bottom: 12px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            cursor: pointer; 
-            transition: all 0.3s;
-        }
-
-        .folder-card:hover { 
-            border-color: var(--gold); 
-            background: rgba(212, 175, 55, 0.08);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px var(--shadow);
-        }
-
-        .folder-info { 
-            flex: 1; 
-        }
-
-        .folder-name { 
-            font-weight: 900; 
-            font-size: 18px; 
-            margin-bottom: 6px;
-            color: var(--gold);
-        }
-
-        .folder-meta { 
-            font-size: 12px; 
-            color: #666;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .folder-arrow { 
-            color: var(--gold); 
-            font-size: 28px;
-            transition: transform 0.3s;
-        }
-
-        .folder-card:hover .folder-arrow {
-            transform: translateX(5px);
-        }
-
-        /* ========== STATS CARDS ========== */
-        .stats-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 12px; 
-            margin: 20px 0; 
-        }
-
-        .stat-card { 
-            background: var(--card); 
-            border: 2px solid var(--border); 
-            padding: 20px; 
-            border-radius: 12px; 
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-
-        .stat-value { 
-            font-size: 32px; 
-            font-weight: 900; 
-            color: var(--gold);
-            font-family: 'Space Mono', monospace;
-        }
-
-        .stat-label { 
-            font-size: 10px; 
-            color: #666; 
-            text-transform: uppercase; 
-            margin-top: 8px;
-            letter-spacing: 0.05em;
-            font-weight: 700;
-        }
-
-        /* ========== INVENTORY CARDS ========== */
-        .inventory-card {
+        
+        /* CARDS */
+        .card {
             background: var(--card);
             border: 2px solid var(--border);
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 12px;
-            transition: all 0.3s;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .inventory-card:hover {
+        .card:hover {
             border-color: var(--gold);
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px var(--shadow);
         }
         
-        .inventory-header {
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 10px;
         }
         
-        .inventory-ref {
+        .card-title {
             font-weight: 900;
-            font-size: 16px;
+            font-size: 18px;
             color: var(--gold);
         }
         
-        .inventory-status {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-        
-        .status-stock { background: var(--success); color: white; }
-        .status-installed { background: var(--info); color: white; }
-        .status-defect { background: var(--danger); color: white; }
-        .status-maintenance { background: var(--warning); color: black; }
-        
-        .inventory-details {
+        .card-meta {
             font-size: 12px;
             color: #888;
             margin-top: 8px;
         }
         
-        .inventory-sn {
-            font-family: 'Space Mono', monospace;
-            font-size: 11px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        /* ========== BARCODE SCANNER ========== */
-        .scanner-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            margin: 20px auto;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 3px solid var(--gold);
+        /* INVENTORY CARD WITH PHOTO */
+        .inventory-card {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
         }
         
-        #scanner-video {
-            width: 100%;
-            display: block;
+        .inventory-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+            flex-shrink: 0;
         }
         
-        .scanner-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            height: 60%;
-            border: 3px solid var(--gold);
-            border-radius: 12px;
-            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+        .inventory-photo-placeholder {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
         }
         
-        .scanner-line {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gold);
-            animation: scan 2s linear infinite;
+        .inventory-info {
+            flex: 1;
         }
         
-        @keyframes scan {
-            0%, 100% { top: 0; }
-            50% { top: calc(100% - 3px); }
-        }
-
-        /* ========== TIMELINE ========== */
-        .timeline-item { 
-            border-left: 4px solid var(--gold); 
-            padding-left: 25px; 
-            margin-bottom: 50px; 
-            position: relative;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -8px;
-            top: 0;
-            width: 12px;
-            height: 12px;
-            background: var(--gold);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--shadow);
-        }
-
-        .section-block { 
-            background: var(--card); 
-            padding: 15px; 
-            border-radius: 10px; 
-            margin-bottom: 10px; 
-            border-left: 3px solid var(--border);
-            font-size: 14px; 
+        /* TEST CHECKLIST */
+        .test-item {
+            background: var(--card);
             border: 2px solid var(--border);
-            transition: all 0.3s;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-
-        .section-block:hover {
-            border-left-color: var(--gold);
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        
+        .test-item input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            accent-color: var(--gold);
+            cursor: pointer;
         }
-
-        /* ========== MODALS ========== */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            right: 0; 
-            bottom: 0; 
-            background: rgba(0,0,0,0.9); 
-            z-index: 10000; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px;
-            backdrop-filter: blur(10px);
+        
+        .test-item.checked {
+            border-color: var(--success);
+            background: rgba(46, 204, 113, 0.1);
         }
-
-        .modal.active { 
-            display: flex; 
-            animation: fadeIn 0.3s; 
-        }
-
-        .modal-content { 
-            background: var(--card); 
-            border: 3px solid var(--gold); 
-            border-radius: 15px; 
-            padding: 30px; 
-            max-width: 500px; 
-            width: 90%; 
-            max-height: 80vh; 
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .modal-title { 
-            font-size: 20px; 
-            font-weight: 900; 
-            color: var(--gold); 
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        .modal-body { 
-            font-size: 14px; 
-            margin-bottom: 25px; 
-            line-height: 1.6;
+        
+        .test-item label {
+            margin: 0;
+            flex: 1;
+            cursor: pointer;
+            text-transform: none;
+            font-size: 14px;
             font-weight: 600;
         }
-
-        .modal-actions { 
-            display: flex; 
-            gap: 12px; 
-        }
-
-        .modal-btn { 
-            flex: 1; 
-            padding: 14px; 
-            border-radius: 10px; 
-            border: none; 
-            font-weight: 900; 
-            cursor: pointer;
-            font-size: 13px;
-            text-transform: uppercase;
-            transition: all 0.3s;
-        }
-
-        .modal-btn.confirm { 
-            background: var(--gold); 
-            color: black;
-            box-shadow: 0 4px 15px var(--shadow);
-        }
-
-        .modal-btn.cancel { 
-            background: transparent; 
-            color: var(--text); 
-            border: 2px solid var(--border); 
-        }
-
-        /* ========== IMAGE MODAL ========== */
-        .image-modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            right: 0; 
-            bottom: 0; 
-            background: rgba(0,0,0,0.95); 
-            z-index: 10001; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .image-modal.active { 
-            display: flex; 
-            animation: fadeIn 0.3s; 
-        }
-
-        .image-modal img { 
-            max-width: 100%; 
-            max-height: 90vh; 
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-
-        .image-modal-close { 
-            position: absolute; 
-            top: 30px; 
-            right: 30px; 
-            background: var(--danger); 
-            color: white; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: bold;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        /* ========== ANIMATIONS ========== */
-        @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        /* ========== STEP CONTAINER ========== */
-        .step { 
-            display: none; 
-            animation: fadeIn 0.3s ease; 
-        }
-
-        .step.active { 
-            display: block; 
-        }
-
-        /* ========== TEMPLATE SELECTOR ========== */
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin: 20px 0;
+        
+        .test-item-actions {
+            display: flex;
+            gap: 5px;
         }
         
-        .template-card {
+        .test-item-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        .test-item-btn:hover {
+            border-color: var(--gold);
+        }
+        
+        /* CLIENT INFO SECTIONS */
+        .info-section {
             background: var(--card);
             border: 2px solid var(--border);
             border-radius: 12px;
             padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
+            margin-bottom: 15px;
         }
         
-        .template-card:hover, .template-card.selected {
-            border-color: var(--gold);
-            background: rgba(212, 175, 55, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .template-icon {
-            font-size: 32px;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        
-        .template-name {
-            font-weight: 900;
+        .info-section-title {
             font-size: 14px;
+            font-weight: 900;
             color: var(--gold);
-            text-align: center;
-            margin-bottom: 5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .template-desc {
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .info-label {
+            font-weight: 700;
+            min-width: 120px;
+            color: #999;
+        }
+        
+        .info-value {
+            flex: 1;
+            word-break: break-word;
+        }
+        
+        /* PHOTO GALLERY */
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .photo-card {
+            background: var(--bg);
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+        }
+        
+        .photo-card img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--card);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        
+        .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* BADGE */
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
             font-size: 11px;
-            color: #888;
-            text-align: center;
+            font-weight: 900;
+            text-transform: uppercase;
         }
-
-        /* ========== RESPONSIVE ========== */
-        @media (max-width: 600px) {
-            .header h1 {
-                font-size: 20px;
-                letter-spacing: 4px;
-            }
-            
-            .main-nav {
-                grid-template-columns: 1fr;
-            }
-            
-            .type-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+        
+        .badge-success { background: var(--success); color: white; }
+        .badge-warning { background: var(--warning); color: white; }
+        .badge-danger { background: var(--danger); color: white; }
+        .badge-info { background: var(--info); color: white; }
+        
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 16px 30px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 9999;
+            animation: slideDown 0.3s ease;
         }
-
-        /* ========== UTILITY CLASSES ========== */
-        .no-print { }
-        @media print { 
-            .no-print { display: none !important; } 
+        
+        .toast.error { background: var(--danger); }
+        .toast.warning { background: var(--warning); }
+        
+        @keyframes slideDown {
+            from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
         }
+        
+        /* STEP SYSTEM */
+        .step {
+            display: none;
+        }
+        
+        .step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* UTILITIES */
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mb-20 { margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<!-- Indicators -->
-<div class="offline-indicator" id="offlineIndicator">📡 MODE HORS LIGNE</div>
-<div class="autosave-indicator" id="autosaveIndicator">💾 Sauvegardé</div>
-
 <div class="container">
-    <!-- Header -->
     <div class="header">
-        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         <h1>VERTEX MONACO</h1>
-        <p class="header-subtitle">DIGITAL SIGNAGE PRO | V3.0</p>
-        <div class="version-badge">v3.0</div>
+        <p class="header-subtitle">V4.0 ULTIMATE • DIGITAL SIGNAGE</p>
     </div>
 
     <!-- STEP 0: MAIN MENU -->
     <div class="step active" id="step0">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="stat-active">0</div>
-                <div class="stat-label">Projets actifs</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-inventory">0</div>
-                <div class="stat-label">En stock</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-hours">0h</div>
-                <div class="stat-label">Total heures</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-month">0</div>
-                <div class="stat-label">Ce mois</div>
-            </div>
-        </div>
-
         <div class="main-nav">
-            <div class="nav-card" onclick="showProjectsView()">
+            <div class="nav-card" onclick="goTo(1)">
                 <div class="nav-icon">🏢</div>
-                <div class="nav-title">Projets Clients</div>
-                <div class="nav-subtitle">Installations & SAV</div>
-                <div class="nav-badge" id="badge-projects">0</div>
+                <div class="nav-title">PROJETS</div>
+                <div class="nav-subtitle">Clients & Interventions</div>
             </div>
             
-            <div class="nav-card" onclick="showInventoryView()">
+            <div class="nav-card" onclick="goTo(2)">
                 <div class="nav-icon">📦</div>
-                <div class="nav-title">Stock & Réceptions</div>
-                <div class="nav-subtitle">Gestion matériel</div>
-                <div class="nav-badge" id="badge-inventory" style="background:var(--info);">0</div>
+                <div class="nav-title">STOCK</div>
+                <div class="nav-subtitle">Inventaire & Réceptions</div>
+            </div>
+            
+            <div class="nav-card" onclick="goTo(10)">
+                <div class="nav-icon">💻</div>
+                <div class="nav-title">LOGICIELS</div>
+                <div class="nav-subtitle">CMS & Tests logiciels</div>
+            </div>
+            
+            <div class="nav-card" onclick="goTo(11)">
+                <div class="nav-icon">⚙️</div>
+                <div class="nav-title">RÉGLAGES</div>
+                <div class="nav-subtitle">Paramètres & Sauvegarde</div>
             </div>
         </div>
-
-        <button class="btn-outline" onclick="exportToCSV()">📊 EXPORT EXCEL</button>
-        <button class="btn-outline" onclick="exportBackup()">💾 SAUVEGARDER</button>
-        <button class="btn-outline" onclick="document.getElementById('import-file').click()">📥 RESTAURER</button>
-        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(this)">
     </div>
 
-    <!-- STEP 1: PROJECTS VIEW -->
+    <!-- STEP 1: PROJECTS LIST -->
     <div class="step" id="step1">
         <h2 style="color:var(--gold); margin-bottom:20px;">🏢 Projets Clients</h2>
         
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchProjectTab('ongoing')">EN COURS</button>
-            <button class="tab-btn" onclick="switchProjectTab('done')">ARCHIVES</button>
-        </div>
+        <button class="btn-gold" onclick="newProject()">+ NOUVEAU PROJET</button>
         
-        <button class="btn-gold" onclick="showNewProjectOptions()">+ NOUVEAU PROJET</button>
+        <input type="text" id="searchProjects" placeholder="🔍 Rechercher..." style="margin-top:20px;" oninput="filterProjects()">
         
-        <input type="text" id="searchBarProjects" oninput="filterProjects()" placeholder="🔍 Rechercher..." style="margin-top:20px;">
+        <div id="projectsList" style="margin-top:15px;"></div>
         
-        <div id="project-list" style="margin-top:15px;"></div>
-        
-        <button class="btn-outline" onclick="nextStep(0)">← RETOUR</button>
+        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
     </div>
 
-    <!-- STEP 2: INVENTORY VIEW -->
+    <!-- STEP 2: INVENTORY LIST -->
     <div class="step" id="step2">
-        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Stock & Réceptions</h2>
+        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Stock & Inventaire</h2>
         
         <div class="tabs">
             <button class="tab-btn active" onclick="switchInventoryTab('stock')">EN STOCK</button>
@@ -1347,898 +539,461 @@
             <button class="tab-btn" onclick="switchInventoryTab('defect')">DÉFAUT</button>
         </div>
         
-        <button class="btn-gold" onclick="nextStep(7)">+ NOUVELLE RÉCEPTION</button>
+        <button class="btn-gold" onclick="goTo(3)">+ NOUVELLE RÉCEPTION</button>
         
-        <input type="text" id="searchBarInventory" oninput="filterInventory()" placeholder="🔍 Rechercher S/N, ref..." style="margin-top:20px;">
+        <input type="text" id="searchInventory" placeholder="🔍 Rechercher S/N, ref..." style="margin-top:20px;" oninput="filterInventory()">
         
-        <div id="inventory-list" style="margin-top:15px;"></div>
+        <div id="inventoryList" style="margin-top:15px;"></div>
         
-        <button class="btn-outline" onclick="nextStep(0)">← RETOUR</button>
+        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
     </div>
 
-    <!-- STEP 3: PROJECT INFO / START INTERVENTION -->
+    <!-- STEP 3: NEW RECEPTION -->
     <div class="step" id="step3">
-        <div class="progress-bar">
-            <div class="progress-step active">
-                <div class="progress-dot">1</div>
-                <div class="progress-label">Démarrage</div>
-            </div>
-            <div class="progress-step">
-                <div class="progress-dot">2</div>
-                <div class="progress-label">Installation</div>
-            </div>
-            <div class="progress-step">
-                <div class="progress-dot">3</div>
-                <div class="progress-label">Tests</div>
-            </div>
-            <div class="progress-step">
-                <div class="progress-dot">4</div>
-                <div class="progress-label">Finalisation</div>
-            </div>
-        </div>
-
-        <h3 id="c-name" style="text-align:center; color:var(--gold); margin-bottom:25px;"></h3>
-        
-        <label>Type d'intervention *</label>
-        <div class="type-grid">
-            <div class="type-chip" onclick="selectType(this, 'INSTALLATION')">🖥️ INSTALLATION</div>
-            <div class="type-chip" onclick="selectType(this, 'MAINTENANCE')">🔧 MAINTENANCE</div>
-            <div class="type-chip" onclick="selectType(this, 'SAV')">⚠️ SAV</div>
-            <div class="type-chip" onclick="selectType(this, 'CONFIGURATION')">⚙️ CONFIG</div>
-            <div class="type-chip" onclick="selectType(this, 'AUDIT')">📊 AUDIT</div>
-        </div>
-
-        <label>Template d'intervention</label>
-        <select id="intervention-template" onchange="applyInterventionTemplate(this.value)">
-            <option value="">-- Choisir un template --</option>
-            <option value="videowall">Video Wall 3x3</option>
-            <option value="standalone">Écran standalone</option>
-            <option value="menu-board">Menu Board restaurant</option>
-            <option value="custom">Personnalisé</option>
-        </select>
-
-        <label>Équipe sur place *</label>
-        <div class="staff-grid">
-            <div class="staff-chip" onclick="toggleStaff(this)">Allan</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Pietro</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Marco</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Osvaldo</div>
-            <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe</div>
-        </div>
-
-        <label>Heure d'arrivée *</label>
-        <input type="time" id="time_in">
-        <button class="btn-now" onclick="setTime('time_in')">⏰ MAINTENANT</button>
-
-        <div id="gps-info" style="font-size:11px; color: var(--success); margin-top:15px; font-weight:700;"></div>
-
-        <label>Notes / Contexte intervention</label>
-        <textarea id="client_context" rows="3" placeholder="Ex: Installation video wall 3x3, câblage existant, formation utilisateur..."></textarea>
-
-        <button class="btn-gold" onclick="validateStep3()">DÉMARRER L'INTERVENTION</button>
-        <button class="btn-outline" onclick="confirmCancel()">ANNULER</button>
-    </div>
-
-    <!-- STEP 4: PHOTOS INSTALLATION -->
-    <div class="step" id="step4">
-        <div class="progress-bar">
-            <div class="progress-step completed">
-                <div class="progress-dot">✓</div>
-                <div class="progress-label">Démarrage</div>
-            </div>
-            <div class="progress-step active">
-                <div class="progress-dot">2</div>
-                <div class="progress-label">Installation</div>
-            </div>
-            <div class="progress-step">
-                <div class="progress-dot">3</div>
-                <div class="progress-label">Tests</div>
-            </div>
-            <div class="progress-step">
-                <div class="progress-dot">4</div>
-                <div class="progress-label">Finalisation</div>
-            </div>
-        </div>
-
-        <div class="photo-box">
-            <h4>📸 Photos AVANT intervention</h4>
-            <div class="drop-zone" id="drop-before" onclick="document.getElementById('cam-before').click()">
-                <div class="drop-zone-icon">📷</div>
-                <div class="drop-zone-text">Ajouter des photos</div>
-                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
-            </div>
-            <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'before')" style="display:none;" id="cam-before">
-            <div id="gallery-before" class="photo-gallery"></div>
-        </div>
-
-        <div class="photo-box">
-            <h4>📸 Photos PENDANT installation</h4>
-            <div class="drop-zone" id="drop-during" onclick="document.getElementById('cam-during').click()">
-                <div class="drop-zone-icon">📷</div>
-                <div class="drop-zone-text">Ajouter des photos</div>
-                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
-            </div>
-            <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'during')" style="display:none;" id="cam-during">
-            <div id="gallery-during" class="photo-gallery"></div>
-        </div>
-
-        <button class="btn-gold" onclick="validateStep4()">CONTINUER → TESTS</button>
-        <button class="btn-outline" onclick="nextStep(3)">← RETOUR</button>
-    </div>
-
-    <!-- STEP 5: TESTS & CONFIGURATION -->
-    <div class="step" id="step5">
-        <div class="progress-bar">
-            <div class="progress-step completed">
-                <div class="progress-dot">✓</div>
-                <div class="progress-label">Démarrage</div>
-            </div>
-            <div class="progress-step completed">
-                <div class="progress-dot">✓</div>
-                <div class="progress-label">Installation</div>
-            </div>
-            <div class="progress-step active">
-                <div class="progress-dot">3</div>
-                <div class="progress-label">Tests</div>
-            </div>
-            <div class="progress-step">
-                <div class="progress-dot">4</div>
-                <div class="progress-label">Finalisation</div>
-            </div>
-        </div>
-
-        <div class="photo-box">
-            <h4>📸 Photos APRÈS installation</h4>
-            <div class="drop-zone" id="drop-after" onclick="document.getElementById('cam-after').click()">
-                <div class="drop-zone-icon">📷</div>
-                <div class="drop-zone-text">Ajouter des photos</div>
-                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
-            </div>
-            <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'after')" style="display:none;" id="cam-after">
-            <div id="gallery-after" class="photo-gallery"></div>
-        </div>
-
-        <label>Matériel installé / Références *</label>
-        <button class="btn-outline" onclick="selectFromInventory()" style="margin-bottom:10px; border-color:var(--info); color:var(--info);">
-            📦 SÉLECTIONNER DEPUIS LE STOCK
-        </button>
-        <textarea id="task_mat" rows="4" placeholder="Ex:&#10;- Écran Samsung QM85R-B 85'' 4K (S/N: ABC123456)&#10;- Media Player BrightSign XT1144 (S/N: XYZ789)"></textarea>
-
-        <label>Compte-rendu technique *</label>
-        <textarea id="task_done" rows="6" placeholder="Travaux effectués..."></textarea>
-
-        <label>Configuration réseau / Adresses IP</label>
-        <textarea id="task_network" rows="3" placeholder="IP, CMS, Wi-Fi..."></textarea>
-
-        <label>Tests effectués</label>
-        <div id="tests-checklist">
-            <div class="check-item">
-                <input type="checkbox" id="test1">
-                <label for="test1">Affichage image/vidéo OK</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="test2">
-                <label for="test2">Résolution et qualité conformes</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="test3">
-                <label for="test3">Connexion réseau stable</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="test4">
-                <label for="test4">CMS / Playlist fonctionnel</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="test5">
-                <label for="test5">Audio (si applicable)</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="test6">
-                <label for="test6">Programmation horaires</label>
-            </div>
-        </div>
-
-        <button class="btn-gold" onclick="validateStep5()">CONTINUER → FINALISATION</button>
-        <button class="btn-outline" onclick="nextStep(4)">← RETOUR</button>
-    </div>
-
-    <!-- STEP 6: FINALISATION & SIGNATURE -->
-    <div class="step" id="step6">
-        <div class="progress-bar">
-            <div class="progress-step completed">
-                <div class="progress-dot">✓</div>
-                <div class="progress-label">Démarrage</div>
-            </div>
-            <div class="progress-step completed">
-                <div class="progress-dot">✓</div>
-                <div class="progress-label">Installation</div>
-            </div>
-            <div class="progress-step completed">
-                <div class="progress-dot">✓</div>
-                <div class="progress-label">Tests</div>
-            </div>
-            <div class="progress-step active">
-                <div class="progress-dot">4</div>
-                <div class="progress-label">Finalisation</div>
-            </div>
-        </div>
-
-        <label>Heure de départ *</label>
-        <input type="time" id="time_out">
-        <button class="btn-now" onclick="setTime('time_out')">⏰ MAINTENANT</button>
-
-        <label>Pièces détachées / Consommables</label>
-        <textarea id="task_parts" rows="3" placeholder="Chevilles, câbles, connecteurs..."></textarea>
-
-        <label>Recommandations / Formation client</label>
-        <textarea id="task_recommendations" rows="3" placeholder="Formation effectuée, conseils maintenance..."></textarea>
-
-        <label style="margin-top:30px;">Checklist de fin *</label>
-        <div id="checklist-container">
-            <div class="check-item">
-                <input type="checkbox" id="check1">
-                <label for="check1">Chantier nettoyé / Emballages évacués</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="check2">
-                <label for="check2">Tests finaux validés client</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="check3">
-                <label for="check3">Documentation technique remise</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="check4">
-                <label for="check4">Accès CMS / Codes transmis</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="check5">
-                <label for="check5">Formation utilisateur effectuée</label>
-            </div>
-            <div class="check-item">
-                <input type="checkbox" id="check6">
-                <label for="check6">Client informé SAV & Contact</label>
-            </div>
-        </div>
-
-        <label style="margin-top:30px;">Signature client *</label>
-        <canvas id="sig-canvas"></canvas>
-        <button class="btn-outline" onclick="clearSig()">🗑️ EFFACER</button>
-        
-        <div id="save-spinner" style="display:none;">
-            <div class="spinner-container">
-                <div class="spinner"></div>
-                <p class="spinner-text">Enregistrement...</p>
-            </div>
-        </div>
-        
-        <button class="btn-gold" id="btn-save" onclick="saveEntry()">✓ ENREGISTRER</button>
-        <button class="btn-outline" onclick="nextStep(5)">← RETOUR</button>
-    </div>
-
-    <!-- STEP 7: NEW RECEPTION -->
-    <div class="step" id="step7">
         <h2 style="color:var(--gold); margin-bottom:20px;">📦 Nouvelle Réception</h2>
         
-        <label>Scanner code-barres / QR</label>
-        <button class="btn-outline" onclick="startBarcodeScanner()" style="border-color:var(--info); color:var(--info);">
-            📷 SCANNER CODE
-        </button>
-        
-        <div id="scanner-container" style="display:none;">
-            <div class="scanner-container">
-                <video id="scanner-video" autoplay playsinline></video>
-                <div class="scanner-overlay">
-                    <div class="scanner-line"></div>
-                </div>
-            </div>
-            <button class="btn-outline" onclick="stopBarcodeScanner()">⏹️ ARRÊTER</button>
-        </div>
-        
         <label>Type de produit *</label>
-        <div class="template-grid">
-            <div class="template-card" onclick="selectProductTemplate(this, 'display')">
-                <div class="template-icon">🖥️</div>
-                <div class="template-name">ÉCRAN</div>
-                <div class="template-desc">Display, Monitor</div>
-            </div>
-            <div class="template-card" onclick="selectProductTemplate(this, 'player')">
-                <div class="template-icon">📺</div>
-                <div class="template-name">PLAYER</div>
-                <div class="template-desc">Media Player, Box</div>
-            </div>
-            <div class="template-card" onclick="selectProductTemplate(this, 'mount')">
-                <div class="template-icon">🔧</div>
-                <div class="template-name">SUPPORT</div>
-                <div class="template-desc">Mount, Bracket</div>
-            </div>
-            <div class="template-card" onclick="selectProductTemplate(this, 'accessory')">
-                <div class="template-icon">🔌</div>
-                <div class="template-name">ACCESSOIRE</div>
-                <div class="template-desc">Câble, Connecteur</div>
-            </div>
-        </div>
+        <select id="productType" onchange="updateTestTemplate()">
+            <option value="">-- Sélectionner --</option>
+            <option value="display">🖥️ ÉCRAN / DISPLAY</option>
+            <option value="player">📺 MEDIA PLAYER</option>
+            <option value="led_module">💡 MODULE LED</option>
+            <option value="mount">🔧 SUPPORT / FIXATION</option>
+            <option value="cable">🔌 CÂBLE / CONNECTEUR</option>
+            <option value="other">📦 AUTRE</option>
+        </select>
         
         <label>Référence produit *</label>
-        <input type="text" id="reception-ref" placeholder="Ex: Samsung QM85R-B">
+        <input type="text" id="receptionRef" placeholder="Ex: Samsung QM85R-B">
         
         <label>Numéro de série *</label>
-        <input type="text" id="reception-sn" placeholder="S/N">
+        <input type="text" id="receptionSN" placeholder="S/N">
         
         <label>Quantité</label>
-        <input type="number" id="reception-qty" value="1" min="1">
+        <input type="number" id="receptionQty" value="1" min="1">
         
-        <label>État de réception</label>
-        <select id="reception-status">
+        <label>📸 Photo produit (affichée dans l'inventaire)</label>
+        <input type="file" id="receptionMainPhoto" accept="image/*" onchange="previewMainPhoto(this)">
+        <div id="mainPhotoPreview" style="margin-top:10px;"></div>
+        
+        <label>Tests de réception</label>
+        <div id="testsContainer"></div>
+        
+        <button class="btn-outline" onclick="addCustomTest()" style="border-color:var(--info); color:var(--info);">
+            + AJOUTER ÉTAPE DE TEST
+        </button>
+        
+        <label>Notes / Défauts constatés</label>
+        <textarea id="receptionNotes" placeholder="Remarques..."></textarea>
+        
+        <label>Photos supplémentaires</label>
+        <input type="file" id="receptionPhotos" accept="image/*" multiple onchange="handleReceptionPhotos(this)">
+        <div id="receptionGallery" class="photo-gallery"></div>
+        
+        <label>Statut</label>
+        <select id="receptionStatus">
             <option value="stock">✓ OK - En stock</option>
             <option value="defect">✗ Défaut constaté</option>
         </select>
         
-        <label>Notes / Défauts</label>
-        <textarea id="reception-notes" rows="3" placeholder="Remarques..."></textarea>
-        
-        <div class="photo-box">
-            <h4>📸 Photos produit</h4>
-            <div class="drop-zone" onclick="document.getElementById('cam-reception').click()">
-                <div class="drop-zone-icon">📷</div>
-                <div class="drop-zone-text">Ajouter des photos</div>
-                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
-            </div>
-            <input type="file" accept="image/*" multiple onchange="handleReceptionPhotos(this)" style="display:none;" id="cam-reception">
-            <div id="gallery-reception" class="photo-gallery"></div>
-        </div>
-        
-        <label>Tests de réception</label>
-        <div id="reception-tests-container"></div>
-        
-        <button class="btn-gold" onclick="saveReception()">✓ ENREGISTRER RÉCEPTION</button>
-        <button class="btn-outline" onclick="nextStep(2)">← RETOUR</button>
+        <button class="btn-gold" onclick="saveReception()">✓ ENREGISTRER</button>
+        <button class="btn-outline" onclick="goTo(2)">← ANNULER</button>
     </div>
 
-    <!-- STEP 8: VIEW PROJECT -->
-    <div class="step" id="step8">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-            <h2 id="view-n" style="color:var(--gold); margin:0; font-size:22px;"></h2>
-            <div id="status-toggle-container"></div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-value" id="project-interventions">0</div>
-                <div class="stat-label">Interventions</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="project-hours">0h</div>
-                <div class="stat-label">Temps total</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value" id="project-screens">0</div>
-                <div class="stat-label">Écrans installés</div>
-            </div>
-        </div>
-
-        <div id="timeline" style="margin-top:30px;"></div>
+    <!-- STEP 4: VIEW CLIENT -->
+    <div class="step" id="step4">
+        <h2 id="clientName" style="color:var(--gold); margin-bottom:20px;"></h2>
         
-        <div class="no-print">
-            <button class="btn-outline" style="color:#2ecc71; border-color:#2ecc71;" onclick="sendProjectMail()">
-                ✉️ ENVOYER PAR MAIL
-            </button>
-            <button class="btn-gold" onclick="newIntervention()">+ NOUVELLE INTERVENTION</button>
-            <button class="btn-outline" onclick="exportProjectPDF()">🖨️ GÉNÉRER PDF</button>
-            <button class="btn-outline" onclick="nextStep(1)">← RETOUR PROJETS</button>
-            <button class="btn-danger" onclick="confirmDeleteProject()">⚠️ SUPPRIMER</button>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchClientTab('info')">INFOS</button>
+            <button class="tab-btn" onclick="switchClientTab('interventions')">INTERVENTIONS</button>
+            <button class="tab-btn" onclick="switchClientTab('equipement')">ÉQUIPEMENT</button>
         </div>
+        
+        <div id="clientTabContent"></div>
+        
+        <button class="btn-gold" onclick="editClientInfo()">✏️ MODIFIER</button>
+        <button class="btn-outline" onclick="goTo(1)">← RETOUR</button>
     </div>
 
-    <!-- STEP 9: VIEW INVENTORY ITEM -->
-    <div class="step" id="step9">
-        <h2 id="inventory-item-ref" style="color:var(--gold); margin-bottom:10px;"></h2>
-        <div id="inventory-item-sn" style="font-family:'Space Mono',monospace; font-size:13px; color:#888; margin-bottom:20px;"></div>
+    <!-- STEP 10: SOFTWARE -->
+    <div class="step" id="step10">
+        <h2 style="color:var(--gold); margin-bottom:20px;">💻 Logiciels & Tests</h2>
         
-        <div id="inventory-item-details"></div>
-        
-        <div class="photo-box">
-            <h4>📸 Photos</h4>
-            <div id="inventory-item-photos"></div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchSoftwareTab('cms')">CMS</button>
+            <button class="tab-btn" onclick="switchSoftwareTab('firmware')">FIRMWARE</button>
+            <button class="tab-btn" onclick="switchSoftwareTab('tests')">TESTS</button>
         </div>
         
-        <div id="inventory-item-qr" style="text-align:center; margin:30px 0;"></div>
+        <button class="btn-gold" onclick="newSoftwareEntry()">+ NOUVELLE ENTRÉE</button>
         
-        <button class="btn-outline" onclick="printInventoryLabel()">🖨️ IMPRIMER ÉTIQUETTE</button>
-        <button class="btn-outline" onclick="editInventoryItem()">✏️ MODIFIER</button>
-        <button class="btn-outline" onclick="nextStep(2)">← RETOUR STOCK</button>
-        <button class="btn-danger" onclick="confirmDeleteInventoryItem()">⚠️ SUPPRIMER</button>
+        <div id="softwareList" style="margin-top:15px;"></div>
+        
+        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
     </div>
 
+    <!-- STEP 11: SETTINGS -->
+    <div class="step" id="step11">
+        <h2 style="color:var(--gold); margin-bottom:20px;">⚙️ Réglages</h2>
+        
+        <button class="btn-outline mb-20" onclick="exportBackup()">💾 SAUVEGARDER</button>
+        <button class="btn-outline mb-20" onclick="document.getElementById('importFile').click()">📥 RESTAURER</button>
+        <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importBackup(this)">
+        
+        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
+    </div>
 </div>
 
 <!-- MODALS -->
-<div class="modal" id="confirmModal">
+<div class="modal" id="editClientModal">
     <div class="modal-content">
-        <div class="modal-title" id="modalTitle">Confirmation</div>
-        <div class="modal-body" id="modalBody">Êtes-vous sûr ?</div>
-        <div class="modal-actions">
-            <button class="modal-btn cancel" onclick="closeModal()">Annuler</button>
-            <button class="modal-btn confirm" id="modalConfirm" onclick="modalConfirmAction()">Confirmer</button>
-        </div>
+        <button class="modal-close" onclick="closeModal('editClientModal')">×</button>
+        <div class="modal-title">Informations Client</div>
+        
+        <label>Nom du client *</label>
+        <input type="text" id="editClientName">
+        
+        <label>📞 Contact direct</label>
+        <input type="text" id="editClientContact" placeholder="Nom, tél, email...">
+        
+        <label>🔑 Clés / Codes d'accès</label>
+        <textarea id="editClientKeys" rows="3" placeholder="Code porte, clé remise, badge..."></textarea>
+        
+        <label>📍 Accès exact</label>
+        <textarea id="editClientAccess" rows="3" placeholder="Parking, étage, ascenseur..."></textarea>
+        
+        <label>📋 Consignes spécifiques</label>
+        <textarea id="editClientInstructions" rows="4" placeholder="Horaires d'accès, procédures..."></textarea>
+        
+        <label>⚙️ Spécifications matériel</label>
+        <textarea id="editClientSpecs" rows="4" placeholder="Configuration réseau, CMS utilisé..."></textarea>
+        
+        <button class="btn-gold" onclick="saveClientInfo()">✓ ENREGISTRER</button>
     </div>
 </div>
 
-<div class="modal" id="inventorySelectModal">
+<div class="modal" id="newTestModal">
     <div class="modal-content">
-        <div class="modal-title">Sélectionner depuis le stock</div>
-        <div class="modal-body">
-            <input type="text" id="inventory-search-modal" placeholder="🔍 Rechercher..." style="margin-bottom:15px;">
-            <div id="inventory-select-list" style="max-height:400px; overflow-y:auto;"></div>
-        </div>
-        <div class="modal-actions">
-            <button class="modal-btn cancel" onclick="closeInventorySelectModal()">Annuler</button>
-        </div>
+        <button class="modal-close" onclick="closeModal('newTestModal')">×</button>
+        <div class="modal-title">Nouvelle étape de test</div>
+        
+        <label>Description du test</label>
+        <input type="text" id="customTestLabel" placeholder="Ex: Vérifier luminosité uniforme">
+        
+        <button class="btn-gold" onclick="addTestToList()">+ AJOUTER</button>
     </div>
-</div>
-
-<div class="image-modal" id="imageModal" onclick="closeImageModal()">
-    <button class="image-modal-close">✕ FERMER</button>
-    <img id="modalImage" src="" alt="">
 </div>
 
 <script>
-// ========== CONFIGURATION ==========
+// ========== CONFIG ==========
 const CONFIG = {
-    DB_NAME: 'VertexDB_V3',
-    DB_VERSION: 3,
-    MAX_IMAGE_SIZE: 1400,
-    IMAGE_QUALITY: 0.75,
-    AUTOSAVE_INTERVAL: 30000, // 30 seconds
+    DB_NAME: 'VertexDB_V4',
+    VERSION: 4
 };
 
-// ========== TEMPLATES ==========
-const INTERVENTION_TEMPLATES = {
-    videowall: {
-        mat: "- Écran x9 (3x3)\n- Support mural renforcé x9\n- Media Player\n- Câblage HDMI",
-        done: "Installation video wall 3x3\nCâblage dissimulé\nConfiguration sync écrans",
-        network: "IP Media Player: 192.168.1.50\nCMS: ",
-    },
-    standalone: {
-        mat: "- Écran 1x\n- Support mural\n- Media Player\n- Câbles",
-        done: "Installation écran standalone\nConfiguration CMS",
-        network: "IP: 192.168.1.50",
-    },
-    "menu-board": {
-        mat: "- Écran x2 (portrait)\n- Support mural x2\n- Media Player x2",
-        done: "Installation menu board\nOrientation portrait\nPlaylist menu",
-        network: "IP Player 1: 192.168.1.50\nIP Player 2: 192.168.1.51",
-    }
-};
-
-const PRODUCT_TEST_TEMPLATES = {
+// ========== TEST TEMPLATES ==========
+const TEST_TEMPLATES = {
     display: [
-        { id: 'visual', label: 'État physique OK (pas de dommage)' },
-        { id: 'power', label: 'Allumage / Mise sous tension OK' },
-        { id: 'display', label: 'Affichage / Image OK (pixels morts)' },
-        { id: 'ports', label: 'Connecteurs HDMI/DP fonctionnels' },
-        { id: 'remote', label: 'Télécommande incluse et fonctionnelle' },
+        'État physique OK (pas de dommage)',
+        'Allumage / Mise sous tension OK',
+        'Affichage image OK (pas de pixels morts)',
+        'Test résolutions (Full HD, 4K si applicable)',
+        'Ports HDMI/DP fonctionnels',
+        'Luminosité conforme aux specs',
+        'Uniformité de l\'affichage',
+        'Télécommande incluse et fonctionnelle'
     ],
     player: [
-        { id: 'visual', label: 'État physique OK' },
-        { id: 'boot', label: 'Boot système OK' },
-        { id: 'network', label: 'Connectivité réseau OK' },
-        { id: 'ports', label: 'Ports USB/SD fonctionnels' },
-        { id: 'video', label: 'Sortie vidéo OK' },
+        'État physique OK',
+        'Boot système OK',
+        'Connexion réseau Ethernet OK',
+        'Connexion WiFi OK',
+        'Sortie HDMI fonctionnelle',
+        'Ports USB fonctionnels',
+        'Lecture média test OK',
+        'CMS compatible (si applicable)'
+    ],
+    led_module: [
+        'État physique modules OK',
+        'Alimentation 5V OK',
+        'Test pixels rouges OK',
+        'Test pixels verts OK',
+        'Test pixels bleus OK',
+        'Test pixels blancs OK',
+        'Uniformité luminosité OK',
+        'Aucun pixel mort détecté',
+        'Connecteurs fonctionnels'
     ],
     mount: [
-        { id: 'visual', label: 'Pièces complètes et non endommagées' },
-        { id: 'screws', label: 'Visserie complète' },
-        { id: 'manual', label: 'Manuel d\'installation inclus' },
+        'Pièces complètes (inventaire)',
+        'Aucun dommage visible',
+        'Visserie complète',
+        'Manuel d\'installation inclus',
+        'Compatibilité vérifiée'
     ],
-    accessory: [
-        { id: 'visual', label: 'État physique OK' },
-        { id: 'functional', label: 'Test fonctionnel OK' },
+    cable: [
+        'État physique OK',
+        'Connecteurs non endommagés',
+        'Test continuité OK',
+        'Longueur conforme'
+    ],
+    other: [
+        'État physique OK',
+        'Test fonctionnel OK'
     ]
 };
 
 // ========== STATE ==========
-let db = { projects: {}, inventory: {} };
-let indexedDB_instance = null;
-let cur = null;
-let curInventory = null;
-let staff = [];
-let photosBefore = [];
-let photosDuring = [];
-let photosAfter = [];
-let receptionPhotos = [];
-let selectedType = "";
-let selectedProductType = "";
-let currentProjectFilter = 'ongoing';
-let currentInventoryFilter = 'stock';
-let gpsCoords = null;
-let hasUnsavedChanges = false;
-let modalCallback = null;
-let isOnline = navigator.onLine;
-let currentTheme = localStorage.getItem('vertex_theme') || 'dark';
-let autosaveTimer = null;
-let barcodeScanner = null;
+let db = {
+    projects: {},
+    inventory: {},
+    software: {}
+};
 
-// ========== INITIALIZATION ==========
-window.addEventListener('load', async () => {
-    console.log('🚀 Vertex Monaco V3.0');
-    
-    await initIndexedDB();
-    await loadFromIndexedDB();
-    applyTheme(currentTheme);
-    requestGeolocation();
-    setupNetworkListeners();
-    setupDragAndDrop();
-    updateAllStats();
-    startAutosave();
-    
-    console.log('✓ Système prêt');
+let currentProject = null;
+let currentInventoryFilter = 'stock';
+let currentClientTab = 'info';
+let currentSoftwareTab = 'cms';
+let receptionTests = [];
+let receptionMainPhotoData = null;
+let receptionPhotos = [];
+
+// ========== INIT ==========
+window.addEventListener('load', () => {
+    loadData();
+    console.log('✅ Vertex V4.0 chargé');
 });
 
-// ========== INDEXED DB ==========
-async function initIndexedDB() {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(CONFIG.DB_NAME, CONFIG.DB_VERSION);
-        
-        request.onerror = () => reject(request.error);
-        
-        request.onsuccess = () => {
-            indexedDB_instance = request.result;
-            resolve();
-        };
-        
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-            if (!db.objectStoreNames.contains('data')) {
-                db.createObjectStore('data', { keyPath: 'id' });
-            }
-        };
-    });
-}
-
-async function loadFromIndexedDB() {
-    try {
-        const transaction = indexedDB_instance.transaction(['data'], 'readonly');
-        const store = transaction.objectStore('data');
-        const request = store.get('main');
-        
-        request.onsuccess = () => {
-            if (request.result) {
-                db = request.result.data;
-                // Ensure structure
-                if (!db.projects) db.projects = {};
-                if (!db.inventory) db.inventory = {};
-            }
-        };
-    } catch (e) {
-        const stored = localStorage.getItem('vertex_v3_db');
-        if (stored) {
-            try {
-                db = JSON.parse(stored);
-                if (!db.projects) db.projects = {};
-                if (!db.inventory) db.inventory = {};
-            } catch (e) {
-                db = { projects: {}, inventory: {} };
-            }
-        }
+function loadData() {
+    const stored = localStorage.getItem(CONFIG.DB_NAME);
+    if (stored) {
+        db = JSON.parse(stored);
     }
+    if (!db.projects) db.projects = {};
+    if (!db.inventory) db.inventory = {};
+    if (!db.software) db.software = {};
 }
 
-async function saveToIndexedDB() {
-    try {
-        const transaction = indexedDB_instance.transaction(['data'], 'readwrite');
-        const store = transaction.objectStore('data');
-        await store.put({ id: 'main', data: db });
-        
-        localStorage.setItem('vertex_v3_db', JSON.stringify(db));
-        hasUnsavedChanges = false;
-        
-        showAutosaveIndicator();
-    } catch (e) {
-        console.error('Save error:', e);
-        showToast('Erreur sauvegarde', 'error');
-    }
-}
-
-// ========== AUTOSAVE ==========
-function startAutosave() {
-    autosaveTimer = setInterval(() => {
-        if (hasUnsavedChanges) {
-            saveToIndexedDB();
-        }
-    }, CONFIG.AUTOSAVE_INTERVAL);
-}
-
-function showAutosaveIndicator() {
-    const indicator = document.getElementById('autosaveIndicator');
-    indicator.classList.add('active');
-    setTimeout(() => {
-        indicator.classList.remove('active');
-    }, 2000);
-}
-
-// ========== THEME ==========
-function toggleTheme() {
-    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    applyTheme(currentTheme);
-    localStorage.setItem('vertex_theme', currentTheme);
-}
-
-function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-}
-
-// ========== NETWORK ==========
-function setupNetworkListeners() {
-    window.addEventListener('online', () => {
-        isOnline = true;
-        document.getElementById('offlineIndicator').classList.remove('active');
-        showToast('✓ Connexion rétablie', 'success');
-    });
-    
-    window.addEventListener('offline', () => {
-        isOnline = false;
-        document.getElementById('offlineIndicator').classList.add('active');
-        showToast('📡 Mode hors ligne', 'warning');
-    });
-    
-    if (!isOnline) {
-        document.getElementById('offlineIndicator').classList.add('active');
-    }
-}
-
-// ========== DRAG & DROP ==========
-function setupDragAndDrop() {
-    ['drop-before', 'drop-during', 'drop-after'].forEach(id => {
-        const zone = document.getElementById(id);
-        if (!zone) return;
-        
-        zone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            zone.classList.add('dragover');
-        });
-        
-        zone.addEventListener('dragleave', () => {
-            zone.classList.remove('dragover');
-        });
-        
-        zone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            zone.classList.remove('dragover');
-            
-            const type = id.replace('drop-', '');
-            const files = Array.from(e.dataTransfer.files);
-            
-            if (files.length > 0) {
-                processPhotoFiles(files, type);
-            }
-        });
-    });
-}
-
-function processPhotoFiles(files, type) {
-    const imageFiles = files.filter(f => f.type.startsWith('image/'));
-    if (imageFiles.length === 0) {
-        showToast('⚠️ Aucune image trouvée', 'warning');
-        return;
-    }
-    
-    showToast(`📸 Traitement de ${imageFiles.length} photo(s)...`, 'info');
-    
-    imageFiles.forEach(file => {
-        compressImage(file, (compressedDataUrl, originalSize, compressedSize) => {
-            const imgObj = {
-                src: compressedDataUrl,
-                note: "",
-                originalSize: originalSize,
-                compressedSize: compressedSize,
-                rotation: 0
-            };
-            
-            if (type === 'before') photosBefore.push(imgObj);
-            else if (type === 'during') photosDuring.push(imgObj);
-            else photosAfter.push(imgObj);
-            
-            renderGalleries();
-            hasUnsavedChanges = true;
-        });
-    });
-}
-
-// ========== TOAST & MODALS ==========
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.animation = 'toastSlide 0.3s ease reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
-
-function showModal(title, body, confirmText, callback) {
-    document.getElementById('modalTitle').textContent = title;
-    document.getElementById('modalBody').textContent = body;
-    document.getElementById('modalConfirm').textContent = confirmText;
-    modalCallback = callback;
-    document.getElementById('confirmModal').classList.add('active');
-}
-
-function closeModal() {
-    document.getElementById('confirmModal').classList.remove('active');
-    modalCallback = null;
-}
-
-function modalConfirmAction() {
-    if (modalCallback) modalCallback();
-    closeModal();
+function saveData() {
+    localStorage.setItem(CONFIG.DB_NAME, JSON.stringify(db));
 }
 
 // ========== NAVIGATION ==========
-function nextStep(n) {
+function goTo(step) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step' + n).classList.add('active');
+    document.getElementById('step' + step).classList.add('active');
     
-    if (n === 6) {
-        setTimeout(resizeCanvas, 200);
-    }
-    if (n === 3) {
-        document.getElementById('c-name').textContent = cur;
-        resetInterventionForm();
-    }
-    if (n === 7) {
-        resetReceptionForm();
-    }
-    if (n === 8) {
-        showProjectTimeline();
-    }
-    if (n === 9) {
-        showInventoryItem();
-    }
-    if (n === 1) {
-        loadProjectsList();
-    }
-    if (n === 2) {
-        loadInventoryList();
-    }
-    if (n === 0) {
-        updateAllStats();
+    if (step === 1) loadProjects();
+    if (step === 2) loadInventory();
+    if (step === 3) resetReceptionForm();
+    if (step === 4) loadClientView();
+    if (step === 10) loadSoftware();
+    
+    window.scrollTo(0, 0);
+}
+
+// ========== TOAST ==========
+function showToast(msg, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+
+// ========== MODALS ==========
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+
+// ========== PROJECTS ==========
+function newProject() {
+    const name = prompt('Nom du client/projet :');
+    if (!name || !name.trim()) return;
+    
+    const key = name.trim();
+    if (db.projects[key]) {
+        showToast('Ce projet existe déjà', 'error');
+        return;
     }
     
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function confirmCancel() {
-    if (hasUnsavedChanges) {
-        showModal(
-            'Annuler',
-            'Les données non enregistrées seront perdues.',
-            'Oui, annuler',
-            () => nextStep(0)
-        );
-    } else {
-        nextStep(0);
-    }
-}
-
-// ========== MAIN VIEWS ==========
-function showProjectsView() {
-    currentProjectFilter = 'ongoing';
-    nextStep(1);
-}
-
-function showInventoryView() {
-    currentInventoryFilter = 'stock';
-    nextStep(2);
-}
-
-// ========== PROJECT FUNCTIONS ==========
-function switchProjectTab(tab) {
-    currentProjectFilter = tab;
+    db.projects[key] = {
+        name: key,
+        created: new Date().toISOString(),
+        contact: '',
+        keys: '',
+        access: '',
+        instructions: '',
+        specs: '',
+        interventions: [],
+        equipment: []
+    };
     
-    document.querySelectorAll('#step1 .tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('#step1 .tab-btn')[tab === 'ongoing' ? 0 : 1].classList.add('active');
-    
-    loadProjectsList();
+    saveData();
+    loadProjects();
+    showToast('✓ Projet créé', 'success');
 }
 
-function loadProjectsList(query = '') {
-    const list = document.getElementById('project-list');
+function loadProjects() {
+    const list = document.getElementById('projectsList');
+    const query = document.getElementById('searchProjects').value.toLowerCase();
+    
     list.innerHTML = '';
     
-    const projects = Object.keys(db.projects)
-        .filter(key => db.projects[key].status === currentProjectFilter)
-        .filter(key => !query || key.toLowerCase().includes(query.toLowerCase()))
-        .sort((a, b) => {
-            const aDate = db.projects[a].entries.length > 0 ? 
-                new Date(db.projects[a].entries[db.projects[a].entries.length - 1].timestamp) : 
-                new Date(db.projects[a].created);
-            const bDate = db.projects[b].entries.length > 0 ? 
-                new Date(db.projects[b].entries[db.projects[b].entries.length - 1].timestamp) : 
-                new Date(db.projects[b].created);
-            return bDate - aDate;
-        });
+    const projects = Object.keys(db.projects).filter(k => 
+        k.toLowerCase().includes(query)
+    ).sort();
     
     if (projects.length === 0) {
         list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun projet</p>';
         return;
     }
     
-    projects.forEach(id => {
-        const project = db.projects[id];
-        const lastEntry = project.entries[project.entries.length - 1];
-        const lastDate = lastEntry ? lastEntry.date : 'Aucune intervention';
-        const entryCount = project.entries.length;
+    projects.forEach(key => {
+        const p = db.projects[key];
+        const interventionCount = p.interventions?.length || 0;
         
         list.innerHTML += `
-            <div class="folder-card" onclick="cur='${escapeHtml(id)}';nextStep(8);">
-                <div class="folder-info">
-                    <div class="folder-name">${escapeHtml(id)}</div>
-                    <div class="folder-meta">
-                        ${entryCount} intervention${entryCount > 1 ? 's' : ''} • ${escapeHtml(lastDate)}
-                    </div>
+            <div class="card" onclick="currentProject='${escapeHtml(key)}';goTo(4);">
+                <div class="card-header">
+                    <div class="card-title">${escapeHtml(key)}</div>
                 </div>
-                <div class="folder-arrow">❯</div>
+                <div class="card-meta">
+                    ${interventionCount} intervention${interventionCount > 1 ? 's' : ''}
+                    ${p.contact ? ' • ' + escapeHtml(p.contact.split('\n')[0]) : ''}
+                </div>
             </div>
         `;
     });
 }
 
 function filterProjects() {
-    const query = document.getElementById('searchBarProjects').value;
-    loadProjectsList(query);
+    loadProjects();
 }
 
-function showNewProjectOptions() {
-    const name = prompt('📁 Nom du projet / client :');
-    if (!name) return;
+// ========== CLIENT VIEW ==========
+function switchClientTab(tab) {
+    currentClientTab = tab;
+    document.querySelectorAll('#step4 .tab-btn').forEach(b => b.classList.remove('active'));
+    const index = tab === 'info' ? 0 : tab === 'interventions' ? 1 : 2;
+    document.querySelectorAll('#step4 .tab-btn')[index].classList.add('active');
+    loadClientView();
+}
+
+function loadClientView() {
+    const client = db.projects[currentProject];
+    if (!client) return;
     
-    const trimmed = name.trim();
-    if (!trimmed) {
-        showToast('⚠️ Le nom ne peut pas être vide', 'error');
+    document.getElementById('clientName').textContent = client.name;
+    const content = document.getElementById('clientTabContent');
+    
+    if (currentClientTab === 'info') {
+        content.innerHTML = `
+            <div class="info-section">
+                <div class="info-section-title">📞 CONTACT</div>
+                <div class="info-value">${escapeHtml(client.contact) || 'Non renseigné'}</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-section-title">🔑 CLÉS / CODES</div>
+                <div class="info-value">${escapeHtml(client.keys) || 'Non renseigné'}</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-section-title">📍 ACCÈS</div>
+                <div class="info-value">${escapeHtml(client.access) || 'Non renseigné'}</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-section-title">📋 CONSIGNES</div>
+                <div class="info-value">${escapeHtml(client.instructions) || 'Non renseigné'}</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-section-title">⚙️ SPÉCIFICATIONS</div>
+                <div class="info-value">${escapeHtml(client.specs) || 'Non renseigné'}</div>
+            </div>
+        `;
+    } else if (currentClientTab === 'interventions') {
+        content.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Module interventions à venir</p>';
+    } else if (currentClientTab === 'equipement') {
+        content.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Équipement installé à venir</p>';
+    }
+}
+
+function editClientInfo() {
+    const client = db.projects[currentProject];
+    if (!client) return;
+    
+    document.getElementById('editClientName').value = client.name;
+    document.getElementById('editClientContact').value = client.contact || '';
+    document.getElementById('editClientKeys').value = client.keys || '';
+    document.getElementById('editClientAccess').value = client.access || '';
+    document.getElementById('editClientInstructions').value = client.instructions || '';
+    document.getElementById('editClientSpecs').value = client.specs || '';
+    
+    document.getElementById('editClientModal').classList.add('active');
+}
+
+function saveClientInfo() {
+    const client = db.projects[currentProject];
+    if (!client) return;
+    
+    const newName = document.getElementById('editClientName').value.trim();
+    
+    if (!newName) {
+        showToast('Le nom ne peut pas être vide', 'error');
         return;
     }
     
-    if (db.projects[trimmed]) {
-        showToast('⚠️ Ce projet existe déjà', 'error');
+    // Si le nom a changé
+    if (newName !== currentProject && db.projects[newName]) {
+        showToast('Ce nom existe déjà', 'error');
         return;
     }
     
-    db.projects[trimmed] = {
-        entries: [],
-        status: 'ongoing',
-        created: new Date().toISOString()
-    };
+    client.name = newName;
+    client.contact = document.getElementById('editClientContact').value;
+    client.keys = document.getElementById('editClientKeys').value;
+    client.access = document.getElementById('editClientAccess').value;
+    client.instructions = document.getElementById('editClientInstructions').value;
+    client.specs = document.getElementById('editClientSpecs').value;
     
-    saveToIndexedDB();
-    loadProjectsList();
-    updateAllStats();
-    showToast('✓ Nouveau projet créé', 'success');
+    // Si le nom a changé, recréer l'entrée
+    if (newName !== currentProject) {
+        db.projects[newName] = client;
+        delete db.projects[currentProject];
+        currentProject = newName;
+    }
+    
+    saveData();
+    closeModal('editClientModal');
+    loadClientView();
+    showToast('✓ Infos enregistrées', 'success');
 }
 
-// ========== INVENTORY FUNCTIONS ==========
+// ========== INVENTORY ==========
 function switchInventoryTab(tab) {
     currentInventoryFilter = tab;
-    
-    document.querySelectorAll('#step2 .tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('#step2 .tab-btn').forEach(b => b.classList.remove('active'));
     const index = tab === 'stock' ? 0 : tab === 'installed' ? 1 : 2;
     document.querySelectorAll('#step2 .tab-btn')[index].classList.add('active');
-    
-    loadInventoryList();
+    loadInventory();
 }
 
-function loadInventoryList(query = '') {
-    const list = document.getElementById('inventory-list');
+function loadInventory() {
+    const list = document.getElementById('inventoryList');
+    const query = document.getElementById('searchInventory').value.toLowerCase();
+    
     list.innerHTML = '';
     
-    const items = Object.keys(db.inventory)
-        .filter(sn => db.inventory[sn].status === currentInventoryFilter)
-        .filter(sn => !query || 
-            sn.toLowerCase().includes(query.toLowerCase()) || 
-            db.inventory[sn].ref.toLowerCase().includes(query.toLowerCase()))
-        .sort((a, b) => new Date(db.inventory[b].date) - new Date(db.inventory[a].date));
+    const items = Object.keys(db.inventory).filter(sn => {
+        const item = db.inventory[sn];
+        return item.status === currentInventoryFilter && 
+               (sn.toLowerCase().includes(query) || 
+                item.ref.toLowerCase().includes(query));
+    }).sort((a, b) => new Date(db.inventory[b].date) - new Date(db.inventory[a].date));
     
     if (items.length === 0) {
         list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun élément</p>';
@@ -2247,28 +1002,32 @@ function loadInventoryList(query = '') {
     
     items.forEach(sn => {
         const item = db.inventory[sn];
-        const statusClass = `status-${item.status}`;
-        const statusText = {
-            stock: '✓ EN STOCK',
-            installed: '🔧 INSTALLÉ',
-            defect: '✗ DÉFAUT',
-            maintenance: '⚙️ MAINTENANCE'
+        const statusBadge = {
+            stock: '<span class="badge badge-success">EN STOCK</span>',
+            installed: '<span class="badge badge-info">INSTALLÉ</span>',
+            defect: '<span class="badge badge-danger">DÉFAUT</span>'
         }[item.status];
         
+        const photoHTML = item.mainPhoto ? 
+            `<img src="${item.mainPhoto}" class="inventory-photo" alt="${item.ref}">` :
+            `<div class="inventory-photo-placeholder">📦</div>`;
+        
         list.innerHTML += `
-            <div class="inventory-card" onclick="curInventory='${escapeHtml(sn)}';nextStep(9);">
-                <div class="inventory-header">
-                    <div class="inventory-ref">${escapeHtml(item.ref)}</div>
-                    <div class="inventory-status ${statusClass}">${statusText}</div>
-                </div>
-                <div class="inventory-details">
-                    ${item.type ? `📦 ${item.type.toUpperCase()}` : ''} 
-                    ${item.qty > 1 ? `• Qté: ${item.qty}` : ''}
-                    ${item.assigned_to ? `• Assigné: ${escapeHtml(item.assigned_to)}` : ''}
-                </div>
-                <div class="inventory-sn">S/N: ${escapeHtml(sn)}</div>
-                <div class="inventory-details" style="font-size:11px; margin-top:5px;">
-                    📅 ${new Date(item.date).toLocaleDateString('fr-FR')}
+            <div class="card">
+                <div class="inventory-card">
+                    ${photoHTML}
+                    <div class="inventory-info">
+                        <div class="card-title" style="margin-bottom:5px;">${escapeHtml(item.ref)}</div>
+                        <div style="font-family:'Space Mono',monospace; font-size:12px; color:#888; margin-bottom:8px;">
+                            S/N: ${escapeHtml(sn)}
+                        </div>
+                        ${statusBadge}
+                        <div class="card-meta">
+                            ${item.type ? item.type.toUpperCase() : ''} 
+                            ${item.qty > 1 ? '• Qté: ' + item.qty : ''}
+                            • ${new Date(item.date).toLocaleDateString('fr-FR')}
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -2276,1046 +1035,220 @@ function loadInventoryList(query = '') {
 }
 
 function filterInventory() {
-    const query = document.getElementById('searchBarInventory').value;
-    loadInventoryList(query);
+    loadInventory();
 }
 
-// ========== INTERVENTION WORKFLOW ==========
-function setTime(id) {
-    const n = new Date();
-    document.getElementById(id).value = n.getHours().toString().padStart(2, '0') + ':' + 
-                                        n.getMinutes().toString().padStart(2, '0');
-    showToast('⏰ Heure enregistrée', 'info');
+// ========== RECEPTION ==========
+function resetReceptionForm() {
+    document.getElementById('productType').value = '';
+    document.getElementById('receptionRef').value = '';
+    document.getElementById('receptionSN').value = '';
+    document.getElementById('receptionQty').value = '1';
+    document.getElementById('receptionNotes').value = '';
+    document.getElementById('receptionStatus').value = 'stock';
+    document.getElementById('receptionMainPhoto').value = '';
+    document.getElementById('receptionPhotos').value = '';
+    document.getElementById('mainPhotoPreview').innerHTML = '';
+    document.getElementById('receptionGallery').innerHTML = '';
+    document.getElementById('testsContainer').innerHTML = '';
+    receptionTests = [];
+    receptionMainPhotoData = null;
+    receptionPhotos = [];
 }
 
-function selectType(el, type) {
-    document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedType = type;
-}
-
-function toggleStaff(el) {
-    el.classList.toggle('selected');
-    staff = Array.from(document.querySelectorAll('.staff-chip.selected')).map(c => c.textContent);
-}
-
-function applyInterventionTemplate(templateKey) {
-    if (!templateKey || !INTERVENTION_TEMPLATES[templateKey]) return;
+function updateTestTemplate() {
+    const type = document.getElementById('productType').value;
+    const container = document.getElementById('testsContainer');
     
-    const template = INTERVENTION_TEMPLATES[templateKey];
-    if (document.getElementById('task_mat')) document.getElementById('task_mat').value = template.mat;
-    if (document.getElementById('task_done')) document.getElementById('task_done').value = template.done;
-    if (document.getElementById('task_network')) document.getElementById('task_network').value = template.network;
+    if (!type) {
+        container.innerHTML = '';
+        receptionTests = [];
+        return;
+    }
     
-    showToast('✓ Template appliqué', 'success');
-}
-
-function requestGeolocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                gpsCoords = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                const gpsInfo = document.getElementById('gps-info');
-                if (gpsInfo) {
-                    gpsInfo.textContent = `📍 GPS: ${gpsCoords.lat.toFixed(5)}, ${gpsCoords.lng.toFixed(5)}`;
-                }
-            },
-            () => {}
-        );
-    }
-}
-
-function validateStep3() {
-    if (!selectedType) {
-        showToast('⚠️ Sélectionnez un type', 'error');
-        return;
-    }
-    if (staff.length === 0) {
-        showToast('⚠️ Sélectionnez l\'équipe', 'error');
-        return;
-    }
-    if (!document.getElementById('time_in').value) {
-        showToast('⚠️ Heure d\'arrivée requise', 'error');
-        return;
-    }
-    hasUnsavedChanges = true;
-    nextStep(4);
-}
-
-function validateStep4() {
-    nextStep(5);
-}
-
-function validateStep5() {
-    if (!document.getElementById('task_mat').value.trim() || 
-        !document.getElementById('task_done').value.trim()) {
-        showToast('⚠️ Matériel et compte-rendu requis', 'error');
-        return;
-    }
-    nextStep(6);
-}
-
-// ========== PHOTO MANAGEMENT ==========
-function handlePhotos(input, type) {
-    const files = Array.from(input.files);
-    if (files.length === 0) return;
+    const template = TEST_TEMPLATES[type] || [];
+    receptionTests = template.map((label, i) => ({
+        id: Date.now() + i,
+        label: label,
+        checked: false,
+        custom: false
+    }));
     
-    processPhotoFiles(files, type);
-    input.value = '';
+    renderTests();
+}
+
+function renderTests() {
+    const container = document.getElementById('testsContainer');
+    container.innerHTML = '';
+    
+    receptionTests.forEach((test, index) => {
+        const checkedClass = test.checked ? 'checked' : '';
+        const removeBtn = test.custom ? 
+            `<button class="test-item-btn" onclick="removeTest(${index})">✕</button>` : '';
+        
+        container.innerHTML += `
+            <div class="test-item ${checkedClass}">
+                <input type="checkbox" id="test-${test.id}" 
+                       ${test.checked ? 'checked' : ''}
+                       onchange="toggleTest(${index})">
+                <label for="test-${test.id}">${escapeHtml(test.label)}</label>
+                <div class="test-item-actions">
+                    ${removeBtn}
+                </div>
+            </div>
+        `;
+    });
+}
+
+function toggleTest(index) {
+    receptionTests[index].checked = !receptionTests[index].checked;
+    renderTests();
+}
+
+function removeTest(index) {
+    receptionTests.splice(index, 1);
+    renderTests();
+}
+
+function addCustomTest() {
+    document.getElementById('customTestLabel').value = '';
+    document.getElementById('newTestModal').classList.add('active');
+}
+
+function addTestToList() {
+    const label = document.getElementById('customTestLabel').value.trim();
+    if (!label) {
+        showToast('Entrez une description', 'error');
+        return;
+    }
+    
+    receptionTests.push({
+        id: Date.now(),
+        label: label,
+        checked: false,
+        custom: true
+    });
+    
+    renderTests();
+    closeModal('newTestModal');
+    showToast('✓ Test ajouté', 'success');
+}
+
+function previewMainPhoto(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        receptionMainPhotoData = e.target.result;
+        document.getElementById('mainPhotoPreview').innerHTML = `
+            <img src="${e.target.result}" style="width:100%; max-width:200px; border-radius:8px; border:2px solid var(--gold);">
+        `;
+    };
+    reader.readAsDataURL(file);
 }
 
 function handleReceptionPhotos(input) {
     const files = Array.from(input.files);
     if (files.length === 0) return;
     
-    showToast(`📸 Traitement de ${files.length} photo(s)...`, 'info');
-    
     files.forEach(file => {
-        compressImage(file, (compressedDataUrl, originalSize, compressedSize) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
             receptionPhotos.push({
-                src: compressedDataUrl,
-                note: "",
-                originalSize: originalSize,
-                compressedSize: compressedSize,
-                rotation: 0
+                src: e.target.result,
+                note: ''
             });
             renderReceptionGallery();
-            hasUnsavedChanges = true;
-        });
-    });
-    
-    input.value = '';
-}
-
-function compressImage(file, callback) {
-    const reader = new FileReader();
-    const originalSize = file.size;
-    
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-            
-            if (width > CONFIG.MAX_IMAGE_SIZE || height > CONFIG.MAX_IMAGE_SIZE) {
-                if (width > height) {
-                    height = Math.round((height * CONFIG.MAX_IMAGE_SIZE) / width);
-                    width = CONFIG.MAX_IMAGE_SIZE;
-                } else {
-                    width = Math.round((width * CONFIG.MAX_IMAGE_SIZE) / height);
-                    height = CONFIG.MAX_IMAGE_SIZE;
-                }
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            // Watermark
-            ctx.font = 'bold 14px "Darker Grotesque"';
-            ctx.fillStyle = 'rgba(212, 175, 55, 0.8)';
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-            ctx.shadowBlur = 4;
-            ctx.fillText(`Vertex Monaco - ${new Date().toLocaleDateString('fr-FR')}`, 15, height - 15);
-            
-            const compressedDataUrl = canvas.toDataURL('image/jpeg', CONFIG.IMAGE_QUALITY);
-            const compressedSize = Math.round((compressedDataUrl.length * 3) / 4);
-            
-            callback(compressedDataUrl, originalSize, compressedSize);
         };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
-function renderGalleries() {
-    renderGallery('before', photosBefore);
-    renderGallery('during', photosDuring);
-    renderGallery('after', photosAfter);
-}
-
-function renderGallery(type, photos) {
-    const container = document.getElementById(`gallery-${type}`);
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    if (photos.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0; font-size:13px;">Aucune photo</p>';
-        return;
-    }
-    
-    photos.forEach((p, i) => {
-        const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB`;
-        
-        container.innerHTML += `
-            <div class="photo-card">
-                <img src="${escapeHtml(p.src)}" 
-                     style="transform: rotate(${p.rotation}deg);"
-                     onclick="openImageModal('${type}', ${i})"
-                     alt="Photo ${type}">
-                <div class="photo-size">📦 ${sizeInfo}</div>
-                <input type="text" class="photo-input" placeholder="Légende..." 
-                       oninput="photos${type.charAt(0).toUpperCase() + type.slice(1)}[${i}].note=this.value; hasUnsavedChanges=true;" 
-                       value="${escapeHtml(p.note)}">
-                <div class="photo-controls">
-                    <button onclick="rotatePhoto('${type}', ${i})">🔄</button>
-                    <button onclick="removePhoto('${type}', ${i})" style="border-color:var(--danger); color:var(--danger);">🗑️</button>
-                </div>
-            </div>
-        `;
+        reader.readAsDataURL(file);
     });
 }
 
 function renderReceptionGallery() {
-    const container = document.getElementById('gallery-reception');
-    if (!container) return;
+    const gallery = document.getElementById('receptionGallery');
+    gallery.innerHTML = '';
     
-    container.innerHTML = '';
-    
-    if (receptionPhotos.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0; font-size:13px;">Aucune photo</p>';
-        return;
-    }
-    
-    receptionPhotos.forEach((p, i) => {
-        const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB`;
-        
-        container.innerHTML += `
+    receptionPhotos.forEach((photo, i) => {
+        gallery.innerHTML += `
             <div class="photo-card">
-                <img src="${escapeHtml(p.src)}" 
-                     style="transform: rotate(${p.rotation}deg);"
-                     onclick="openImageModal('reception', ${i})"
-                     alt="Photo reception">
-                <div class="photo-size">📦 ${sizeInfo}</div>
-                <input type="text" class="photo-input" placeholder="Légende..." 
-                       oninput="receptionPhotos[${i}].note=this.value; hasUnsavedChanges=true;" 
-                       value="${escapeHtml(p.note)}">
-                <div class="photo-controls">
-                    <button onclick="rotateReceptionPhoto(${i})">🔄</button>
-                    <button onclick="removeReceptionPhoto(${i})" style="border-color:var(--danger); color:var(--danger);">🗑️</button>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function rotatePhoto(type, index) {
-    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
-    photoArray[index].rotation = (photoArray[index].rotation + 90) % 360;
-    renderGalleries();
-    hasUnsavedChanges = true;
-}
-
-function rotateReceptionPhoto(index) {
-    receptionPhotos[index].rotation = (receptionPhotos[index].rotation + 90) % 360;
-    renderReceptionGallery();
-    hasUnsavedChanges = true;
-}
-
-function removePhoto(type, index) {
-    showModal(
-        'Supprimer la photo',
-        'Êtes-vous sûr ?',
-        'Supprimer',
-        () => {
-            if (type === 'before') photosBefore.splice(index, 1);
-            else if (type === 'during') photosDuring.splice(index, 1);
-            else photosAfter.splice(index, 1);
-            
-            renderGalleries();
-            showToast('✓ Photo supprimée', 'success');
-            hasUnsavedChanges = true;
-        }
-    );
-}
-
-function removeReceptionPhoto(index) {
-    showModal(
-        'Supprimer la photo',
-        'Êtes-vous sûr ?',
-        'Supprimer',
-        () => {
-            receptionPhotos.splice(index, 1);
-            renderReceptionGallery();
-            showToast('✓ Photo supprimée', 'success');
-            hasUnsavedChanges = true;
-        }
-    );
-}
-
-function openImageModal(type, index) {
-    let photo;
-    if (type === 'before') photo = photosBefore[index];
-    else if (type === 'during') photo = photosDuring[index];
-    else if (type === 'after') photo = photosAfter[index];
-    else if (type === 'reception') photo = receptionPhotos[index];
-    
-    if (photo) {
-        document.getElementById('modalImage').src = photo.src;
-        document.getElementById('imageModal').classList.add('active');
-    }
-}
-
-function closeImageModal() {
-    document.getElementById('imageModal').classList.remove('active');
-}
-
-// ========== SIGNATURE ==========
-const canvas = document.getElementById('sig-canvas');
-if (canvas) {
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-
-    function resizeCanvas() {
-        const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        tempCtx.drawImage(canvas, 0, 0);
-        
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#000';
-        
-        ctx.drawImage(tempCanvas, 0, 0);
-    }
-
-    function getPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        return {
-            x: clientX - rect.left,
-            y: clientY - rect.top
-        };
-    }
-
-    function startDrawing(e) {
-        drawing = true;
-        const p = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        e.preventDefault();
-    }
-
-    function draw(e) {
-        if (!drawing) return;
-        const p = getPos(e);
-        ctx.lineTo(p.x, p.y);
-        ctx.stroke();
-        e.preventDefault();
-    }
-
-    function stopDrawing() {
-        drawing = false;
-    }
-
-    canvas.addEventListener('touchstart', startDrawing, { passive: false });
-    canvas.addEventListener('touchmove', draw, { passive: false });
-    canvas.addEventListener('touchend', stopDrawing);
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
-
-    window.resizeCanvas = resizeCanvas;
-}
-
-function clearSig() {
-    const canvas = document.getElementById('sig-canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    showToast('✓ Signature effacée', 'success');
-}
-
-function isCanvasBlank(canvas) {
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-    return canvas.toDataURL() === blank.toDataURL();
-}
-
-// ========== SAVE ENTRY ==========
-function saveEntry() {
-    if (!selectedType || !staff.length) {
-        showToast('⚠️ Type et Équipe requis', 'error');
-        return;
-    }
-    
-    if (!document.getElementById('time_out').value) {
-        showToast('⚠️ Heure de départ requise', 'error');
-        return;
-    }
-    
-    const checks = Array.from(document.querySelectorAll('#checklist-container input[type="checkbox"]'));
-    if (!checks.every(c => c.checked)) {
-        showToast('⚠️ Validez tous les points', 'error');
-        return;
-    }
-    
-    const canvas = document.getElementById('sig-canvas');
-    if (isCanvasBlank(canvas)) {
-        showToast('⚠️ Signature requise', 'error');
-        return;
-    }
-    
-    document.getElementById('save-spinner').style.display = 'block';
-    document.getElementById('btn-save').disabled = true;
-    
-    setTimeout(async () => {
-        try {
-            const testsChecked = Array.from(document.querySelectorAll('#tests-checklist input[type="checkbox"]'))
-                .map((checkbox) => ({
-                    label: checkbox.nextElementSibling.textContent,
-                    checked: checkbox.checked
-                }));
-
-            const entry = {
-                id: Date.now(),
-                date: new Date().toLocaleDateString('fr-FR'),
-                timestamp: new Date().toISOString(),
-                type: selectedType,
-                in: document.getElementById('time_in').value,
-                out: document.getElementById('time_out').value,
-                staff: staff.join(', '),
-                context: document.getElementById('client_context')?.value || '',
-                mat: document.getElementById('task_mat').value,
-                done: document.getElementById('task_done').value,
-                network: document.getElementById('task_network')?.value || '',
-                parts: document.getElementById('task_parts')?.value || '',
-                recommendations: document.getElementById('task_recommendations')?.value || '',
-                tests: testsChecked,
-                before: [...photosBefore],
-                during: [...photosDuring],
-                after: [...photosAfter],
-                sig: canvas.toDataURL('image/png', 0.5),
-                gps: gpsCoords ? { lat: gpsCoords.lat, lng: gpsCoords.lng } : null,
-            };
-            
-            db.projects[cur].entries.push(entry);
-            
-            // Update inventory if equipment was installed
-            updateInventoryFromInstallation(entry);
-            
-            await saveToIndexedDB();
-            
-            document.getElementById('save-spinner').style.display = 'none';
-            document.getElementById('btn-save').disabled = false;
-            
-            showToast('✅ Intervention enregistrée !', 'success');
-            nextStep(8);
-        } catch (e) {
-            document.getElementById('save-spinner').style.display = 'none';
-            document.getElementById('btn-save').disabled = false;
-            showToast('❌ Erreur lors de l\'enregistrement', 'error');
-            console.error(e);
-        }
-    }, 500);
-}
-
-function updateInventoryFromInstallation(entry) {
-    // Try to extract serial numbers from material description
-    const matText = entry.mat || '';
-    const snMatches = matText.match(/S\/N:\s*([A-Z0-9]+)/gi);
-    
-    if (snMatches) {
-        snMatches.forEach(match => {
-            const sn = match.replace(/S\/N:\s*/i, '').trim();
-            if (db.inventory[sn] && db.inventory[sn].status === 'stock') {
-                db.inventory[sn].status = 'installed';
-                db.inventory[sn].assigned_to = cur;
-                db.inventory[sn].installation_date = new Date().toISOString();
-            }
-        });
-    }
-}
-
-// ========== RESET FORMS ==========
-function resetInterventionForm() {
-    staff = [];
-    photosBefore = [];
-    photosDuring = [];
-    photosAfter = [];
-    selectedType = '';
-    
-    document.querySelectorAll('.type-chip, .staff-chip').forEach(c => c.classList.remove('selected'));
-    if (document.getElementById('task_done')) document.getElementById('task_done').value = '';
-    if (document.getElementById('task_mat')) document.getElementById('task_mat').value = '';
-    if (document.getElementById('task_network')) document.getElementById('task_network').value = '';
-    if (document.getElementById('task_parts')) document.getElementById('task_parts').value = '';
-    if (document.getElementById('task_recommendations')) document.getElementById('task_recommendations').value = '';
-    if (document.getElementById('client_context')) document.getElementById('client_context').value = '';
-    document.getElementById('time_in').value = '';
-    document.getElementById('time_out').value = '';
-    if (document.getElementById('intervention-template')) document.getElementById('intervention-template').value = '';
-    
-    renderGalleries();
-    clearSig();
-    hasUnsavedChanges = true;
-}
-
-function resetReceptionForm() {
-    selectedProductType = '';
-    receptionPhotos = [];
-    
-    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-    if (document.getElementById('reception-ref')) document.getElementById('reception-ref').value = '';
-    if (document.getElementById('reception-sn')) document.getElementById('reception-sn').value = '';
-    if (document.getElementById('reception-qty')) document.getElementById('reception-qty').value = '1';
-    if (document.getElementById('reception-status')) document.getElementById('reception-status').value = 'stock';
-    if (document.getElementById('reception-notes')) document.getElementById('reception-notes').value = '';
-    
-    renderReceptionGallery();
-    renderReceptionTests();
-}
-
-// ========== RECEPTION WORKFLOW ==========
-function selectProductTemplate(el, type) {
-    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedProductType = type;
-    renderReceptionTests();
-}
-
-function renderReceptionTests() {
-    const container = document.getElementById('reception-tests-container');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    if (!selectedProductType || !PRODUCT_TEST_TEMPLATES[selectedProductType]) {
-        container.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0; font-size:13px;">Sélectionnez un type de produit</p>';
-        return;
-    }
-    
-    const tests = PRODUCT_TEST_TEMPLATES[selectedProductType];
-    
-    tests.forEach(test => {
-        container.innerHTML += `
-            <div class="check-item">
-                <input type="checkbox" id="reception-test-${test.id}">
-                <label for="reception-test-${test.id}">${test.label}</label>
+                <img src="${photo.src}" alt="Photo ${i+1}">
+                <input type="text" placeholder="Légende..." 
+                       value="${escapeHtml(photo.note)}"
+                       oninput="receptionPhotos[${i}].note=this.value"
+                       style="width:100%; padding:8px; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:6px;">
             </div>
         `;
     });
 }
 
 function saveReception() {
-    const ref = document.getElementById('reception-ref').value.trim();
-    const sn = document.getElementById('reception-sn').value.trim();
+    const ref = document.getElementById('receptionRef').value.trim();
+    const sn = document.getElementById('receptionSN').value.trim();
+    const type = document.getElementById('productType').value;
     
-    if (!ref || !sn) {
-        showToast('⚠️ Référence et S/N requis', 'error');
-        return;
-    }
-    
-    if (!selectedProductType) {
-        showToast('⚠️ Sélectionnez un type de produit', 'error');
+    if (!ref || !sn || !type) {
+        showToast('Référence, S/N et Type requis', 'error');
         return;
     }
     
     if (db.inventory[sn]) {
-        showToast('⚠️ Ce S/N existe déjà', 'error');
+        showToast('Ce S/N existe déjà', 'error');
         return;
     }
     
-    const tests = {};
-    if (PRODUCT_TEST_TEMPLATES[selectedProductType]) {
-        PRODUCT_TEST_TEMPLATES[selectedProductType].forEach(test => {
-            const checkbox = document.getElementById(`reception-test-${test.id}`);
-            tests[test.id] = checkbox ? checkbox.checked : false;
-        });
-    }
-    
-    const item = {
+    db.inventory[sn] = {
         ref: ref,
         sn: sn,
-        type: selectedProductType,
-        qty: parseInt(document.getElementById('reception-qty').value) || 1,
-        status: document.getElementById('reception-status').value,
-        notes: document.getElementById('reception-notes').value,
-        tests: tests,
-        photos: [...receptionPhotos],
-        date: new Date().toISOString(),
-        assigned_to: null,
+        type: type,
+        qty: parseInt(document.getElementById('receptionQty').value) || 1,
+        mainPhoto: receptionMainPhotoData,
+        tests: receptionTests,
+        notes: document.getElementById('receptionNotes').value,
+        photos: receptionPhotos,
+        status: document.getElementById('receptionStatus').value,
+        date: new Date().toISOString()
     };
     
-    db.inventory[sn] = item;
-    saveToIndexedDB();
-    
-    showToast('✅ Réception enregistrée !', 'success');
-    updateAllStats();
-    nextStep(2);
+    saveData();
+    showToast('✓ Réception enregistrée', 'success');
+    goTo(2);
 }
 
-// ========== BARCODE SCANNER ==========
-function startBarcodeScanner() {
-    const container = document.getElementById('scanner-container');
-    const video = document.getElementById('scanner-video');
-    
-    container.style.display = 'block';
-    
-    const codeReader = new ZXing.BrowserMultiFormatReader();
-    
-    codeReader.decodeFromVideoDevice(null, video, (result, err) => {
-        if (result) {
-            const code = result.text;
-            document.getElementById('reception-sn').value = code;
-            showToast(`✓ Code scanné: ${code}`, 'success');
-            stopBarcodeScanner();
-        }
-    });
-    
-    barcodeScanner = codeReader;
+// ========== SOFTWARE ==========
+function switchSoftwareTab(tab) {
+    currentSoftwareTab = tab;
+    document.querySelectorAll('#step10 .tab-btn').forEach(b => b.classList.remove('active'));
+    const index = tab === 'cms' ? 0 : tab === 'firmware' ? 1 : 2;
+    document.querySelectorAll('#step10 .tab-btn')[index].classList.add('active');
+    loadSoftware();
 }
 
-function stopBarcodeScanner() {
-    if (barcodeScanner) {
-        barcodeScanner.reset();
-        barcodeScanner = null;
-    }
-    
-    const container = document.getElementById('scanner-container');
-    if (container) container.style.display = 'none';
+function loadSoftware() {
+    const list = document.getElementById('softwareList');
+    list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Module logiciels à venir</p>';
 }
 
-// ========== INVENTORY SELECTION ==========
-function selectFromInventory() {
-    const modal = document.getElementById('inventorySelectModal');
-    const list = document.getElementById('inventory-select-list');
-    
-    list.innerHTML = '';
-    
-    const stockItems = Object.keys(db.inventory)
-        .filter(sn => db.inventory[sn].status === 'stock');
-    
-    if (stockItems.length === 0) {
-        list.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0;">Aucun équipement en stock</p>';
-    } else {
-        stockItems.forEach(sn => {
-            const item = db.inventory[sn];
-            list.innerHTML += `
-                <div class="inventory-card" onclick="addInventoryToMaterial('${escapeHtml(sn)}')">
-                    <div class="inventory-header">
-                        <div class="inventory-ref">${escapeHtml(item.ref)}</div>
-                        <div class="inventory-status status-stock">STOCK</div>
-                    </div>
-                    <div class="inventory-sn">S/N: ${escapeHtml(sn)}</div>
-                </div>
-            `;
-        });
-    }
-    
-    modal.classList.add('active');
+function newSoftwareEntry() {
+    showToast('Fonction à venir', 'info');
 }
 
-function addInventoryToMaterial(sn) {
-    const item = db.inventory[sn];
-    const currentMat = document.getElementById('task_mat').value;
-    const newLine = `- ${item.ref} (S/N: ${sn})`;
-    
-    document.getElementById('task_mat').value = currentMat ? 
-        `${currentMat}\n${newLine}` : newLine;
-    
-    closeInventorySelectModal();
-    showToast('✓ Équipement ajouté', 'success');
-    hasUnsavedChanges = true;
-}
-
-function closeInventorySelectModal() {
-    document.getElementById('inventorySelectModal').classList.remove('active');
-}
-
-// ========== PROJECT TIMELINE ==========
-function showProjectTimeline() {
-    const t = document.getElementById('timeline');
-    t.innerHTML = '';
-    
-    const isDone = db.projects[cur].status === 'done';
-    document.getElementById('status-toggle-container').innerHTML = `
-        <button class="status-pill ${isDone ? 'status-done' : 'status-ongoing'}" 
-                onclick="toggleProjectStatus()" 
-                style="padding:8px 16px; border-radius:25px; font-size:11px; cursor:pointer; border:none; 
-                       background:${isDone ? 'var(--border)' : 'var(--success)'}; color:white; font-weight:900;">
-            ${isDone ? '📦 ARCHIVÉ' : '✅ ACTIF'}
-        </button>
-    `;
-    
-    document.getElementById('view-n').textContent = cur;
-    
-    const entries = db.projects[cur].entries;
-    document.getElementById('project-interventions').textContent = entries.length;
-    
-    let totalMinutes = 0;
-    let totalScreens = 0;
-    
-    entries.forEach(e => {
-        if (e.in && e.out) {
-            const [inH, inM] = e.in.split(':').map(Number);
-            const [outH, outM] = e.out.split(':').map(Number);
-            const minutes = (outH * 60 + outM) - (inH * 60 + inM);
-            if (minutes > 0) totalMinutes += minutes;
-        }
-        
-        const matText = (e.mat || '').toLowerCase();
-        const screenMatch = matText.match(/(\d+)\s*(?:écran|screen|display)/i);
-        if (screenMatch) totalScreens += parseInt(screenMatch[1]);
-        else if (matText.includes('écran') || matText.includes('screen')) totalScreens += 1;
-    });
-    
-    const hours = Math.floor(totalMinutes / 60);
-    const minutes = totalMinutes % 60;
-    document.getElementById('project-hours').textContent = `${hours}h${minutes > 0 ? minutes.toString().padStart(2, '0') : ''}`;
-    document.getElementById('project-screens').textContent = totalScreens;
-    
-    [...entries].reverse().forEach(e => {
-        const gpsInfo = e.gps ? `📍 ${e.gps.lat.toFixed(5)}, ${e.gps.lng.toFixed(5)}` : '';
-        const duration = calculateDuration(e.in, e.out);
-        
-        let testsHTML = '';
-        if (e.tests && e.tests.length > 0) {
-            testsHTML = '<div class="section-block" style="border-left-color:var(--success)"><strong>Tests:</strong><br>';
-            e.tests.forEach(test => {
-                testsHTML += `${test.checked ? '✓' : '✗'} ${escapeHtml(test.label)}<br>`;
-            });
-            testsHTML += '</div>';
-        }
-        
-        t.innerHTML += `
-            <div class="timeline-item">
-                <div style="font-size:11px; font-weight:900; color:var(--gold); margin-bottom:8px; text-transform:uppercase;">
-                    ${escapeHtml(e.date)} | ${escapeHtml(e.type)}
-                </div>
-                <div class="section-block">
-                    <strong>Équipe:</strong> ${escapeHtml(e.staff)}<br>
-                    <strong>Horaires:</strong> ${escapeHtml(e.in)} → ${escapeHtml(e.out)} ${duration ? `(${duration})` : ''}
-                    ${gpsInfo ? `<br><span style="font-size:10px; color:#888;">${gpsInfo}</span>` : ''}
-                </div>
-                ${e.context ? `<div class="section-block" style="border-left-color:var(--info);">
-                    <strong>📝 Contexte:</strong><br>${escapeHtml(e.context).replace(/\n/g, '<br>')}
-                </div>` : ''}
-                <div class="section-block">
-                    <strong>🔧 Travaux:</strong><br>${escapeHtml(e.done).replace(/\n/g, '<br>')}
-                </div>
-                <div class="section-block" style="border-left-color:var(--warning);">
-                    <strong>🖥️ Matériel:</strong><br>${escapeHtml(e.mat).replace(/\n/g, '<br>')}
-                </div>
-                ${e.network ? `<div class="section-block" style="border-left-color:var(--info);">
-                    <strong>🌐 Réseau:</strong><br>${escapeHtml(e.network).replace(/\n/g, '<br>')}
-                </div>` : ''}
-                ${e.parts ? `<div class="section-block">
-                    <strong>📦 Pièces:</strong><br>${escapeHtml(e.parts).replace(/\n/g, '<br>')}
-                </div>` : ''}
-                ${e.recommendations ? `<div class="section-block" style="border-left-color:var(--success);">
-                    <strong>💡 Recommandations:</strong><br>${escapeHtml(e.recommendations).replace(/\n/g, '<br>')}
-                </div>` : ''}
-                ${testsHTML}
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:15px 0;">
-                    <div>
-                        <div style="font-size:10px; font-weight:700; color:#e67e22; margin-bottom:5px;">AVANT (${e.before.length})</div>
-                        ${e.before.map(p => renderPhotoInTimeline(p)).join('')}
-                    </div>
-                    <div>
-                        <div style="font-size:10px; font-weight:700; color:#3498db; margin-bottom:5px;">PENDANT (${(e.during || []).length})</div>
-                        ${(e.during || []).map(p => renderPhotoInTimeline(p)).join('')}
-                    </div>
-                    <div>
-                        <div style="font-size:10px; font-weight:700; color:#2ecc71; margin-bottom:5px;">APRÈS (${e.after.length})</div>
-                        ${e.after.map(p => renderPhotoInTimeline(p)).join('')}
-                    </div>
-                </div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:15px;">
-                    <img src="${escapeHtml(e.sig)}" 
-                         style="width:140px; background:white; border-radius:6px; padding:5px; border:2px solid #ddd;">
-                    <button class="no-print" 
-                            style="color:var(--danger); border:1px solid var(--danger); background:rgba(255,77,77,0.1); 
-                                   font-size:11px; cursor:pointer; padding:8px 12px; border-radius:6px; font-weight:700;" 
-                            onclick="confirmDeleteEntry(${e.id})">
-                        🗑️ Supprimer
-                    </button>
-                </div>
-            </div>
-        `;
-    });
-    
-    if (entries.length === 0) {
-        t.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucune intervention</p>';
-    }
-}
-
-function calculateDuration(timeIn, timeOut) {
-    if (!timeIn || !timeOut) return '';
-    const [inH, inM] = timeIn.split(':').map(Number);
-    const [outH, outM] = timeOut.split(':').map(Number);
-    const minutes = (outH * 60 + outM) - (inH * 60 + inM);
-    if (minutes <= 0) return '';
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return `${h}h${m > 0 ? m.toString().padStart(2, '0') : ''}`;
-}
-
-function renderPhotoInTimeline(photo) {
-    return `
-        <img src="${escapeHtml(photo.src)}" 
-             style="width:100%; border:2px solid var(--gold); border-radius:6px; margin-bottom:8px; 
-                    transform: rotate(${photo.rotation || 0}deg); cursor:pointer;"
-             onclick="openImageModal('timeline', 0)" alt="Photo">
-        ${photo.note ? `<div style="font-size:10px; color:#888; margin-bottom:10px;">${escapeHtml(photo.note)}</div>` : ''}
-    `;
-}
-
-function newIntervention() {
-    nextStep(3);
-}
-
-function toggleProjectStatus() {
-    db.projects[cur].status = (db.projects[cur].status === 'done' ? 'ongoing' : 'done');
-    saveToIndexedDB();
-    showProjectTimeline();
-    updateAllStats();
-    showToast(`✓ Projet ${db.projects[cur].status === 'done' ? 'archivé' : 'réactivé'}`, 'success');
-}
-
-function confirmDeleteEntry(id) {
-    showModal(
-        'Supprimer l\'intervention',
-        'Action irréversible.',
-        'Supprimer',
-        () => deleteEntry(id)
-    );
-}
-
-function deleteEntry(id) {
-    db.projects[cur].entries = db.projects[cur].entries.filter(e => e.id !== id);
-    saveToIndexedDB();
-    showProjectTimeline();
-    updateAllStats();
-    showToast('✓ Intervention supprimée', 'success');
-}
-
-function confirmDeleteProject() {
-    showModal(
-        '⚠️ Supprimer le projet',
-        `Toutes les interventions pour "${cur}" seront supprimées.`,
-        'Supprimer',
-        deleteFullProject
-    );
-}
-
-function deleteFullProject() {
-    delete db.projects[cur];
-    saveToIndexedDB();
-    updateAllStats();
-    showToast('✓ Projet supprimé', 'success');
-    nextStep(1);
-}
-
-// ========== INVENTORY ITEM VIEW ==========
-function showInventoryItem() {
-    const item = db.inventory[curInventory];
-    if (!item) {
-        showToast('⚠️ Élément introuvable', 'error');
-        nextStep(2);
-        return;
-    }
-    
-    document.getElementById('inventory-item-ref').textContent = item.ref;
-    document.getElementById('inventory-item-sn').textContent = `S/N: ${curInventory}`;
-    
-    const statusClass = `status-${item.status}`;
-    const statusText = {
-        stock: '✓ EN STOCK',
-        installed: '🔧 INSTALLÉ',
-        defect: '✗ DÉFAUT',
-        maintenance: '⚙️ MAINTENANCE'
-    }[item.status];
-    
-    let testsHTML = '';
-    if (item.tests && Object.keys(item.tests).length > 0) {
-        testsHTML = '<div class="section-block"><strong>Tests de réception:</strong><br>';
-        Object.entries(item.tests).forEach(([key, value]) => {
-            const label = PRODUCT_TEST_TEMPLATES[item.type]?.find(t => t.id === key)?.label || key;
-            testsHTML += `${value ? '✓' : '✗'} ${label}<br>`;
-        });
-        testsHTML += '</div>';
-    }
-    
-    document.getElementById('inventory-item-details').innerHTML = `
-        <div class="section-block">
-            <strong>Type:</strong> ${item.type ? item.type.toUpperCase() : 'N/A'}<br>
-            <strong>Statut:</strong> <span class="inventory-status ${statusClass}">${statusText}</span><br>
-            <strong>Quantité:</strong> ${item.qty || 1}<br>
-            <strong>Date réception:</strong> ${new Date(item.date).toLocaleDateString('fr-FR')}<br>
-            ${item.assigned_to ? `<strong>Assigné à:</strong> ${escapeHtml(item.assigned_to)}<br>` : ''}
-            ${item.installation_date ? `<strong>Date installation:</strong> ${new Date(item.installation_date).toLocaleDateString('fr-FR')}<br>` : ''}
-        </div>
-        ${item.notes ? `<div class="section-block"><strong>Notes:</strong><br>${escapeHtml(item.notes)}</div>` : ''}
-        ${testsHTML}
-    `;
-    
-    // Photos
-    const photosContainer = document.getElementById('inventory-item-photos');
-    if (item.photos && item.photos.length > 0) {
-        photosContainer.innerHTML = item.photos.map(p => `
-            <img src="${escapeHtml(p.src)}" 
-                 style="width:100%; border-radius:8px; margin-bottom:10px; cursor:pointer;"
-                 onclick="openImageModal('inventory', 0)" alt="Photo">
-            ${p.note ? `<div style="font-size:12px; color:#888; margin-bottom:10px;">${escapeHtml(p.note)}</div>` : ''}
-        `).join('');
-    } else {
-        photosContainer.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0;">Aucune photo</p>';
-    }
-    
-    // Generate QR code
-    generateInventoryQR(curInventory, item);
-}
-
-function generateInventoryQR(sn, item) {
-    const container = document.getElementById('inventory-item-qr');
-    container.innerHTML = '';
-    
-    const qrDiv = document.createElement('div');
-    qrDiv.id = 'qrcode-display';
-    container.appendChild(qrDiv);
-    
-    const qrData = JSON.stringify({
-        sn: sn,
-        ref: item.ref,
-        type: item.type,
-        vertex: 'monaco'
-    });
-    
-    new QRCode(qrDiv, {
-        text: qrData,
-        width: 200,
-        height: 200,
-        colorDark: "#D4AF37",
-        colorLight: "#000000",
-    });
-    
-    const label = document.createElement('div');
-    label.style.cssText = 'font-size:12px; margin-top:10px; color:#888;';
-    label.textContent = `QR Code • ${item.ref}`;
-    container.appendChild(label);
-}
-
-function printInventoryLabel() {
-    window.print();
-}
-
-function editInventoryItem() {
-    // Future implementation
-    showToast('🔧 Fonction en développement', 'info');
-}
-
-function confirmDeleteInventoryItem() {
-    showModal(
-        '⚠️ Supprimer l\'équipement',
-        `Supprimer ${curInventory} ?`,
-        'Supprimer',
-        deleteInventoryItem
-    );
-}
-
-function deleteInventoryItem() {
-    delete db.inventory[curInventory];
-    saveToIndexedDB();
-    updateAllStats();
-    showToast('✓ Équipement supprimé', 'success');
-    nextStep(2);
-}
-
-// ========== STATS ==========
-function updateAllStats() {
-    let activeProjects = 0;
-    let totalInterventions = 0;
-    let totalMinutes = 0;
-    let thisMonth = 0;
-    let stockCount = 0;
-    
-    const now = new Date();
-    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-    
-    Object.values(db.projects || {}).forEach(project => {
-        if (project.status === 'ongoing') activeProjects++;
-        totalInterventions += project.entries.length;
-        
-        project.entries.forEach(e => {
-            if (e.in && e.out) {
-                const [inH, inM] = e.in.split(':').map(Number);
-                const [outH, outM] = e.out.split(':').map(Number);
-                const minutes = (outH * 60 + outM) - (inH * 60 + inM);
-                if (minutes > 0) totalMinutes += minutes;
-            }
-            
-            const entryDate = new Date(e.timestamp || e.date);
-            if (entryDate >= thisMonthStart) thisMonth++;
-        });
-    });
-    
-    Object.values(db.inventory || {}).forEach(item => {
-        if (item.status === 'stock') stockCount++;
-    });
-    
-    document.getElementById('stat-active').textContent = activeProjects;
-    document.getElementById('stat-inventory').textContent = stockCount;
-    document.getElementById('stat-month').textContent = thisMonth;
-    
-    const hours = Math.floor(totalMinutes / 60);
-    document.getElementById('stat-hours').textContent = `${hours}h`;
-    
-    // Update badges
-    document.getElementById('badge-projects').textContent = activeProjects;
-    document.getElementById('badge-inventory').textContent = stockCount;
-}
-
-// ========== EXPORT ==========
-function exportToCSV() {
-    let csv = '\uFEFFProjet;Date;Type;Equipe;Arrivee;Depart;Duree;Materiel;Travaux;GPS_Lat;GPS_Lng\n';
-    
-    Object.entries(db.projects || {}).forEach(([client, project]) => {
-        project.entries.forEach(e => {
-            const gpsLat = e.gps ? e.gps.lat : '';
-            const gpsLng = e.gps ? e.gps.lng : '';
-            const duration = calculateDuration(e.in, e.out);
-            csv += `"${escapeCSV(client)}";`;
-            csv += `"${escapeCSV(e.date)}";`;
-            csv += `"${escapeCSV(e.type)}";`;
-            csv += `"${escapeCSV(e.staff)}";`;
-            csv += `"${escapeCSV(e.in)}";`;
-            csv += `"${escapeCSV(e.out)}";`;
-            csv += `"${escapeCSV(duration)}";`;
-            csv += `"${escapeCSV(e.mat)}";`;
-            csv += `"${escapeCSV(e.done)}";`;
-            csv += `"${escapeCSV(gpsLat)}";`;
-            csv += `"${escapeCSV(gpsLng)}"\n`;
-        });
-    });
-    
-    downloadFile(csv, `Vertex_Export_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv;charset=utf-8;');
-    showToast('✅ Export CSV généré', 'success');
-}
-
+// ========== EXPORT / IMPORT ==========
 function exportBackup() {
     const backup = {
-        version: CONFIG.DB_VERSION,
-        appVersion: '3.0',
-        exportDate: new Date().toISOString(),
+        version: CONFIG.VERSION,
+        date: new Date().toISOString(),
         data: db
     };
     
     const json = JSON.stringify(backup, null, 2);
-    downloadFile(json, `Vertex_Backup_${new Date().toISOString().split('T')[0]}.json`, 'application/json');
-    showToast('✅ Sauvegarde générée', 'success');
+    const blob = new Blob([json], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Vertex_Backup_${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    showToast('✅ Sauvegarde créée', 'success');
 }
 
 function importBackup(input) {
@@ -3323,68 +1256,21 @@ function importBackup(input) {
     if (!file) return;
     
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = (e) => {
         try {
             const backup = JSON.parse(e.target.result);
-            
-            if (!backup.data) {
-                throw new Error('Format invalide');
-            }
-            
-            showModal(
-                'Restaurer les données',
-                `Restaurer ${Object.keys(backup.data.projects || {}).length} projets et ${Object.keys(backup.data.inventory || {}).length} équipements ?`,
-                'Restaurer',
-                () => {
-                    db = backup.data;
-                    if (!db.projects) db.projects = {};
-                    if (!db.inventory) db.inventory = {};
-                    saveToIndexedDB();
-                    updateAllStats();
-                    showToast('✅ Données restaurées', 'success');
-                }
-            );
+            db = backup.data;
+            if (!db.projects) db.projects = {};
+            if (!db.inventory) db.inventory = {};
+            if (!db.software) db.software = {};
+            saveData();
+            showToast('✅ Données restaurées', 'success');
         } catch (err) {
             showToast('❌ Fichier invalide', 'error');
         }
     };
     reader.readAsText(file);
     input.value = '';
-}
-
-function exportProjectPDF() {
-    showToast('🖨️ Génération PDF...', 'info');
-    setTimeout(() => window.print(), 500);
-}
-
-function downloadFile(content, filename, type) {
-    const blob = new Blob([content], { type: type });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('download', filename);
-    link.click();
-}
-
-function sendProjectMail() {
-    const entries = db.projects[cur].entries;
-    if (!entries.length) return;
-    
-    const lastEntry = entries[entries.length - 1];
-    
-    const subject = encodeURIComponent(`Rapport Vertex - ${cur} - ${lastEntry.date}`);
-    let body = `PROJET: ${cur}\n\n`;
-    body += `TYPE: ${lastEntry.type}\n`;
-    body += `DATE: ${lastEntry.date}\n`;
-    body += `ÉQUIPE: ${lastEntry.staff}\n`;
-    body += `HORAIRES: ${lastEntry.in} - ${lastEntry.out}\n\n`;
-    body += `MATÉRIEL:\n${lastEntry.mat}\n\n`;
-    body += `TRAVAUX:\n${lastEntry.done}\n\n`;
-    if (lastEntry.network) body += `RÉSEAU:\n${lastEntry.network}\n\n`;
-    if (lastEntry.recommendations) body += `RECOMMANDATIONS:\n${lastEntry.recommendations}\n\n`;
-    if (lastEntry.gps) body += `GPS: ${lastEntry.gps.lat}, ${lastEntry.gps.lng}\n`;
-    body += `\n--- Vertex Monaco V3.0 ---`;
-    
-    window.location.href = `mailto:?subject=${subject}&body=${encodeURIComponent(body)}`;
 }
 
 // ========== UTILITIES ==========
@@ -3395,30 +1281,7 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function escapeCSV(text) {
-    if (!text) return '';
-    return text.toString().replace(/"/g, '""').replace(/\n/g, ' ');
-}
-
-window.onresize = () => {
-    if (document.getElementById('step6')?.classList.contains('active')) {
-        resizeCanvas();
-    }
-};
-
-// Cleanup on unload
-window.addEventListener('beforeunload', (e) => {
-    if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = '';
-    }
-    
-    if (barcodeScanner) {
-        stopBarcodeScanner();
-    }
-});
-
-console.log('✅ Vertex Monaco V3.0 - Système chargé');
+console.log('✅ Vertex V4.0 Ultimate - Chargé');
 </script>
 
 </body>
