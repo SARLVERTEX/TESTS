@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#D4AF37">
-    <meta name="description" content="Vertex Monaco - Système de gestion d'interventions techniques professionnel">
+    <meta name="description" content="Vertex Monaco - Système de gestion technico-commercial professionnel">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA7AAAAOwBeShxvQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAIcSURBVFiFxZe/axRBFMc/M3t7t7eXS3KJiYqIYGER0MJCsFAQbPwDLCz8A2wsBEELCyurbWwEwUKwsBEUBEWwUFDQQkQQRTQxJnfZ3Z2Zx8yevdvb3CTqwYNl5+2b7/d9M+/NPJBSSimllFJKKaX/ScYYtNbYto1t2xiGcd5rT1Gr1ahWq7TbbQCMMViWheu6OI6DbdvnAnG6Uq/XqdVqRFFEGIYopVBKYZomlmXheR6+7+N5HpZlnRnkqQLNZpNGo0Gr1SKKIoIgQGuNMQbDMDAMA9M08X0fz/MoFAp4nofruniet2+I3wqEYUiz2aTRaNBqtYiiiFQqRRRFJxpzXZd0Ok0mk8H3ffL5PIVCAcdxjgU5ViAIAlqtFo1Gg3a7TRAEKKXQWZ8oigiCAK01bOA4DplMhnQ6jeM45HI5CoUC+XyedDp9cAClFO12m1qtxs7ODmEYYpomURQRhiFRFKG1RilFEARxVjKZDJlMhnQ6jeu65HI5stks2WwW27YPCxiGQbvdplKp0Gw2iaKIdDod/08xCCEwTTNut23jeR6ZTAbf9/F9n2w2SyaTwXGcgwK2bbO7u8vW1ha1Wo0oikilUiilCMPw0LjOQD6fp1gsksvlyOVyZLPZQwKe57G5ucna2hq1Wo0oivA8jyiK4h04ynVdisUihUKBYrFIJpOJWzEhYNs2m5ub/Pz5k0ajQavVot1uH3sqXdclm82Sz+cpFouUSiVKpRKe5x28hZRSSimllFL6X/4C9gfhI6xNdH0AAAAASUVORK5CYII=">
-    <title>Vertex Monaco | V14 ULTRA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <title>Vertex Monaco | V15 PRO</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Darker+Grotesque:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
     <style>
+        /* ========== VARIABLES ========== */
         :root { 
             --gold: #D4AF37; 
+            --gold-dark: #B8941F;
+            --gold-light: #F5E6B3;
             --bg: #000; 
             --card: #121212; 
             --text: #fff; 
@@ -20,213 +25,1418 @@
             --border: #282828;
             --warning: #f39c12;
             --info: #3498db;
+            --accent: #e74c3c;
+            --shadow: rgba(212, 175, 55, 0.15);
         }
         
         [data-theme="light"] {
-            --bg: #f5f5f5;
+            --bg: #fafafa;
             --card: #ffffff;
-            --text: #000;
-            --border: #ddd;
+            --text: #1a1a1a;
+            --border: #e0e0e0;
+            --shadow: rgba(0, 0, 0, 0.1);
         }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.4; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
-        .container { max-width: 500px; margin: 0 auto; padding: 15px; padding-bottom: 80px; }
+        /* ========== RESET & BASE ========== */
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+        }
         
-        .header { text-align: center; padding: 15px 0; border-bottom: 2px solid var(--gold); margin-bottom: 20px; position: relative; }
-        .header h1 { letter-spacing: 4px; font-size: 16px; color: var(--gold); margin: 0; font-weight: 900; }
-        .version-badge { position: absolute; top: 10px; right: 10px; font-size: 8px; background: var(--gold); color: black; padding: 3px 8px; border-radius: 10px; font-weight: bold; }
-        .theme-toggle { position: absolute; top: 10px; left: 10px; background: none; border: 1px solid var(--border); color: var(--text); padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+        body { 
+            margin: 0; 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Darker Grotesque', sans-serif; 
+            line-height: 1.5; 
+            overflow-x: hidden; 
+            transition: background 0.3s, color 0.3s;
+            font-size: 16px;
+        }
         
-        .offline-indicator { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--danger); color: white; padding: 8px 15px; border-radius: 20px; font-size: 11px; font-weight: bold; z-index: 10000; display: none; }
-        .offline-indicator.active { display: block; animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            padding-bottom: 100px; 
+        }
         
-        .sync-indicator { position: fixed; top: 80px; right: 20px; background: var(--info); color: white; padding: 8px 12px; border-radius: 20px; font-size: 10px; font-weight: bold; z-index: 9999; display: none; }
-        .sync-indicator.active { display: block; animation: fadeIn 0.3s; }
-
-        /* Toast notifications */
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 15px 25px; border-radius: 8px; font-size: 13px; font-weight: bold; z-index: 9999; animation: slideDown 0.3s ease; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        /* ========== TYPOGRAPHY ========== */
+        h1, h2, h3 { 
+            font-weight: 900; 
+            letter-spacing: -0.02em; 
+            margin: 0;
+        }
+        
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+        
+        .mono { 
+            font-family: 'Space Mono', monospace; 
+            letter-spacing: 0.05em;
+        }
+        
+        /* ========== HEADER ========== */
+        .header { 
+            text-align: center; 
+            padding: 30px 0; 
+            border-bottom: 3px solid var(--gold); 
+            margin-bottom: 30px; 
+            position: relative;
+            background: linear-gradient(135deg, var(--card) 0%, var(--bg) 100%);
+        }
+        
+        .header h1 { 
+            letter-spacing: 8px; 
+            font-size: 24px; 
+            color: var(--gold); 
+            margin: 0; 
+            font-weight: 900;
+            text-shadow: 2px 2px 8px var(--shadow);
+        }
+        
+        .header-subtitle {
+            font-size: 11px;
+            color: var(--gold-light);
+            letter-spacing: 3px;
+            margin-top: 8px;
+            font-weight: 600;
+            opacity: 0.8;
+        }
+        
+        .version-badge { 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            font-size: 9px; 
+            background: var(--gold); 
+            color: black; 
+            padding: 5px 12px; 
+            border-radius: 20px; 
+            font-weight: bold;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+        
+        .theme-toggle { 
+            position: absolute; 
+            top: 20px; 
+            left: 20px; 
+            background: none; 
+            border: 2px solid var(--gold); 
+            color: var(--gold); 
+            padding: 8px 15px; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-size: 14px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            background: var(--gold);
+            color: black;
+            transform: rotate(180deg);
+        }
+        
+        /* ========== INDICATORS ========== */
+        .offline-indicator { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: var(--danger); 
+            color: white; 
+            padding: 12px 20px; 
+            border-radius: 30px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            z-index: 10000; 
+            display: none;
+            box-shadow: 0 6px 20px rgba(255, 77, 77, 0.4);
+        }
+        
+        .offline-indicator.active { 
+            display: block; 
+            animation: pulse 2s infinite; 
+        }
+        
+        @keyframes pulse { 
+            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); } 
+            50% { opacity: 0.8; transform: translateX(-50%) scale(1.02); } 
+        }
+        
+        .sync-indicator { 
+            position: fixed; 
+            top: 100px; 
+            right: 20px; 
+            background: var(--info); 
+            color: white; 
+            padding: 10px 15px; 
+            border-radius: 25px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            z-index: 9999; 
+            display: none;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .sync-indicator.active { 
+            display: block; 
+            animation: slideInRight 0.3s; 
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(150px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* ========== TOAST ========== */
+        .toast { 
+            position: fixed; 
+            top: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: var(--success); 
+            color: white; 
+            padding: 16px 30px; 
+            border-radius: 12px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            z-index: 9999; 
+            animation: toastSlide 0.3s ease;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+        
         .toast.error { background: var(--danger); }
         .toast.warning { background: var(--warning); }
         .toast.info { background: var(--info); }
-        @keyframes slideDown { from { transform: translateX(-50%) translateY(-100px); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
-
-        /* Progress indicator */
-        .progress-bar { display: flex; justify-content: space-between; margin-bottom: 20px; }
-        .progress-step { flex: 1; text-align: center; position: relative; }
-        .progress-step::before { content: ''; position: absolute; top: 15px; left: 0; right: 0; height: 2px; background: var(--border); z-index: -1; }
-        .progress-step:first-child::before { left: 50%; }
-        .progress-step:last-child::before { right: 50%; }
-        .progress-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--border); margin: 0 auto 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; }
-        .progress-step.active .progress-dot { background: var(--gold); color: black; }
-        .progress-step.completed .progress-dot { background: var(--success); color: white; }
-        .progress-label { font-size: 9px; color: #666; }
-
-        .step { display: none; animation: fadeIn 0.2s ease; }
-        .step.active { display: block; }
-
-        /* Loading spinner */
-        .spinner { border: 3px solid var(--border); border-top: 3px solid var(--gold); border-radius: 50%; width: 30px; height: 30px; animation: spin 0.8s linear infinite; margin: 20px auto; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Tabs & Types */
-        .tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { flex: 1; min-width: 80px; padding: 12px; background: var(--card); border: 1px solid var(--border); color: #666; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .tab-btn.active { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .tab-btn:active { transform: scale(0.98); }
-
-        .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .type-chip { background: var(--card); border: 1px solid var(--border); padding: 10px; border-radius: 8px; text-align: center; font-size: 10px; font-weight: bold; color: #666; cursor: pointer; transition: all 0.2s; }
-        .type-chip.selected { border-color: var(--gold); color: var(--gold); background: rgba(212, 175, 55, 0.1); }
-        .type-chip:active { transform: scale(0.95); }
-
-        .staff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .staff-chip { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 6px; font-size: 11px; text-align: center; color: #888; cursor: pointer; transition: all 0.2s; }
-        .staff-chip.selected { background: var(--gold); color: #000; font-weight: 800; border-color: var(--gold); }
-        .staff-chip:active { transform: scale(0.95); }
-
-        /* Checklist */
-        .check-item { display: flex; align-items: center; background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid var(--border); transition: all 0.2s; }
-        .check-item:has(input:checked) { background: rgba(46, 204, 113, 0.1); border-color: var(--success); }
-        .check-item input { width: 22px; height: 22px; margin-right: 12px; accent-color: var(--gold); cursor: pointer; }
-
-        /* Photos */
-        .photo-box { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 10px; margin-top: 15px; }
-        .photo-box h4 { margin: 0 0 10px 0; font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .photo-gallery { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-        .photo-card { background: var(--card); padding: 8px; border-radius: 8px; border: 1px solid var(--border); position: relative; }
-        .photo-card img { width: 100%; border-radius: 4px; margin-bottom: 8px; max-height: 300px; object-fit: cover; cursor: pointer; transition: transform 0.2s; }
-        .photo-card img:hover { transform: scale(1.02); }
-        .photo-input { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 8px; font-size: 12px; width: 100%; border-radius: 4px; margin-bottom: 5px; }
-        .photo-size { font-size: 9px; color: #666; margin-bottom: 5px; }
-        .photo-controls { display: flex; gap: 5px; margin-top: 5px; }
-        .photo-controls button { flex: 1; padding: 6px; font-size: 9px; border-radius: 4px; border: 1px solid var(--border); background: var(--card); color: var(--text); cursor: pointer; }
-
-        /* Image modal */
-        .image-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); z-index: 10001; align-items: center; justify-content: center; padding: 20px; }
-        .image-modal.active { display: flex; animation: fadeIn 0.3s; }
-        .image-modal img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
-        .image-modal-close { position: absolute; top: 20px; right: 20px; background: var(--danger); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-
-        /* Signature */
-        #sig-canvas { background: #fff; border: 2px solid var(--gold); border-radius: 8px; touch-action: none; width: 100%; height: 200px; cursor: crosshair; }
-
-        /* Buttons */
-        .btn-gold { width: 100%; padding: 18px; background: var(--gold); color: black; border: none; font-weight: 900; border-radius: 10px; text-transform: uppercase; margin-top: 15px; cursor: pointer; transition: all 0.2s; }
-        .btn-gold:active { transform: scale(0.98); }
-        .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
-        .btn-outline { width: 100%; padding: 12px; background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 8px; margin-top: 8px; cursor: pointer; transition: all 0.2s; }
-        .btn-outline:active { transform: scale(0.98); }
-        .btn-now { background: var(--card); color: var(--gold); border: 1px solid var(--gold); padding: 8px; border-radius: 4px; font-size: 10px; margin-top: 5px; width: 100%; cursor: pointer; transition: all 0.2s; }
-        .btn-now:active { transform: scale(0.95); }
-        .btn-danger { width: 100%; padding: 12px; background: rgba(255, 77, 77, 0.1); color: var(--danger); border: 1px solid var(--danger); border-radius: 8px; margin-top: 20px; font-size: 11px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .btn-danger:active { transform: scale(0.98); }
-
-        label { display: block; margin: 15px 0 5px 0; font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; }
-        input, textarea, select { width: 100%; padding: 12px; background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 8px; font-size: 15px; }
-        textarea { font-family: 'Inter', sans-serif; resize: vertical; }
-
-        .timeline-item { border-left: 3px solid var(--gold); padding-left: 15px; margin-bottom: 40px; position: relative; }
-        .section-block { background: var(--card); padding: 10px; border-radius: 6px; margin-bottom: 8px; border-left: 2px solid #444; font-size: 13px; border: 1px solid var(--border); }
-
-        /* Folder cards */
-        .folder-card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s; }
-        .folder-card:hover { border-color: var(--gold); background: rgba(212, 175, 55, 0.05); }
-        .folder-card:active { transform: scale(0.98); }
-        .folder-info { flex: 1; }
-        .folder-name { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
-        .folder-meta { font-size: 10px; color: #666; }
-        .folder-arrow { color: var(--gold); font-size: 20px; }
-
-        /* Stats cards */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; }
-        .stat-value { font-size: 24px; font-weight: 900; color: var(--gold); }
-        .stat-label { font-size: 9px; color: #666; text-transform: uppercase; margin-top: 5px; }
-
-        /* Charts */
-        .chart-container { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin: 15px 0; }
-        .chart-title { font-size: 11px; font-weight: bold; color: var(--gold); margin-bottom: 10px; text-transform: uppercase; }
-        .chart-bar { background: var(--border); height: 30px; border-radius: 4px; margin-bottom: 8px; position: relative; overflow: hidden; }
-        .chart-bar-fill { background: var(--gold); height: 100%; transition: width 0.5s ease; display: flex; align-items: center; padding-left: 10px; font-size: 11px; font-weight: bold; color: black; }
-        .chart-bar-label { font-size: 10px; margin-bottom: 3px; }
-
-        /* Advanced search */
-        .search-filters { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin-top: 10px; }
-        .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-
-        /* Status pill */
-        .status-pill { padding: 6px 12px; border-radius: 20px; font-size: 9px; font-weight: bold; cursor: pointer; border: none; transition: all 0.2s; }
-        .status-ongoing { background: var(--success); color: white; }
-        .status-done { background: #666; color: white; }
-        .status-pill:active { transform: scale(0.95); }
-
-        /* Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
-        .modal.active { display: flex; animation: fadeIn 0.2s; }
-        .modal-content { background: var(--card); border: 1px solid var(--gold); border-radius: 10px; padding: 25px; max-width: 400px; width: 90%; max-height: 80vh; overflow-y: auto; }
-        .modal-title { font-size: 16px; font-weight: 900; color: var(--gold); margin-bottom: 15px; }
-        .modal-body { font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
-        .modal-actions { display: flex; gap: 10px; }
-        .modal-btn { flex: 1; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
-        .modal-btn.confirm { background: var(--gold); color: black; }
-        .modal-btn.cancel { background: transparent; color: var(--text); border: 1px solid var(--border); }
-
-        /* Templates */
-        .template-card { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
-        .template-card:hover { border-color: var(--gold); }
-        .template-card h4 { margin: 0 0 5px 0; font-size: 13px; color: var(--gold); }
-        .template-card p { margin: 0; font-size: 11px; color: #666; }
-
-        /* Voice recording */
-        .voice-recorder { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin-top: 10px; }
-        .voice-btn.recording { background: var(--danger); color: white; animation: pulse 1s infinite; }
-
-        /* Weather widget */
-        .weather-widget { background: var(--card); border: 1px solid var(--border); padding: 12px; border-radius: 8px; margin: 10px 0; display: flex; align-items: center; gap: 10px; }
-        .weather-icon { font-size: 30px; }
-        .weather-info { flex: 1; }
-        .weather-temp { font-size: 18px; font-weight: bold; color: var(--gold); }
-        .weather-desc { font-size: 11px; color: #666; }
-
-        /* Calendar */
-        .calendar { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 8px; margin: 15px 0; }
-        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-        .calendar-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); }
-        .calendar-day.today { background: var(--gold); color: black; font-weight: bold; }
-        .calendar-day.has-event { background: rgba(46, 204, 113, 0.2); }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @media print { .no-print { display: none; } body { background: white; color: black; } }
         
-        /* Install prompt */
-        .install-prompt { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--gold); color: black; padding: 15px 20px; border-radius: 10px; font-size: 12px; font-weight: bold; z-index: 10000; display: none; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .install-prompt.active { display: block; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateX(-50%) translateY(100px); } to { transform: translateX(-50%) translateY(0); } }
-        .install-prompt button { margin-left: 10px; padding: 8px 15px; background: black; color: var(--gold); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        @keyframes toastSlide { 
+            from { transform: translateX(-50%) translateY(-100px); opacity: 0; } 
+            to { transform: translateX(-50%) translateY(0); opacity: 1; } 
+        }
+        
+        /* ========== PROGRESS BAR ========== */
+        .progress-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--border);
+            z-index: 0;
+        }
+        
+        .progress-step { 
+            flex: 1; 
+            text-align: center; 
+            position: relative;
+            z-index: 1;
+        }
+        
+        .progress-dot { 
+            width: 36px; 
+            height: 36px; 
+            border-radius: 50%; 
+            background: var(--card); 
+            border: 3px solid var(--border);
+            margin: 0 auto 8px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 12px; 
+            font-weight: 900;
+            transition: all 0.3s;
+        }
+        
+        .progress-step.active .progress-dot { 
+            background: var(--gold); 
+            color: black; 
+            border-color: var(--gold);
+            box-shadow: 0 0 20px var(--shadow);
+            transform: scale(1.1);
+        }
+        
+        .progress-step.completed .progress-dot { 
+            background: var(--success); 
+            color: white; 
+            border-color: var(--success);
+        }
+        
+        .progress-label { 
+            font-size: 11px; 
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* ========== LOADING SPINNER ========== */
+        .spinner-container {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .spinner { 
+            border: 4px solid var(--border); 
+            border-top: 4px solid var(--gold); 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            animation: spin 0.8s linear infinite; 
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        .spinner-text {
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* ========== TABS ========== */
+        .tabs { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+        
+        .tab-btn { 
+            flex: 1; 
+            min-width: 100px; 
+            padding: 14px 20px; 
+            background: transparent; 
+            border: none;
+            color: #666; 
+            border-radius: 0;
+            font-size: 13px; 
+            font-weight: 800; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+        }
+        
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        
+        .tab-btn.active { 
+            color: var(--gold);
+        }
+        
+        .tab-btn.active::after {
+            transform: scaleX(1);
+        }
+        
+        .tab-btn:hover {
+            color: var(--gold-light);
+        }
+        
+        /* ========== TYPE CHIPS ========== */
+        .type-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 12px; 
+            margin-bottom: 20px; 
+        }
+        
+        .type-chip { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 16px; 
+            border-radius: 12px; 
+            text-align: center; 
+            font-size: 12px; 
+            font-weight: 900; 
+            color: #666; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .type-chip.selected { 
+            border-color: var(--gold); 
+            color: var(--gold); 
+            background: rgba(212, 175, 55, 0.15);
+            box-shadow: 0 0 20px var(--shadow);
+            transform: translateY(-2px);
+        }
+        
+        .type-chip:hover {
+            border-color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+        
+        .type-chip:active { 
+            transform: scale(0.95); 
+        }
+        
+        /* ========== STAFF GRID ========== */
+        .staff-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+            gap: 10px; 
+        }
+        
+        .staff-chip { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 14px; 
+            border-radius: 10px; 
+            font-size: 13px; 
+            text-align: center; 
+            color: #888; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-weight: 700;
+        }
+        
+        .staff-chip.selected { 
+            background: var(--gold); 
+            color: #000; 
+            font-weight: 900; 
+            border-color: var(--gold);
+            box-shadow: 0 4px 15px var(--shadow);
+            transform: translateY(-2px);
+        }
+        
+        .staff-chip:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+        
+        .staff-chip:active { 
+            transform: scale(0.95); 
+        }
+        /* ========== CHECKLIST ========== */
+        .check-item { 
+            display: flex; 
+            align-items: center; 
+            background: var(--card); 
+            padding: 16px; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            border: 2px solid var(--border); 
+            transition: all 0.3s;
+        }
+        
+        .check-item:has(input:checked) { 
+            background: rgba(46, 204, 113, 0.15); 
+            border-color: var(--success);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+        }
+        
+        .check-item input { 
+            width: 24px; 
+            height: 24px; 
+            margin-right: 15px; 
+            accent-color: var(--gold); 
+            cursor: pointer;
+        }
+        
+        .check-item label {
+            flex: 1;
+            cursor: pointer;
+            user-select: none;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        /* ========== PHOTO SYSTEM ========== */
+        .photo-box { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-top: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .photo-box h4 { 
+            margin: 0 0 15px 0; 
+            font-size: 12px; 
+            color: var(--gold); 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            font-weight: 900;
+        }
+        
+        .photo-gallery { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 15px; 
+            margin-top: 15px; 
+        }
+        
+        .photo-card { 
+            background: var(--bg); 
+            padding: 12px; 
+            border-radius: 12px; 
+            border: 2px solid var(--border); 
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .photo-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        .photo-card img { 
+            width: 100%; 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
+            max-height: 400px; 
+            object-fit: contain; 
+            cursor: pointer; 
+            transition: transform 0.3s;
+            background: #1a1a1a;
+        }
+        
+        .photo-card img:hover { 
+            transform: scale(1.02); 
+        }
+        
+        .photo-input { 
+            background: var(--bg); 
+            border: 1px solid var(--border); 
+            color: var(--text); 
+            padding: 10px; 
+            font-size: 13px; 
+            width: 100%; 
+            border-radius: 6px; 
+            margin-bottom: 8px;
+            font-family: 'Darker Grotesque', sans-serif;
+            font-weight: 600;
+        }
+        
+        .photo-size { 
+            font-size: 10px; 
+            color: #666; 
+            margin-bottom: 8px;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .photo-controls { 
+            display: flex; 
+            gap: 8px; 
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .photo-controls button { 
+            flex: 1; 
+            min-width: 80px;
+            padding: 8px 12px; 
+            font-size: 10px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border); 
+            background: var(--card); 
+            color: var(--text); 
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        
+        .photo-controls button:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .photo-controls button:active {
+            transform: scale(0.95);
+        }
+        
+        /* ========== ANNOTATION CANVAS ========== */
+        .annotation-container {
+            position: relative;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .annotation-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+            z-index: 10;
+        }
+        
+        .annotation-tools {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .annotation-tool-btn {
+            padding: 8px 12px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .annotation-tool-btn.active {
+            background: var(--gold);
+            color: black;
+            border-color: var(--gold);
+        }
+        
+        .annotation-tool-btn:hover {
+            border-color: var(--gold);
+        }
+        
+        .color-picker {
+            width: 40px;
+            height: 36px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        
+        .measure-input {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        /* ========== IMAGE MODAL ========== */
+        .image-modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 10001; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .image-modal.active { 
+            display: flex; 
+            animation: fadeIn 0.3s; 
+        }
+        
+        .image-modal img { 
+            max-width: 100%; 
+            max-height: 90vh; 
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .image-modal-close { 
+            position: absolute; 
+            top: 30px; 
+            right: 30px; 
+            background: var(--danger); 
+            color: white; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .image-modal-close:hover {
+            background: #ff6b6b;
+            transform: scale(1.05);
+        }
+        
+        /* ========== SIGNATURE ========== */
+        #sig-canvas { 
+            background: #fff; 
+            border: 3px solid var(--gold); 
+            border-radius: 12px; 
+            touch-action: none; 
+            width: 100%; 
+            height: 250px; 
+            cursor: crosshair;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        /* ========== BUTTONS ========== */
+        .btn-gold { 
+            width: 100%; 
+            padding: 20px; 
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: black; 
+            border: none; 
+            font-weight: 900; 
+            border-radius: 12px; 
+            text-transform: uppercase; 
+            margin-top: 20px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-size: 15px;
+            letter-spacing: 0.1em;
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+        
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--shadow);
+        }
+        
+        .btn-gold:active { 
+            transform: scale(0.98); 
+        }
+        
+        .btn-gold:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-outline { 
+            width: 100%; 
+            padding: 14px 20px; 
+            background: transparent; 
+            color: var(--text); 
+            border: 2px solid var(--border); 
+            border-radius: 10px; 
+            margin-top: 10px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline:active { 
+            transform: scale(0.98); 
+        }
+        
+        .btn-now { 
+            background: var(--card); 
+            color: var(--gold); 
+            border: 2px solid var(--gold); 
+            padding: 10px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            margin-top: 8px; 
+            width: 100%; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-now:hover {
+            background: var(--gold);
+            color: black;
+        }
+        
+        .btn-now:active { 
+            transform: scale(0.95); 
+        }
+        
+        .btn-danger { 
+            width: 100%; 
+            padding: 14px 20px; 
+            background: rgba(255, 77, 77, 0.1); 
+            color: var(--danger); 
+            border: 2px solid var(--danger); 
+            border-radius: 10px; 
+            margin-top: 30px; 
+            font-size: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger:active { 
+            transform: scale(0.98); 
+        }
+        
+        /* ========== FORM INPUTS ========== */
+        label { 
+            display: block; 
+            margin: 20px 0 8px 0; 
+            font-size: 12px; 
+            font-weight: 900; 
+            color: var(--gold); 
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        input:not([type="checkbox"]):not([type="file"]), 
+        textarea, 
+        select { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            color: var(--text); 
+            border-radius: 10px; 
+            font-size: 15px;
+            font-family: 'Darker Grotesque', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 20px var(--shadow);
+        }
+        
+        textarea { 
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+        
+        /* ========== CARDS ========== */
+        .folder-card { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: all 0.3s;
+        }
+        
+        .folder-card:hover { 
+            border-color: var(--gold); 
+            background: rgba(212, 175, 55, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+        
+        .folder-card:active { 
+            transform: scale(0.98); 
+        }
+        
+        .folder-info { 
+            flex: 1; 
+        }
+        
+        .folder-name { 
+            font-weight: 900; 
+            font-size: 18px; 
+            margin-bottom: 6px;
+            color: var(--gold);
+        }
+        
+        .folder-meta { 
+            font-size: 12px; 
+            color: #666;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .folder-arrow { 
+            color: var(--gold); 
+            font-size: 28px;
+            transition: transform 0.3s;
+        }
+        
+        .folder-card:hover .folder-arrow {
+            transform: translateX(5px);
+        }
+        
+        /* ========== STATS CARDS ========== */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 12px; 
+            margin: 20px 0; 
+        }
+        
+        .stat-card { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        .stat-value { 
+            font-size: 32px; 
+            font-weight: 900; 
+            color: var(--gold);
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .stat-label { 
+            font-size: 10px; 
+            color: #666; 
+            text-transform: uppercase; 
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+        /* ========== TIMELINE ========== */
+        .timeline-item { 
+            border-left: 4px solid var(--gold); 
+            padding-left: 25px; 
+            margin-bottom: 50px; 
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--shadow);
+        }
+        
+        .section-block { 
+            background: var(--card); 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            border-left: 3px solid var(--border);
+            font-size: 14px; 
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .section-block:hover {
+            border-left-color: var(--gold);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* ========== CHARTS ========== */
+        .chart-container { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title { 
+            font-size: 13px; 
+            font-weight: 900; 
+            color: var(--gold); 
+            margin-bottom: 15px; 
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .chart-bar { 
+            background: var(--border); 
+            height: 36px; 
+            border-radius: 8px; 
+            margin-bottom: 12px; 
+            position: relative; 
+            overflow: hidden;
+        }
+        
+        .chart-bar-fill { 
+            background: linear-gradient(90deg, var(--gold) 0%, var(--gold-dark) 100%);
+            height: 100%; 
+            transition: width 0.8s ease; 
+            display: flex; 
+            align-items: center; 
+            padding-left: 15px; 
+            font-size: 13px; 
+            font-weight: 900; 
+            color: black;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .chart-bar-label { 
+            font-size: 11px; 
+            margin-bottom: 5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* ========== STATUS PILLS ========== */
+        .status-pill { 
+            padding: 8px 16px; 
+            border-radius: 25px; 
+            font-size: 11px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            border: none; 
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .status-ongoing { 
+            background: var(--success); 
+            color: white;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .status-done { 
+            background: #666; 
+            color: white; 
+        }
+        
+        .status-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .status-pill:active { 
+            transform: scale(0.95); 
+        }
+        
+        /* ========== MODAL ========== */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.9); 
+            z-index: 10000; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.active { 
+            display: flex; 
+            animation: fadeIn 0.3s; 
+        }
+        
+        .modal-content { 
+            background: var(--card); 
+            border: 3px solid var(--gold); 
+            border-radius: 15px; 
+            padding: 30px; 
+            max-width: 500px; 
+            width: 90%; 
+            max-height: 80vh; 
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .modal-title { 
+            font-size: 20px; 
+            font-weight: 900; 
+            color: var(--gold); 
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .modal-body { 
+            font-size: 14px; 
+            margin-bottom: 25px; 
+            line-height: 1.6;
+            font-weight: 600;
+        }
+        
+        .modal-actions { 
+            display: flex; 
+            gap: 12px; 
+        }
+        
+        .modal-btn { 
+            flex: 1; 
+            padding: 14px; 
+            border-radius: 10px; 
+            border: none; 
+            font-weight: 900; 
+            cursor: pointer;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn.confirm { 
+            background: var(--gold); 
+            color: black;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+        
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+        
+        .modal-btn.cancel { 
+            background: transparent; 
+            color: var(--text); 
+            border: 2px solid var(--border); 
+        }
+        
+        .modal-btn.cancel:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        /* ========== TEMPLATES ========== */
+        .template-card { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 16px; 
+            border-radius: 10px; 
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+        }
+        
+        .template-card:hover { 
+            border-color: var(--gold);
+            box-shadow: 0 4px 20px var(--shadow);
+            transform: translateY(-2px);
+        }
+        
+        .template-card h4 { 
+            margin: 0 0 8px 0; 
+            font-size: 15px; 
+            color: var(--gold);
+            font-weight: 900;
+        }
+        
+        .template-card p { 
+            margin: 0; 
+            font-size: 12px; 
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* ========== SEARCH FILTERS ========== */
+        .search-filters { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-top: 15px;
+        }
+        
+        .filter-row { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-bottom: 12px; 
+        }
+        
+        /* ========== COMMERCIAL TOOLS ========== */
+        .quote-section {
+            background: var(--card);
+            border: 2px solid var(--gold);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .quote-section h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .quote-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .quote-total {
+            text-align: right;
+            padding: 15px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid var(--gold);
+        }
+        
+        .quote-total-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            font-weight: 700;
+        }
+        
+        .quote-total-amount {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--gold);
+            font-family: 'Space Mono', monospace;
+        }
+        
+        /* ========== CLIENT NOTES ========== */
+        .client-notes {
+            background: var(--card);
+            border-left: 4px solid var(--info);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .client-notes-header {
+            color: var(--info);
+            font-weight: 900;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        
+        /* ========== STEP CONTAINER ========== */
+        .step { 
+            display: none; 
+            animation: fadeIn 0.3s ease; 
+        }
+        
+        .step.active { 
+            display: block; 
+        }
+        
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* ========== WEATHER WIDGET ========== */
+        .weather-widget { 
+            background: linear-gradient(135deg, var(--card) 0%, var(--bg) 100%);
+            border: 2px solid var(--border); 
+            padding: 16px; 
+            border-radius: 12px; 
+            margin: 15px 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .weather-icon { 
+            font-size: 40px; 
+        }
+        
+        .weather-info { 
+            flex: 1; 
+        }
+        
+        .weather-temp { 
+            font-size: 24px; 
+            font-weight: 900; 
+            color: var(--gold);
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .weather-desc { 
+            font-size: 12px; 
+            color: #666;
+            font-weight: 600;
+        }
+        
+        /* ========== INSTALL PROMPT ========== */
+        .install-prompt { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: var(--gold); 
+            color: black; 
+            padding: 18px 25px; 
+            border-radius: 15px; 
+            font-size: 13px; 
+            font-weight: 900; 
+            z-index: 10000; 
+            display: none; 
+            box-shadow: 0 8px 30px var(--shadow);
+            max-width: 90%;
+        }
+        
+        .install-prompt.active { 
+            display: block; 
+            animation: slideUp 0.4s ease; 
+        }
+        
+        .install-prompt button { 
+            margin-left: 12px; 
+            padding: 10px 18px; 
+            background: black; 
+            color: var(--gold); 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .install-prompt button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* ========== PRINT STYLES ========== */
+        @media print { 
+            .no-print { display: none !important; } 
+            body { 
+                background: white; 
+                color: black; 
+            }
+            .container {
+                max-width: 100%;
+            }
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 20px;
+                letter-spacing: 4px;
+            }
+            
+            .type-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .quote-item {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ========== UTILITY CLASSES ========== */
+        .mt-10 { margin-top: 10px; }
+        .mt-20 { margin-top: 20px; }
+        .mb-10 { margin-bottom: 10px; }
+        .mb-20 { margin-bottom: 20px; }
+        .text-center { text-align: center; }
+        .text-gold { color: var(--gold); }
+        .font-mono { font-family: 'Space Mono', monospace; }
+        .uppercase { text-transform: uppercase; }
+        .bold { font-weight: 900; }
     </style>
 </head>
 <body>
-
+<!-- ========== INDICATORS ========== -->
 <div class="offline-indicator" id="offlineIndicator">📡 MODE HORS LIGNE</div>
 <div class="sync-indicator" id="syncIndicator">🔄 Synchronisation...</div>
 
 <div class="container">
+    <!-- ========== HEADER ========== -->
     <div class="header">
         <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         <h1>VERTEX MONACO</h1>
-        <p style="font-size: 9px; color: var(--gold); letter-spacing: 2px;">V14 ULTRA | ENTERPRISE EDITION</p>
-        <div class="version-badge">v14.0</div>
+        <p class="header-subtitle">TECHNICO-COMMERCIAL PRO | V15</p>
+        <div class="version-badge">v15.0</div>
     </div>
 
-    <!-- HOME / PROJECT LIST -->
+    <!-- ========== HOME / PROJECT LIST ========== -->
     <div class="step active" id="step0">
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-value" id="stat-active">0</div>
-                <div class="stat-label">Actifs</div>
+                <div class="stat-label">Dossiers actifs</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="stat-total">0</div>
@@ -246,13 +1456,14 @@
             <button class="tab-btn active" id="tab-active" onclick="switchTab('ongoing')">EN COURS</button>
             <button class="tab-btn" id="tab-archived" onclick="switchTab('done')">ARCHIVES</button>
             <button class="tab-btn" id="tab-analytics" onclick="switchTab('analytics')">STATS</button>
-            <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">PLANNING</button>
+            <button class="tab-btn" id="tab-quotes" onclick="switchTab('quotes')">DEVIS</button>
         </div>
         
+        <!-- LIST VIEW -->
         <div id="view-list">
             <button class="btn-gold" onclick="showNewProjectOptions()">+ NOUVEAU CLIENT</button>
             
-            <input type="text" id="searchBar" oninput="filterProjects()" placeholder="🔍 Rechercher un dossier..." style="margin-top:15px;">
+            <input type="text" id="searchBar" oninput="filterProjects()" placeholder="🔍 Rechercher un dossier..." style="margin-top:20px;">
             
             <div class="search-filters" id="advancedFilters" style="display:none;">
                 <div class="filter-row">
@@ -262,6 +1473,8 @@
                         <option value="MAINTENANCE">Maintenance</option>
                         <option value="DÉPANNAGE">Dépannage</option>
                         <option value="AUDIT">Audit</option>
+                        <option value="ÉTAT DES LIEUX">État des lieux</option>
+                        <option value="DEVIS">Devis</option>
                     </select>
                     <select id="filterStaff" onchange="filterProjects()">
                         <option value="">Toute équipe</option>
@@ -278,20 +1491,20 @@
                 </div>
             </div>
             
-            <button class="btn-outline" onclick="toggleAdvancedFilters()" style="margin-top:10px; font-size:10px;">
+            <button class="btn-outline" onclick="toggleAdvancedFilters()" style="margin-top:12px; font-size:11px;">
                 🔎 FILTRES AVANCÉS
             </button>
             
-            <div id="project-list" style="margin-top:10px;"></div>
+            <div id="project-list" style="margin-top:15px;"></div>
             
-            <button class="btn-outline" onclick="exportToCSV()" style="margin-top:40px;">📊 EXPORT EXCEL (.CSV)</button>
+            <button class="btn-outline" onclick="exportToCSV()" style="margin-top:50px;">📊 EXPORT EXCEL (.CSV)</button>
             <button class="btn-outline" onclick="exportPDFReport()">📄 RAPPORT PDF GLOBAL</button>
             <button class="btn-outline" onclick="exportBackup()">💾 SAUVEGARDER DONNÉES</button>
             <button class="btn-outline" onclick="document.getElementById('import-file').click()">📥 RESTAURER DONNÉES</button>
             <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(this)">
         </div>
 
-        <!-- Analytics View -->
+        <!-- ANALYTICS VIEW -->
         <div id="view-analytics" style="display:none;">
             <div class="chart-container">
                 <div class="chart-title">📈 Interventions par type</div>
@@ -322,20 +1535,18 @@
             <button class="btn-outline" onclick="exportAnalyticsPDF()">📊 EXPORTER STATS PDF</button>
         </div>
 
-        <!-- Calendar View -->
-        <div id="view-calendar" style="display:none;">
-            <div class="calendar" id="calendar-widget"></div>
-            <button class="btn-gold" onclick="scheduleIntervention()">+ PLANIFIER INTERVENTION</button>
-            <div id="scheduled-list" style="margin-top:15px;"></div>
+        <!-- QUOTES VIEW -->
+        <div id="view-quotes" style="display:none;">
+            <button class="btn-gold" onclick="newQuote()">+ NOUVEAU DEVIS</button>
+            <div id="quotes-list" style="margin-top:20px;"></div>
         </div>
     </div>
-
-    <!-- STEP 1: MISSION INFO -->
+    <!-- ========== STEP 1: MISSION INFO ========== -->
     <div class="step" id="step1">
         <div class="progress-bar">
             <div class="progress-step active">
                 <div class="progress-dot">1</div>
-                <div class="progress-label">Mission</div>
+                <div class="progress-label">Démarrage</div>
             </div>
             <div class="progress-step">
                 <div class="progress-dot">2</div>
@@ -343,11 +1554,15 @@
             </div>
             <div class="progress-step">
                 <div class="progress-dot">3</div>
+                <div class="progress-label">Rapport</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-dot">4</div>
                 <div class="progress-label">Signature</div>
             </div>
         </div>
 
-        <h3 id="c-name" style="text-align:center; color:var(--gold);"></h3>
+        <h3 id="c-name" style="text-align:center; color:var(--gold); margin-bottom:25px;"></h3>
         
         <label>Charger un template</label>
         <button class="btn-outline" onclick="showTemplates()">📋 TEMPLATES DISPONIBLES</button>
@@ -358,6 +1573,8 @@
             <div class="type-chip" onclick="selectType(this, 'MAINTENANCE')">MAINTENANCE</div>
             <div class="type-chip" onclick="selectType(this, 'DÉPANNAGE')">DÉPANNAGE</div>
             <div class="type-chip" onclick="selectType(this, 'AUDIT')">AUDIT</div>
+            <div class="type-chip" onclick="selectType(this, 'ÉTAT DES LIEUX')">ÉTAT DES LIEUX</div>
+            <div class="type-chip" onclick="selectType(this, 'DEVIS')">DEVIS</div>
         </div>
 
         <label>Équipe sur place *</label>
@@ -369,39 +1586,33 @@
             <div class="staff-chip" onclick="toggleStaff(this)">Jean-Christophe</div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-            <div>
-                <label>Arrivée *</label>
-                <input type="time" id="time_in">
-                <button class="btn-now" onclick="setTime('time_in')">MAINTENANT</button>
-            </div>
-            <div>
-                <label>Départ</label>
-                <input type="time" id="time_out">
-                <button class="btn-now" onclick="setTime('time_out')">MAINTENANT</button>
-            </div>
-        </div>
+        <label>Heure d'arrivée *</label>
+        <input type="time" id="time_in">
+        <button class="btn-now" onclick="setTime('time_in')">⏰ MAINTENANT</button>
 
         <div class="weather-widget" id="weather-widget" style="display:none;">
             <div class="weather-icon">🌤️</div>
             <div class="weather-info">
                 <div class="weather-temp">--°C</div>
-                <div class="weather-desc">Chargement...</div>
+                <div class="weather-desc">Chargement météo...</div>
             </div>
         </div>
 
-        <div id="gps-info" style="font-size:10px; color: var(--success); margin-top:10px;"></div>
+        <div id="gps-info" style="font-size:11px; color: var(--success); margin-top:15px; font-weight:700;"></div>
 
-        <button class="btn-gold" onclick="validateStep1()">SUIVANT : PHOTOS & RAPPORT</button>
+        <label>Notes client / Contexte</label>
+        <textarea id="client_context" rows="3" placeholder="Informations importantes avant l'intervention..."></textarea>
+
+        <button class="btn-gold" onclick="validateStep1()">DÉMARRER L'INTERVENTION</button>
         <button class="btn-outline" onclick="confirmCancel()">ANNULER</button>
     </div>
 
-    <!-- STEP 2: PHOTOS & REPORT -->
+    <!-- ========== STEP 2: PHOTOS AVANT & PENDANT ========== -->
     <div class="step" id="step2">
         <div class="progress-bar">
             <div class="progress-step completed">
                 <div class="progress-dot">✓</div>
-                <div class="progress-label">Mission</div>
+                <div class="progress-label">Démarrage</div>
             </div>
             <div class="progress-step active">
                 <div class="progress-dot">2</div>
@@ -409,6 +1620,10 @@
             </div>
             <div class="progress-step">
                 <div class="progress-dot">3</div>
+                <div class="progress-label">Rapport</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-dot">4</div>
                 <div class="progress-label">Signature</div>
             </div>
         </div>
@@ -416,48 +1631,26 @@
         <div class="photo-box">
             <h4>📸 Photos AVANT l'intervention</h4>
             <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'before')" style="display:none;" id="cam-before">
-            <button class="btn-outline" onclick="document.getElementById('cam-before').click()">+ AJOUTER AVANT</button>
+            <button class="btn-outline" onclick="document.getElementById('cam-before').click()">+ AJOUTER PHOTOS AVANT</button>
             <div id="gallery-before" class="photo-gallery"></div>
         </div>
 
         <div class="photo-box">
             <h4>📸 Photos PENDANT l'intervention</h4>
             <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'during')" style="display:none;" id="cam-during">
-            <button class="btn-outline" onclick="document.getElementById('cam-during').click()">+ AJOUTER PENDANT</button>
+            <button class="btn-outline" onclick="document.getElementById('cam-during').click()">+ AJOUTER PHOTOS PENDANT</button>
             <div id="gallery-during" class="photo-gallery"></div>
         </div>
 
-        <div class="photo-box">
-            <h4>📸 Photos APRÈS l'intervention</h4>
-            <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'after')" style="display:none;" id="cam-after">
-            <button class="btn-outline" onclick="document.getElementById('cam-after').click()">+ AJOUTER APRÈS</button>
-            <div id="gallery-after" class="photo-gallery"></div>
-        </div>
-
-        <label>Compte-rendu des travaux *</label>
-        <textarea id="task_done" rows="5" placeholder="Description technique détaillée de l'intervention..."></textarea>
-        
-        <div class="voice-recorder">
-            <button class="btn-outline" onclick="toggleVoiceRecording()" id="voice-btn">🎤 NOTES VOCALES</button>
-            <div id="voice-status" style="font-size:11px; color:#666; margin-top:5px;"></div>
-        </div>
-        
-        <label>Points de vigilance / Matériel</label>
-        <textarea id="task_mat" rows="2" placeholder="SAV, matériel installé, recommandations..."></textarea>
-
-        <label>Pièces détachées / Références</label>
-        <textarea id="task_parts" rows="2" placeholder="Références matériel, numéros de série..."></textarea>
-
-        <button class="btn-gold" onclick="validateStep2()">SUIVANT : SÉCURITÉ & SIGNATURE</button>
-        <button class="btn-outline" onclick="nextStep(1)">RETOUR</button>
+        <button class="btn-gold" onclick="validateStep2()">CONTINUER → RAPPORT</button>
+        <button class="btn-outline" onclick="nextStep(1)">← RETOUR</button>
     </div>
-
-    <!-- STEP 3: CHECKLIST & SIGNATURE -->
+    <!-- ========== STEP 3: PHOTOS APRÈS & RAPPORT ========== -->
     <div class="step" id="step3">
         <div class="progress-bar">
             <div class="progress-step completed">
                 <div class="progress-dot">✓</div>
-                <div class="progress-label">Mission</div>
+                <div class="progress-label">Démarrage</div>
             </div>
             <div class="progress-step completed">
                 <div class="progress-dot">✓</div>
@@ -465,30 +1658,83 @@
             </div>
             <div class="progress-step active">
                 <div class="progress-dot">3</div>
+                <div class="progress-label">Rapport</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-dot">4</div>
                 <div class="progress-label">Signature</div>
             </div>
         </div>
 
-        <label>Checklist de fin de mission *</label>
-        <div id="checklist-container"></div>
-
-        <label style="margin-top:20px;">Signature client (tactile ou souris) *</label>
-        <canvas id="sig-canvas"></canvas>
-        <button class="btn-outline" onclick="clearSig()">EFFACER LA SIGNATURE</button>
-        
-        <div id="save-spinner" style="display:none;">
-            <div class="spinner"></div>
-            <p style="text-align:center; font-size:12px; color:#666;">Enregistrement en cours...</p>
+        <div class="photo-box">
+            <h4>📸 Photos APRÈS l'intervention</h4>
+            <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'after')" style="display:none;" id="cam-after">
+            <button class="btn-outline" onclick="document.getElementById('cam-after').click()">+ AJOUTER PHOTOS APRÈS</button>
+            <div id="gallery-after" class="photo-gallery"></div>
         </div>
+
+        <label>Compte-rendu des travaux réalisés *</label>
+        <textarea id="task_done" rows="6" placeholder="Description technique détaillée de l'intervention effectuée..."></textarea>
         
-        <button class="btn-gold" id="btn-save" onclick="saveEntry()">✓ ENREGISTRER FINAL</button>
-        <button class="btn-outline" onclick="nextStep(2)">RETOUR</button>
+        <label>Matériel installé / Références</label>
+        <textarea id="task_mat" rows="3" placeholder="Équipements installés, références, numéros de série..."></textarea>
+
+        <label>Pièces détachées utilisées</label>
+        <textarea id="task_parts" rows="3" placeholder="Liste des pièces, quantités, références..."></textarea>
+
+        <label>Recommandations / Points de vigilance</label>
+        <textarea id="task_recommendations" rows="3" placeholder="Conseils pour le client, prochaines interventions, SAV..."></textarea>
+
+        <button class="btn-gold" onclick="validateStep3()">CONTINUER → FINALISATION</button>
+        <button class="btn-outline" onclick="nextStep(2)">← RETOUR AUX PHOTOS</button>
     </div>
 
-    <!-- STEP 4: VIEW PROJECT -->
+    <!-- ========== STEP 4: CHECKLIST, HEURE DE DÉPART & SIGNATURE ========== -->
     <div class="step" id="step4">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 id="view-n" style="color:var(--gold); margin:0; font-size:18px;"></h2>
+        <div class="progress-bar">
+            <div class="progress-step completed">
+                <div class="progress-dot">✓</div>
+                <div class="progress-label">Démarrage</div>
+            </div>
+            <div class="progress-step completed">
+                <div class="progress-dot">✓</div>
+                <div class="progress-label">Photos</div>
+            </div>
+            <div class="progress-step completed">
+                <div class="progress-dot">✓</div>
+                <div class="progress-label">Rapport</div>
+            </div>
+            <div class="progress-step active">
+                <div class="progress-dot">4</div>
+                <div class="progress-label">Signature</div>
+            </div>
+        </div>
+
+        <label>Heure de départ *</label>
+        <input type="time" id="time_out">
+        <button class="btn-now" onclick="setTime('time_out')">⏰ MAINTENANT</button>
+
+        <label style="margin-top:30px;">Checklist de fin de mission *</label>
+        <div id="checklist-container"></div>
+
+        <label style="margin-top:30px;">Signature client (tactile ou souris) *</label>
+        <canvas id="sig-canvas"></canvas>
+        <button class="btn-outline" onclick="clearSig()">🗑️ EFFACER LA SIGNATURE</button>
+        
+        <div id="save-spinner" style="display:none;">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+                <p class="spinner-text">Enregistrement en cours...</p>
+            </div>
+        </div>
+        
+        <button class="btn-gold" id="btn-save" onclick="saveEntry()">✓ ENREGISTRER LA MISSION</button>
+        <button class="btn-outline" onclick="nextStep(3)">← RETOUR AU RAPPORT</button>
+    </div>
+    <!-- ========== STEP 5: VIEW PROJECT ========== -->
+    <div class="step" id="step5">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+            <h2 id="view-n" style="color:var(--gold); margin:0; font-size:22px;"></h2>
             <div id="status-toggle-container"></div>
         </div>
 
@@ -501,23 +1747,32 @@
                 <div class="stat-value" id="project-hours">0h</div>
                 <div class="stat-label">Temps total</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-value" id="project-quotes">0</div>
+                <div class="stat-label">Devis</div>
+            </div>
         </div>
 
-        <div id="timeline" style="margin-top:20px;"></div>
+        <div id="timeline" style="margin-top:30px;"></div>
         
         <div class="no-print">
-            <button class="btn-outline" style="color:#2ecc71; border-color:#2ecc71;" onclick="sendProjectMail()">✉️ ENVOYER PAR MAIL</button>
-            <button class="btn-outline" style="color:#3498db; border-color:#3498db;" onclick="shareWhatsApp()">💬 PARTAGER WHATSAPP</button>
+            <button class="btn-outline" style="color:#2ecc71; border-color:#2ecc71;" onclick="sendProjectMail()">
+                ✉️ ENVOYER PAR MAIL
+            </button>
+            <button class="btn-outline" style="color:#3498db; border-color:#3498db;" onclick="shareWhatsApp()">
+                💬 PARTAGER WHATSAPP
+            </button>
             <button class="btn-gold" onclick="newIntervention()">+ NOUVELLE INTERVENTION</button>
             <button class="btn-outline" onclick="exportProjectPDF()">🖨️ GÉNÉRER PDF DÉTAILLÉ</button>
             <button class="btn-outline" onclick="duplicateLastIntervention()">📋 DUPLIQUER DERNIÈRE</button>
-            <button class="btn-outline" onclick="nextStep(0)">RETOUR ACCUEIL</button>
+            <button class="btn-outline" onclick="newProjectQuote()">💰 CRÉER UN DEVIS</button>
+            <button class="btn-outline" onclick="nextStep(0)">← RETOUR ACCUEIL</button>
             <button class="btn-danger" onclick="confirmDeleteProject()">⚠️ SUPPRIMER CE CLIENT</button>
         </div>
     </div>
 </div>
 
-<!-- Modals -->
+<!-- ========== MODALS ========== -->
 <div class="modal" id="confirmModal">
     <div class="modal-content">
         <div class="modal-title" id="modalTitle">Confirmation</div>
@@ -531,9 +1786,33 @@
 
 <div class="modal" id="templatesModal">
     <div class="modal-content">
-        <div class="modal-title">Choisir un template</div>
+        <div class="modal-title">📋 Choisir un template</div>
         <div id="templates-list"></div>
-        <button class="btn-outline" onclick="closeModal('templatesModal')" style="margin-top:15px;">Fermer</button>
+        <button class="btn-outline" onclick="closeModal('templatesModal')" style="margin-top:20px;">Fermer</button>
+    </div>
+</div>
+
+<div class="modal" id="annotationModal">
+    <div class="modal-content" style="max-width:90%; max-height:90vh;">
+        <div class="modal-title">✏️ Annoter la photo</div>
+        <div class="annotation-tools">
+            <button class="annotation-tool-btn" id="tool-arrow" onclick="selectAnnotationTool('arrow')">→ Flèche</button>
+            <button class="annotation-tool-btn" id="tool-line" onclick="selectAnnotationTool('line')">— Ligne</button>
+            <button class="annotation-tool-btn" id="tool-text" onclick="selectAnnotationTool('text')">T Texte</button>
+            <button class="annotation-tool-btn" id="tool-measure" onclick="selectAnnotationTool('measure')">📏 Mesure</button>
+            <input type="color" class="color-picker" id="annotation-color" value="#D4AF37">
+            <input type="text" class="measure-input" id="measure-value" placeholder="Ex: 2.5m">
+            <button class="annotation-tool-btn" onclick="undoAnnotation()">↶ Annuler</button>
+            <button class="annotation-tool-btn" onclick="clearAnnotations()">🗑️ Effacer tout</button>
+        </div>
+        <div class="annotation-container" id="annotation-container">
+            <img id="annotation-image" src="" style="width:100%; display:block;">
+            <canvas class="annotation-canvas" id="annotation-canvas"></canvas>
+        </div>
+        <div class="modal-actions" style="margin-top:15px;">
+            <button class="modal-btn cancel" onclick="closeAnnotationModal()">Annuler</button>
+            <button class="modal-btn confirm" onclick="saveAnnotation()">✓ Enregistrer</button>
+        </div>
     </div>
 </div>
 
@@ -545,24 +1824,22 @@
 <div class="install-prompt" id="installPrompt">
     📱 Installer Vertex Monaco sur votre appareil
     <button onclick="installPWA()">Installer</button>
-    <button onclick="dismissInstall()" style="background:transparent; color:black; border:1px solid black;">Plus tard</button>
+    <button onclick="dismissInstall()" style="background:transparent; color:black; border:2px solid black;">
+        Plus tard
+    </button>
 </div>
-
-<!-- ========================================= -->
-<!-- VERTEX MONACO V14 ULTRA - PARTIE 2       -->
-<!-- JAVASCRIPT - À INSÉRER AVANT </body>     -->
-<!-- ========================================= -->
-
 <script>
 // ========== CONFIGURATION ==========
 const CONFIG = {
-    DB_NAME: 'VertexDB',
-    DB_VERSION: 3,
-    MAX_IMAGE_SIZE: 1200,
-    IMAGE_QUALITY: 0.7,
+    DB_NAME: 'VertexDB_V15',
+    DB_VERSION: 4,
+    MAX_IMAGE_SIZE: 1400,
+    IMAGE_QUALITY: 0.75,
     WEATHER_API_KEY: 'demo',
     ENABLE_CLOUD_SYNC: false,
     AUTO_SAVE_INTERVAL: 30000,
+    ANNOTATION_LINE_WIDTH: 3,
+    ANNOTATION_FONT_SIZE: 16,
 };
 
 // ========== STATE ==========
@@ -582,34 +1859,91 @@ let modalCallback = null;
 let isOnline = navigator.onLine;
 let syncQueue = [];
 let deferredPrompt = null;
-let mediaRecorder = null;
-let audioChunks = [];
 let currentTheme = localStorage.getItem('vertex_theme') || 'dark';
+
+// Annotation state
+let currentAnnotationPhoto = null;
+let currentAnnotationType = null;
+let annotationCanvas = null;
+let annotationCtx = null;
+let isAnnotating = false;
+let annotationStartPos = null;
+let annotations = [];
+let currentAnnotationColor = '#D4AF37';
 
 // Templates
 const TEMPLATES = {
     'installation_standard': {
         name: 'Installation Standard',
         type: 'INSTALLATION',
-        checklist: ['Chantier nettoyé / Propreté', 'Tests de diffusion OK', 'Alimentation & Baie verrouillées', 'Client prévenu du départ', 'Documentation technique remise'],
-        taskTemplate: 'Installation complète du système audio/vidéo comprenant :\n- Pose du matériel\n- Câblage et raccordements\n- Configuration initiale\n- Tests de fonctionnement'
+        checklist: [
+            'Chantier nettoyé / Propreté',
+            'Tests de diffusion OK',
+            'Alimentation & Baie verrouillées',
+            'Documentation technique remise',
+            'Client formé à l\'utilisation',
+            'Client prévenu du départ'
+        ],
+        taskTemplate: 'Installation complète du système audio/vidéo comprenant :\n- Pose du matériel\n- Câblage et raccordements\n- Configuration initiale\n- Tests de fonctionnement\n- Formation client'
     },
     'maintenance_preventive': {
         name: 'Maintenance Préventive',
         type: 'MAINTENANCE',
-        checklist: ['Vérification câblage', 'Nettoyage équipements', 'Tests systèmes', 'Mise à jour firmware', 'Client prévenu du départ'],
-        taskTemplate: 'Maintenance préventive incluant :\n- Vérification état général\n- Nettoyage des connectiques\n- Tests de performance\n- Recommandations'
+        checklist: [
+            'Vérification câblage',
+            'Nettoyage équipements',
+            'Tests systèmes',
+            'Mise à jour firmware',
+            'Documentation MAJ',
+            'Client prévenu du départ'
+        ],
+        taskTemplate: 'Maintenance préventive incluant :\n- Vérification état général\n- Nettoyage des connectiques\n- Tests de performance\n- Mise à jour logiciels\n- Recommandations'
     },
     'depannage_urgent': {
         name: 'Dépannage Urgent',
         type: 'DÉPANNAGE',
-        checklist: ['Diagnostic effectué', 'Panne résolue', 'Tests OK', 'Client formé', 'SAV planifié si nécessaire'],
+        checklist: [
+            'Diagnostic effectué',
+            'Panne résolue',
+            'Tests OK',
+            'Client formé',
+            'SAV planifié si nécessaire',
+            'Client prévenu du départ'
+        ],
         taskTemplate: 'Intervention de dépannage :\n- Diagnostic panne\n- Réparation effectuée\n- Tests validation\n- Conseils client'
+    },
+    'etat_des_lieux': {
+        name: 'État des Lieux',
+        type: 'ÉTAT DES LIEUX',
+        checklist: [
+            'Toutes les zones photographiées',
+            'Mesures notées',
+            'État général évalué',
+            'Points d\'attention identifiés',
+            'Rapport photos complet',
+            'Client informé'
+        ],
+        taskTemplate: 'État des lieux complet :\n- Prise de photos avec mesures\n- Évaluation de l\'infrastructure\n- Identification des besoins\n- Recommandations pour devis'
+    },
+    'audit_technique': {
+        name: 'Audit Technique',
+        type: 'AUDIT',
+        checklist: [
+            'Inventaire matériel fait',
+            'État réseau analysé',
+            'Points faibles identifiés',
+            'Recommandations formulées',
+            'Rapport détaillé',
+            'Client briefé'
+        ],
+        taskTemplate: 'Audit technique approfondi :\n- Inventaire équipements\n- Analyse infrastructure\n- Tests performance\n- Identification des axes d\'amélioration\n- Recommandations budgétisées'
     }
 };
 
 // ========== INITIALIZATION ==========
 window.addEventListener('load', async () => {
+    console.log('🚀 Initialisation Vertex Monaco V15...');
+    
     await initIndexedDB();
     await loadFromIndexedDB();
     applyTheme(currentTheme);
@@ -620,6 +1954,7 @@ window.addEventListener('load', async () => {
     loadList();
     updateStats();
     
+    // PWA Installation prompt
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -630,12 +1965,20 @@ window.addEventListener('load', async () => {
         }, 5000);
     });
     
+    // Service Worker
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
+        navigator.serviceWorker.register('/sw.js').catch(() => {
+            console.log('Service Worker non disponible');
+        });
     }
     
+    // Auto-save interval
     setInterval(autoSave, CONFIG.AUTO_SAVE_INTERVAL);
+    
+    // Weather
     getWeather();
+    
+    console.log('✓ Vertex Monaco prêt');
 });
 
 // ========== INDEXED DB ==========
@@ -643,9 +1986,14 @@ async function initIndexedDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open(CONFIG.DB_NAME, CONFIG.DB_VERSION);
         
-        request.onerror = () => reject(request.error);
+        request.onerror = () => {
+            console.error('IndexedDB error:', request.error);
+            reject(request.error);
+        };
+        
         request.onsuccess = () => {
             indexedDB_instance = request.result;
+            console.log('✓ IndexedDB connecté');
             resolve();
         };
         
@@ -661,6 +2009,11 @@ async function initIndexedDB() {
             if (!db.objectStoreNames.contains('settings')) {
                 db.createObjectStore('settings', { keyPath: 'key' });
             }
+            if (!db.objectStoreNames.contains('quotes')) {
+                db.createObjectStore('quotes', { keyPath: 'id' });
+            }
+            
+            console.log('✓ IndexedDB schéma mis à jour');
         };
     });
 }
@@ -676,11 +2029,15 @@ async function loadFromIndexedDB() {
             request.result.forEach(project => {
                 db[project.id] = project.data;
             });
+            console.log(`✓ ${Object.keys(db).length} projets chargés`);
         };
     } catch (e) {
-        console.error('IndexedDB error:', e);
-        const stored = localStorage.getItem('vertex_v14_db');
-        if (stored) db = JSON.parse(stored);
+        console.error('Erreur chargement IndexedDB:', e);
+        const stored = localStorage.getItem('vertex_v15_db');
+        if (stored) {
+            db = JSON.parse(stored);
+            console.log('✓ Données chargées depuis localStorage (fallback)');
+        }
     }
 }
 
@@ -689,6 +2046,7 @@ async function saveToIndexedDB() {
         const transaction = indexedDB_instance.transaction(['projects'], 'readwrite');
         const store = transaction.objectStore('projects');
         
+        // Clear and re-save
         await store.clear();
         
         for (const [id, data] of Object.entries(db)) {
@@ -697,9 +2055,12 @@ async function saveToIndexedDB() {
             }
         }
         
-        localStorage.setItem('vertex_v14_db', JSON.stringify(db));
+        // Backup to localStorage
+        localStorage.setItem('vertex_v15_db', JSON.stringify(db));
+        console.log('✓ Données sauvegardées');
+        hasUnsavedChanges = false;
     } catch (e) {
-        console.error('Save error:', e);
+        console.error('Erreur sauvegarde:', e);
         showToast('Erreur de sauvegarde', 'error');
     }
 }
@@ -707,7 +2068,7 @@ async function saveToIndexedDB() {
 function autoSave() {
     if (hasUnsavedChanges) {
         saveToIndexedDB();
-        showToast('Sauvegarde automatique', 'info');
+        showToast('💾 Sauvegarde automatique', 'info');
     }
 }
 
@@ -720,6 +2081,7 @@ function toggleTheme() {
 
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    console.log(`✓ Thème appliqué: ${theme}`);
 }
 
 // ========== NETWORK ==========
@@ -727,14 +2089,14 @@ function setupNetworkListeners() {
     window.addEventListener('online', () => {
         isOnline = true;
         document.getElementById('offlineIndicator').classList.remove('active');
-        showToast('Connexion rétablie', 'success');
+        showToast('✓ Connexion rétablie', 'success');
         syncOfflineData();
     });
     
     window.addEventListener('offline', () => {
         isOnline = false;
         document.getElementById('offlineIndicator').classList.add('active');
-        showToast('Mode hors ligne activé', 'warning');
+        showToast('📡 Mode hors ligne activé', 'warning');
     });
     
     if (!isOnline) {
@@ -745,15 +2107,634 @@ function setupNetworkListeners() {
 function syncOfflineData() {
     if (syncQueue.length > 0 && CONFIG.ENABLE_CLOUD_SYNC) {
         document.getElementById('syncIndicator').classList.add('active');
+        
         setTimeout(() => {
             syncQueue = [];
             document.getElementById('syncIndicator').classList.remove('active');
-            showToast('Synchronisation terminée', 'success');
+            showToast('✓ Synchronisation terminée', 'success');
         }, 2000);
     }
 }
+// ========== PHOTO ANNOTATION SYSTEM ==========
+function openAnnotationModal(type, index) {
+    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
+    const photo = photoArray[index];
+    
+    currentAnnotationPhoto = { type, index };
+    annotations = photo.annotations || [];
+    
+    const modal = document.getElementById('annotationModal');
+    const img = document.getElementById('annotation-image');
+    const canvas = document.getElementById('annotation-canvas');
+    
+    img.src = photo.src;
+    
+    img.onload = () => {
+        const container = document.getElementById('annotation-container');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.style.width = img.offsetWidth + 'px';
+        canvas.style.height = img.offsetHeight + 'px';
+        
+        annotationCanvas = canvas;
+        annotationCtx = canvas.getContext('2d');
+        
+        // Redraw existing annotations
+        redrawAnnotations();
+        
+        setupAnnotationListeners();
+    };
+    
+    modal.classList.add('active');
+    selectAnnotationTool('measure'); // Default to measure tool
+}
 
-// ========== TOAST ==========
+function selectAnnotationTool(tool) {
+    currentAnnotationType = tool;
+    
+    document.querySelectorAll('.annotation-tool-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    const toolBtn = document.getElementById(`tool-${tool}`);
+    if (toolBtn) toolBtn.classList.add('active');
+}
+
+function setupAnnotationListeners() {
+    const canvas = annotationCanvas;
+    
+    // Remove old listeners
+    canvas.removeEventListener('mousedown', startAnnotation);
+    canvas.removeEventListener('mousemove', drawAnnotation);
+    canvas.removeEventListener('mouseup', endAnnotation);
+    canvas.removeEventListener('touchstart', startAnnotation);
+    canvas.removeEventListener('touchmove', drawAnnotation);
+    canvas.removeEventListener('touchend', endAnnotation);
+    
+    // Add listeners
+    canvas.addEventListener('mousedown', startAnnotation);
+    canvas.addEventListener('mousemove', drawAnnotation);
+    canvas.addEventListener('mouseup', endAnnotation);
+    canvas.addEventListener('touchstart', startAnnotation, { passive: false });
+    canvas.addEventListener('touchmove', drawAnnotation, { passive: false });
+    canvas.addEventListener('touchend', endAnnotation);
+}
+
+function getAnnotationPos(e) {
+    const canvas = annotationCanvas;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    
+    return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+    };
+}
+
+function startAnnotation(e) {
+    e.preventDefault();
+    isAnnotating = true;
+    annotationStartPos = getAnnotationPos(e);
+    currentAnnotationColor = document.getElementById('annotation-color').value;
+}
+
+function drawAnnotation(e) {
+    if (!isAnnotating) return;
+    e.preventDefault();
+    
+    const pos = getAnnotationPos(e);
+    const ctx = annotationCtx;
+    
+    // Redraw canvas
+    redrawAnnotations();
+    
+    ctx.strokeStyle = currentAnnotationColor;
+    ctx.fillStyle = currentAnnotationColor;
+    ctx.lineWidth = CONFIG.ANNOTATION_LINE_WIDTH;
+    ctx.font = `bold ${CONFIG.ANNOTATION_FONT_SIZE}px "Darker Grotesque"`;
+    
+    switch (currentAnnotationType) {
+        case 'line':
+            ctx.beginPath();
+            ctx.moveTo(annotationStartPos.x, annotationStartPos.y);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            break;
+            
+        case 'arrow':
+            drawArrow(ctx, annotationStartPos.x, annotationStartPos.y, pos.x, pos.y);
+            break;
+            
+        case 'measure':
+            // Draw line
+            ctx.beginPath();
+            ctx.moveTo(annotationStartPos.x, annotationStartPos.y);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            
+            // Draw endpoints
+            ctx.beginPath();
+            ctx.arc(annotationStartPos.x, annotationStartPos.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw measurement text
+            const measureValue = document.getElementById('measure-value').value || '?';
+            const midX = (annotationStartPos.x + pos.x) / 2;
+            const midY = (annotationStartPos.y + pos.y) / 2;
+            
+            // Background for text
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            const textWidth = ctx.measureText(measureValue).width;
+            ctx.fillRect(midX - textWidth / 2 - 8, midY - CONFIG.ANNOTATION_FONT_SIZE - 4, 
+                        textWidth + 16, CONFIG.ANNOTATION_FONT_SIZE + 8);
+            
+            // Text
+            ctx.fillStyle = currentAnnotationColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(measureValue, midX, midY);
+            break;
+    }
+}
+
+function endAnnotation(e) {
+    if (!isAnnotating) return;
+    e.preventDefault();
+    
+    const pos = getAnnotationPos(e);
+    const measureValue = document.getElementById('measure-value').value || '';
+    
+    const annotation = {
+        type: currentAnnotationType,
+        start: annotationStartPos,
+        end: pos,
+        color: currentAnnotationColor,
+        measure: measureValue
+    };
+    
+    annotations.push(annotation);
+    isAnnotating = false;
+    
+    redrawAnnotations();
+}
+
+function drawArrow(ctx, x1, y1, x2, y2) {
+    const headLength = 15;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    
+    // Line
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    
+    // Arrow head
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - headLength * Math.cos(angle - Math.PI / 6), 
+               y2 - headLength * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(x2 - headLength * Math.cos(angle + Math.PI / 6), 
+               y2 - headLength * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fill();
+}
+
+function redrawAnnotations() {
+    const ctx = annotationCtx;
+    ctx.clearRect(0, 0, annotationCanvas.width, annotationCanvas.height);
+    
+    annotations.forEach(ann => {
+        ctx.strokeStyle = ann.color;
+        ctx.fillStyle = ann.color;
+        ctx.lineWidth = CONFIG.ANNOTATION_LINE_WIDTH;
+        ctx.font = `bold ${CONFIG.ANNOTATION_FONT_SIZE}px "Darker Grotesque"`;
+        
+        switch (ann.type) {
+            case 'line':
+                ctx.beginPath();
+                ctx.moveTo(ann.start.x, ann.start.y);
+                ctx.lineTo(ann.end.x, ann.end.y);
+                ctx.stroke();
+                break;
+                
+            case 'arrow':
+                drawArrow(ctx, ann.start.x, ann.start.y, ann.end.x, ann.end.y);
+                break;
+                
+            case 'measure':
+                // Line
+                ctx.beginPath();
+                ctx.moveTo(ann.start.x, ann.start.y);
+                ctx.lineTo(ann.end.x, ann.end.y);
+                ctx.stroke();
+                
+                // Endpoints
+                ctx.beginPath();
+                ctx.arc(ann.start.x, ann.start.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(ann.end.x, ann.end.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Measurement
+                const midX = (ann.start.x + ann.end.x) / 2;
+                const midY = (ann.start.y + ann.end.y) / 2;
+                
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                const textWidth = ctx.measureText(ann.measure).width;
+                ctx.fillRect(midX - textWidth / 2 - 8, midY - CONFIG.ANNOTATION_FONT_SIZE - 4, 
+                            textWidth + 16, CONFIG.ANNOTATION_FONT_SIZE + 8);
+                
+                ctx.fillStyle = ann.color;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(ann.measure, midX, midY);
+                break;
+                
+            case 'text':
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                const textW = ctx.measureText(ann.measure).width;
+                ctx.fillRect(ann.start.x - 8, ann.start.y - CONFIG.ANNOTATION_FONT_SIZE - 4, 
+                            textW + 16, CONFIG.ANNOTATION_FONT_SIZE + 8);
+                
+                ctx.fillStyle = ann.color;
+                ctx.textAlign = 'left';
+                ctx.textBaseline = 'top';
+                ctx.fillText(ann.measure, ann.start.x, ann.start.y - CONFIG.ANNOTATION_FONT_SIZE);
+                break;
+        }
+    });
+}
+
+function undoAnnotation() {
+    if (annotations.length > 0) {
+        annotations.pop();
+        redrawAnnotations();
+        showToast('Annotation annulée', 'info');
+    }
+}
+
+function clearAnnotations() {
+    if (annotations.length > 0) {
+        showModal(
+            'Effacer toutes les annotations',
+            'Êtes-vous sûr de vouloir effacer toutes les annotations ?',
+            'Effacer',
+            () => {
+                annotations = [];
+                redrawAnnotations();
+                showToast('Annotations effacées', 'success');
+            }
+        );
+    }
+}
+
+function saveAnnotation() {
+    if (!currentAnnotationPhoto) return;
+    
+    const { type, index } = currentAnnotationPhoto;
+    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
+    
+    // Save annotations to photo object
+    photoArray[index].annotations = [...annotations];
+    
+    // Create composite image with annotations
+    const tempCanvas = document.createElement('canvas');
+    const img = document.getElementById('annotation-image');
+    tempCanvas.width = img.naturalWidth;
+    tempCanvas.height = img.naturalHeight;
+    
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCtx.drawImage(img, 0, 0);
+    
+    // Scale and draw annotations
+    const scaleX = tempCanvas.width / annotationCanvas.width;
+    const scaleY = tempCanvas.height / annotationCanvas.height;
+    
+    annotations.forEach(ann => {
+        tempCtx.strokeStyle = ann.color;
+        tempCtx.fillStyle = ann.color;
+        tempCtx.lineWidth = CONFIG.ANNOTATION_LINE_WIDTH * Math.max(scaleX, scaleY);
+        tempCtx.font = `bold ${CONFIG.ANNOTATION_FONT_SIZE * Math.max(scaleX, scaleY)}px "Darker Grotesque"`;
+        
+        const startX = ann.start.x * scaleX;
+        const startY = ann.start.y * scaleY;
+        const endX = ann.end.x * scaleX;
+        const endY = ann.end.y * scaleY;
+        
+        switch (ann.type) {
+            case 'line':
+                tempCtx.beginPath();
+                tempCtx.moveTo(startX, startY);
+                tempCtx.lineTo(endX, endY);
+                tempCtx.stroke();
+                break;
+                
+            case 'arrow':
+                drawArrow(tempCtx, startX, startY, endX, endY);
+                break;
+                
+            case 'measure':
+                tempCtx.beginPath();
+                tempCtx.moveTo(startX, startY);
+                tempCtx.lineTo(endX, endY);
+                tempCtx.stroke();
+                
+                tempCtx.beginPath();
+                tempCtx.arc(startX, startY, 6 * Math.max(scaleX, scaleY), 0, Math.PI * 2);
+                tempCtx.fill();
+                tempCtx.beginPath();
+                tempCtx.arc(endX, endY, 6 * Math.max(scaleX, scaleY), 0, Math.PI * 2);
+                tempCtx.fill();
+                
+                const midX = (startX + endX) / 2;
+                const midY = (startY + endY) / 2;
+                
+                tempCtx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                const textWidth = tempCtx.measureText(ann.measure).width;
+                const fontSize = CONFIG.ANNOTATION_FONT_SIZE * Math.max(scaleX, scaleY);
+                tempCtx.fillRect(midX - textWidth / 2 - 10, midY - fontSize - 5, 
+                                textWidth + 20, fontSize + 10);
+                
+                tempCtx.fillStyle = ann.color;
+                tempCtx.textAlign = 'center';
+                tempCtx.textBaseline = 'middle';
+                tempCtx.fillText(ann.measure, midX, midY);
+                break;
+        }
+    });
+    
+    // Update photo with annotated version
+    photoArray[index].src = tempCanvas.toDataURL('image/jpeg', CONFIG.IMAGE_QUALITY);
+    photoArray[index].compressedSize = Math.round((photoArray[index].src.length * 3) / 4);
+    
+    renderGalleries();
+    closeAnnotationModal();
+    showToast(`✓ Photo annotée avec ${annotations.length} mesure(s)`, 'success');
+    hasUnsavedChanges = true;
+}
+
+function closeAnnotationModal() {
+    document.getElementById('annotationModal').classList.remove('active');
+    currentAnnotationPhoto = null;
+    annotations = [];
+    isAnnotating = false;
+}
+// ========== PHOTO MANAGEMENT ==========
+let photosProcessed = 0;
+let photosTotal = 0;
+
+function handlePhotos(input, type) {
+    const files = Array.from(input.files);
+    photosTotal = files.length;
+    photosProcessed = 0;
+    
+    if (files.length === 0) return;
+    
+    showToast(`📸 Traitement de ${files.length} photo(s)...`, 'info');
+    
+    files.forEach(file => {
+        compressImage(file, (compressedDataUrl, originalSize, compressedSize) => {
+            const imgObj = {
+                src: compressedDataUrl,
+                note: "",
+                originalSize: originalSize,
+                compressedSize: compressedSize,
+                rotation: 0,
+                annotations: []
+            };
+            
+            if (type === 'before') {
+                photosBefore.push(imgObj);
+            } else if (type === 'during') {
+                photosDuring.push(imgObj);
+            } else {
+                photosAfter.push(imgObj);
+            }
+            
+            photosProcessed++;
+            if (photosProcessed === photosTotal) {
+                renderGalleries();
+                showToast(`✓ ${photosTotal} photo(s) ajoutée(s)`, 'success');
+                hasUnsavedChanges = true;
+            }
+        });
+    });
+    
+    input.value = '';
+}
+
+function compressImage(file, callback) {
+    const reader = new FileReader();
+    const originalSize = file.size;
+    
+    reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            
+            // Resize if too large
+            if (width > CONFIG.MAX_IMAGE_SIZE || height > CONFIG.MAX_IMAGE_SIZE) {
+                if (width > height) {
+                    height = Math.round((height * CONFIG.MAX_IMAGE_SIZE) / width);
+                    width = CONFIG.MAX_IMAGE_SIZE;
+                } else {
+                    width = Math.round((width * CONFIG.MAX_IMAGE_SIZE) / height);
+                    height = CONFIG.MAX_IMAGE_SIZE;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            // Add watermark
+            ctx.font = 'bold 14px "Darker Grotesque"';
+            ctx.fillStyle = 'rgba(212, 175, 55, 0.8)';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+            ctx.shadowBlur = 4;
+            ctx.fillText(`Vertex Monaco - ${new Date().toLocaleDateString('fr-FR')}`, 15, height - 15);
+            
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', CONFIG.IMAGE_QUALITY);
+            const compressedSize = Math.round((compressedDataUrl.length * 3) / 4);
+            
+            callback(compressedDataUrl, originalSize, compressedSize);
+        };
+        img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function renderGalleries() {
+    renderGallery('before', photosBefore);
+    renderGallery('during', photosDuring);
+    renderGallery('after', photosAfter);
+}
+
+function renderGallery(type, photos) {
+    const container = document.getElementById(`gallery-${type}`);
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (photos.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0; font-size:13px;">Aucune photo</p>';
+        return;
+    }
+    
+    photos.forEach((p, i) => {
+        const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB`;
+        const hasAnnotations = p.annotations && p.annotations.length > 0;
+        
+        container.innerHTML += `
+            <div class="photo-card">
+                <img src="${escapeHtml(p.src)}" 
+                     style="transform: rotate(${p.rotation}deg);"
+                     onclick="openImageModal('${type}', ${i})"
+                     alt="Photo ${type}">
+                <div class="photo-size">
+                    📦 ${sizeInfo} 
+                    ${hasAnnotations ? `| ✏️ ${p.annotations.length} annotation(s)` : ''}
+                </div>
+                <input type="text" class="photo-input" placeholder="Légende ou description..." 
+                       oninput="photos${type.charAt(0).toUpperCase() + type.slice(1)}[${i}].note=this.value" 
+                       value="${escapeHtml(p.note)}">
+                <div class="photo-controls">
+                    <button onclick="rotatePhoto('${type}', ${i})">🔄 Rotation</button>
+                    <button onclick="openAnnotationModal('${type}', ${i})" style="border-color:var(--gold); color:var(--gold);">
+                        ✏️ Annoter
+                    </button>
+                    <button onclick="removePhoto('${type}', ${i})" style="border-color:var(--danger); color:var(--danger);">
+                        🗑️ Suppr.
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function rotatePhoto(type, index) {
+    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
+    photoArray[index].rotation = (photoArray[index].rotation + 90) % 360;
+    renderGalleries();
+    hasUnsavedChanges = true;
+}
+
+function removePhoto(type, index) {
+    showModal(
+        'Supprimer la photo',
+        'Êtes-vous sûr de vouloir supprimer cette photo ?',
+        'Supprimer',
+        () => {
+            if (type === 'before') photosBefore.splice(index, 1);
+            else if (type === 'during') photosDuring.splice(index, 1);
+            else photosAfter.splice(index, 1);
+            
+            renderGalleries();
+            showToast('✓ Photo supprimée', 'success');
+            hasUnsavedChanges = true;
+        }
+    );
+}
+
+function openImageModal(type, index) {
+    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
+    document.getElementById('modalImage').src = photoArray[index].src;
+    document.getElementById('imageModal').classList.add('active');
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal').classList.remove('active');
+}
+
+// ========== SIGNATURE ==========
+const canvas = document.getElementById('sig-canvas');
+if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function resizeCanvas() {
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        tempCtx.drawImage(canvas, 0, 0);
+        
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+        
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
+
+    function getPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+            x: clientX - rect.left,
+            y: clientY - rect.top
+        };
+    }
+
+    function startDrawing(e) {
+        drawing = true;
+        const p = getPos(e);
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        e.preventDefault();
+    }
+
+    function draw(e) {
+        if (!drawing) return;
+        const p = getPos(e);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        e.preventDefault();
+    }
+
+    function stopDrawing() {
+        drawing = false;
+    }
+
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing);
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    window.resizeCanvas = resizeCanvas;
+}
+
+function clearSig() {
+    const canvas = document.getElementById('sig-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    showToast('✓ Signature effacée', 'success');
+}
+
+function isCanvasBlank(canvas) {
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+    return canvas.toDataURL() === blank.toDataURL();
+}
+// ========== TOAST & MODALS ==========
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
@@ -761,12 +2742,11 @@ function showToast(message, type = 'success') {
     document.body.appendChild(toast);
     
     setTimeout(() => {
-        toast.style.animation = 'slideDown 0.3s ease reverse';
+        toast.style.animation = 'toastSlide 0.3s ease reverse';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
 
-// ========== MODAL ==========
 function showModal(title, body, confirmText, callback, modalId = 'confirmModal') {
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalBody').textContent = body;
@@ -790,7 +2770,7 @@ function nextStep(n) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + n).classList.add('active');
     
-    if (n === 3) {
+    if (n === 4) {
         setTimeout(resizeCanvas, 200);
         loadChecklist();
     }
@@ -799,7 +2779,7 @@ function nextStep(n) {
         resetForm();
         hasUnsavedChanges = true;
     }
-    if (n === 4) {
+    if (n === 5) {
         document.getElementById('view-n').textContent = cur;
         showTimeline();
         hasUnsavedChanges = false;
@@ -809,7 +2789,7 @@ function nextStep(n) {
         switchTab(currentFilter);
     }
     
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function confirmCancel() {
@@ -840,7 +2820,7 @@ function checkStorageSpace() {
         navigator.storage.estimate().then(estimate => {
             const percentUsed = estimate.usage / estimate.quota;
             if (percentUsed > 0.8) {
-                showToast(`Stockage à ${Math.round(percentUsed * 100)}% - Pensez à exporter !`, 'warning');
+                showToast(`⚠️ Stockage à ${Math.round(percentUsed * 100)}% - Pensez à exporter !`, 'warning');
             }
         });
     }
@@ -858,20 +2838,20 @@ function switchTab(tab) {
         document.getElementById('tab-archived').classList.toggle('active', tab === 'done');
         document.getElementById('view-list').style.display = 'block';
         document.getElementById('view-analytics').style.display = 'none';
-        document.getElementById('view-calendar').style.display = 'none';
+        document.getElementById('view-quotes').style.display = 'none';
         loadList();
     } else if (tab === 'analytics') {
         document.getElementById('tab-analytics').classList.add('active');
         document.getElementById('view-list').style.display = 'none';
         document.getElementById('view-analytics').style.display = 'block';
-        document.getElementById('view-calendar').style.display = 'none';
+        document.getElementById('view-quotes').style.display = 'none';
         loadAnalytics();
-    } else if (tab === 'calendar') {
-        document.getElementById('tab-calendar').classList.add('active');
+    } else if (tab === 'quotes') {
+        document.getElementById('tab-quotes').classList.add('active');
         document.getElementById('view-list').style.display = 'none';
         document.getElementById('view-analytics').style.display = 'none';
-        document.getElementById('view-calendar').style.display = 'block';
-        loadCalendar();
+        document.getElementById('view-quotes').style.display = 'block';
+        loadQuotes();
     }
 }
 
@@ -883,7 +2863,9 @@ function toggleAdvancedFilters() {
 // ========== STEP 1: MISSION INFO ==========
 function setTime(id) {
     const n = new Date();
-    document.getElementById(id).value = n.getHours().toString().padStart(2, '0') + ':' + n.getMinutes().toString().padStart(2, '0');
+    document.getElementById(id).value = n.getHours().toString().padStart(2, '0') + ':' + 
+                                        n.getMinutes().toString().padStart(2, '0');
+    showToast('⏰ Heure actuelle enregistrée', 'info');
 }
 
 function selectType(el, type) {
@@ -907,28 +2889,43 @@ function requestGeolocation() {
                 };
                 const gpsInfo = document.getElementById('gps-info');
                 if (gpsInfo) {
-                    gpsInfo.textContent = `📍 Position enregistrée (${gpsCoords.lat.toFixed(5)}, ${gpsCoords.lng.toFixed(5)})`;
+                    gpsInfo.textContent = `📍 Position GPS enregistrée (${gpsCoords.lat.toFixed(5)}, ${gpsCoords.lng.toFixed(5)})`;
                 }
             },
-            () => {}
+            () => {
+                console.log('GPS non disponible');
+            }
         );
     }
 }
 
 function validateStep1() {
     if (!selectedType) {
-        showToast('Veuillez sélectionner un type de mission', 'error');
+        showToast('⚠️ Veuillez sélectionner un type de mission', 'error');
         return;
     }
     if (staff.length === 0) {
-        showToast('Veuillez sélectionner au moins un membre de l\'équipe', 'error');
+        showToast('⚠️ Veuillez sélectionner au moins un membre de l\'équipe', 'error');
         return;
     }
     if (!document.getElementById('time_in').value) {
-        showToast('Veuillez indiquer l\'heure d\'arrivée', 'error');
+        showToast('⚠️ Veuillez indiquer l\'heure d\'arrivée', 'error');
         return;
     }
     nextStep(2);
+}
+
+function validateStep2() {
+    nextStep(3);
+}
+
+function validateStep3() {
+    const taskDone = document.getElementById('task_done').value.trim();
+    if (!taskDone) {
+        showToast('⚠️ Veuillez remplir le compte-rendu des travaux', 'error');
+        return;
+    }
+    nextStep(4);
 }
 
 // ========== TEMPLATES ==========
@@ -939,8 +2936,8 @@ function showTemplates() {
     Object.entries(TEMPLATES).forEach(([id, template]) => {
         list.innerHTML += `
             <div class="template-card" onclick="loadTemplate('${id}')">
-                <h4>${template.name}</h4>
-                <p>Type: ${template.type}</p>
+                <h4>${escapeHtml(template.name)}</h4>
+                <p>Type: ${escapeHtml(template.type)}</p>
             </div>
         `;
     });
@@ -963,20 +2960,25 @@ function loadTemplate(id) {
     document.getElementById('task_done').value = template.taskTemplate;
     
     closeModal('templatesModal');
-    showToast('Template chargé', 'success');
+    showToast('✓ Template chargé', 'success');
 }
 
 function loadChecklist() {
     const container = document.getElementById('checklist-container');
     const template = Object.values(TEMPLATES).find(t => t.type === selectedType);
-    const checklist = template ? template.checklist : ['Chantier nettoyé / Propreté', 'Tests de diffusion OK', 'Alimentation & Baie verrouillées', 'Client prévenu du départ'];
+    const checklist = template ? template.checklist : [
+        'Chantier nettoyé / Propreté',
+        'Tests de diffusion OK',
+        'Alimentation & Baie verrouillées',
+        'Client prévenu du départ'
+    ];
     
     container.innerHTML = '';
     checklist.forEach((item, i) => {
         container.innerHTML += `
             <div class="check-item">
                 <input type="checkbox" id="check${i}">
-                <span>${item}</span>
+                <label for="check${i}">${escapeHtml(item)}</label>
             </div>
         `;
     });
@@ -984,32 +2986,41 @@ function loadChecklist() {
 
 // ========== PROJECT MANAGEMENT ==========
 function showNewProjectOptions() {
-    const name = prompt('Nom du client :');
+    const name = prompt('📁 Nom du client :');
     if (!name) return;
-    startNewProjectWithName(name);
+    
+    const trimmed = name.trim();
+    if (!trimmed) {
+        showToast('⚠️ Le nom ne peut pas être vide', 'error');
+        return;
+    }
+    
+    startNewProjectWithName(trimmed);
 }
 
 function startNewProjectWithName(name) {
     if (db[name]) {
-        showToast('Ce client existe déjà', 'error');
+        showToast('⚠️ Ce client existe déjà', 'error');
         return;
     }
     
     db[name] = {
         entries: [],
+        quotes: [],
         status: 'ongoing',
         created: new Date().toISOString()
     };
     
     saveToIndexedDB();
     loadList();
-    showToast('Nouveau client créé', 'success');
+    showToast('✓ Nouveau client créé', 'success');
 }
 
 // ========== WEATHER ==========
 async function getWeather() {
     if (!gpsCoords) return;
     
+    // Simulated weather - replace with real API call
     setTimeout(() => {
         const widget = document.getElementById('weather-widget');
         if (widget) {
@@ -1020,272 +3031,32 @@ async function getWeather() {
     }, 1000);
 }
 
-// ========== VOICE NOTES ==========
-function toggleVoiceRecording() {
-    const btn = document.getElementById('voice-btn');
-    const status = document.getElementById('voice-status');
-    
-    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                
-                mediaRecorder.ondataavailable = (e) => {
-                    audioChunks.push(e.data);
-                };
-                
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    status.textContent = '✓ Note vocale enregistrée';
-                    btn.classList.remove('recording');
-                };
-                
-                mediaRecorder.start();
-                btn.classList.add('recording');
-                btn.textContent = '⏹️ ARRÊTER';
-                status.textContent = '🎤 Enregistrement en cours...';
-            })
-            .catch(() => {
-                showToast('Microphone non disponible', 'error');
-            });
-    } else {
-        mediaRecorder.stop();
-        btn.textContent = '🎤 NOTES VOCALES';
-    }
-}
-
-// ========== PHOTOS ==========
-let photosProcessed = 0;
-let photosTotal = 0;
-
-function handlePhotos(input, type) {
-    const files = Array.from(input.files);
-    photosTotal = files.length;
-    photosProcessed = 0;
-    
-    files.forEach(file => {
-        compressImage(file, (compressedDataUrl, originalSize, compressedSize) => {
-            const imgObj = {
-                src: compressedDataUrl,
-                note: "",
-                originalSize: originalSize,
-                compressedSize: compressedSize,
-                rotation: 0
-            };
-            
-            if (type === 'before') {
-                photosBefore.push(imgObj);
-            } else if (type === 'during') {
-                photosDuring.push(imgObj);
-            } else {
-                photosAfter.push(imgObj);
-            }
-            
-            photosProcessed++;
-            if (photosProcessed === photosTotal) {
-                renderGalleries();
-                showToast(`${photosTotal} photo(s) ajoutée(s)`, 'success');
-            }
-        });
-    });
-    
-    input.value = '';
-}
-
-function compressImage(file, callback) {
-    const reader = new FileReader();
-    const originalSize = file.size;
-    
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            const canvas = document.createElement('canvas');
-            let width = img.width;
-            let height = img.height;
-            
-            if (width > CONFIG.MAX_IMAGE_SIZE || height > CONFIG.MAX_IMAGE_SIZE) {
-                if (width > height) {
-                    height = Math.round((height * CONFIG.MAX_IMAGE_SIZE) / width);
-                    width = CONFIG.MAX_IMAGE_SIZE;
-                } else {
-                    width = Math.round((width * CONFIG.MAX_IMAGE_SIZE) / height);
-                    height = CONFIG.MAX_IMAGE_SIZE;
-                }
-            }
-            
-            canvas.width = width;
-            canvas.height = height;
-            
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            ctx.font = '12px Inter';
-            ctx.fillStyle = 'rgba(212, 175, 55, 0.7)';
-            ctx.fillText(`Vertex Monaco - ${new Date().toLocaleDateString()}`, 10, height - 10);
-            
-            const compressedDataUrl = canvas.toDataURL('image/jpeg', CONFIG.IMAGE_QUALITY);
-            const compressedSize = Math.round((compressedDataUrl.length * 3) / 4);
-            
-            callback(compressedDataUrl, originalSize, compressedSize);
-        };
-        img.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
-
-function renderGalleries() {
-    renderGallery('before', photosBefore);
-    renderGallery('during', photosDuring);
-    renderGallery('after', photosAfter);
-}
-
-function renderGallery(type, photos) {
-    const container = document.getElementById(`gallery-${type}`);
-    container.innerHTML = '';
-    
-    photos.forEach((p, i) => {
-        const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB`;
-        container.innerHTML += `
-            <div class="photo-card">
-                <img src="${escapeHtml(p.src)}" 
-                     style="transform: rotate(${p.rotation}deg);"
-                     onclick="openImageModal('${type}', ${i})">
-                <div class="photo-size">📦 ${sizeInfo}</div>
-                <input type="text" class="photo-input" placeholder="Légende..." 
-                       oninput="photos${type.charAt(0).toUpperCase() + type.slice(1)}[${i}].note=this.value" 
-                       value="${escapeHtml(p.note)}">
-                <div class="photo-controls">
-                    <button onclick="rotatePhoto('${type}', ${i})">🔄 Rotation</button>
-                    <button onclick="removePhoto('${type}', ${i})">🗑️ Suppr.</button>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function rotatePhoto(type, index) {
-    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
-    photoArray[index].rotation = (photoArray[index].rotation + 90) % 360;
-    renderGalleries();
-}
-
-function removePhoto(type, index) {
-    if (type === 'before') photosBefore.splice(index, 1);
-    else if (type === 'during') photosDuring.splice(index, 1);
-    else photosAfter.splice(index, 1);
-    renderGalleries();
-    showToast('Photo supprimée', 'success');
-}
-
-function openImageModal(type, index) {
-    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
-    document.getElementById('modalImage').src = photoArray[index].src;
-    document.getElementById('imageModal').classList.add('active');
-}
-
-function closeImageModal() {
-    document.getElementById('imageModal').classList.remove('active');
-}
-
-function validateStep2() {
-    const taskDone = document.getElementById('task_done').value.trim();
-    if (!taskDone) {
-        showToast('Veuillez remplir le compte-rendu des travaux', 'error');
-        return;
-    }
-    nextStep(3);
-}
-
-// ========== SIGNATURE ==========
-const canvas = document.getElementById('sig-canvas');
-const ctx = canvas.getContext('2d');
-let drawing = false;
-
-function resizeCanvas() {
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    tempCtx.drawImage(canvas, 0, 0);
-    
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    ctx.lineWidth = 3;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#000';
-    
-    ctx.drawImage(tempCanvas, 0, 0);
-}
-
-function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
-    };
-}
-
-function startDrawing(e) {
-    drawing = true;
-    const p = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    e.preventDefault();
-}
-
-function draw(e) {
-    if (!drawing) return;
-    const p = getPos(e);
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-    e.preventDefault();
-}
-
-function stopDrawing() {
-    drawing = false;
-}
-
-canvas.addEventListener('touchstart', startDrawing, { passive: false });
-canvas.addEventListener('touchmove', draw, { passive: false });
-canvas.addEventListener('touchend', stopDrawing);
-canvas.addEventListener('mousedown', startDrawing);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', stopDrawing);
-canvas.addEventListener('mouseleave', stopDrawing);
-
-function clearSig() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    showToast('Signature effacée', 'success');
-}
-
-function isCanvasBlank(canvas) {
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width;
-    blank.height = canvas.height;
-    return canvas.toDataURL() === blank.toDataURL();
-}
-
 // ========== SAVE ENTRY ==========
 function saveEntry() {
+    // Validation
     if (!selectedType || !staff.length) {
-        showToast('Type et Équipe requis !', 'error');
+        showToast('⚠️ Type et Équipe requis !', 'error');
+        return;
+    }
+    
+    if (!document.getElementById('time_out').value) {
+        showToast('⚠️ Veuillez indiquer l\'heure de départ', 'error');
         return;
     }
     
     const checks = Array.from(document.querySelectorAll('#checklist-container input[type="checkbox"]'));
     if (!checks.every(c => c.checked)) {
-        showToast('Veuillez valider tous les points de la checklist', 'error');
+        showToast('⚠️ Veuillez valider tous les points de la checklist', 'error');
         return;
     }
     
+    const canvas = document.getElementById('sig-canvas');
     if (isCanvasBlank(canvas)) {
-        showToast('Veuillez faire signer le client', 'error');
+        showToast('⚠️ Veuillez faire signer le client', 'error');
         return;
     }
     
+    // Show loading
     document.getElementById('save-spinner').style.display = 'block';
     document.getElementById('btn-save').disabled = true;
     
@@ -1299,9 +3070,11 @@ function saveEntry() {
                 in: document.getElementById('time_in').value,
                 out: document.getElementById('time_out').value,
                 staff: staff.join(', '),
+                context: document.getElementById('client_context')?.value || '',
                 done: document.getElementById('task_done').value,
                 mat: document.getElementById('task_mat').value,
-                parts: document.getElementById('task_parts').value,
+                parts: document.getElementById('task_parts').value || '',
+                recommendations: document.getElementById('task_recommendations')?.value || '',
                 before: [...photosBefore],
                 during: [...photosDuring],
                 after: [...photosAfter],
@@ -1315,17 +3088,42 @@ function saveEntry() {
             document.getElementById('save-spinner').style.display = 'none';
             document.getElementById('btn-save').disabled = false;
             
-            showToast('✓ Mission enregistrée avec succès', 'success');
-            nextStep(4);
+            showToast('✅ Mission enregistrée avec succès !', 'success');
+            nextStep(5);
         } catch (e) {
             document.getElementById('save-spinner').style.display = 'none';
             document.getElementById('btn-save').disabled = false;
-            showToast('Erreur lors de l\'enregistrement', 'error');
+            showToast('❌ Erreur lors de l\'enregistrement', 'error');
+            console.error(e);
         }
     }, 500);
 }
 
-// ========== PROJECT VIEW ==========
+// ========== RESET FORM ==========
+function resetForm() {
+    staff = [];
+    photosBefore = [];
+    photosDuring = [];
+    photosAfter = [];
+    selectedType = '';
+    
+    document.querySelectorAll('.type-chip, .staff-chip').forEach(c => c.classList.remove('selected'));
+    document.getElementById('task_done').value = '';
+    document.getElementById('task_mat').value = '';
+    document.getElementById('task_parts').value = '';
+    if (document.getElementById('task_recommendations')) {
+        document.getElementById('task_recommendations').value = '';
+    }
+    if (document.getElementById('client_context')) {
+        document.getElementById('client_context').value = '';
+    }
+    document.getElementById('time_in').value = '';
+    document.getElementById('time_out').value = '';
+    
+    renderGalleries();
+    clearSig();
+}
+// ========== PROJECT VIEW & TIMELINE ==========
 function showTimeline() {
     const t = document.getElementById('timeline');
     t.innerHTML = '';
@@ -1334,13 +3132,17 @@ function showTimeline() {
     document.getElementById('status-toggle-container').innerHTML = `
         <button class="status-pill ${isDone ? 'status-done' : 'status-ongoing'}" 
                 onclick="toggleStatus()">
-            ${isDone ? '📦 ARCHIVÉ' : '✓ ACTIF'}
+            ${isDone ? '📦 ARCHIVÉ' : '✅ ACTIF'}
         </button>
     `;
     
     const entries = db[cur].entries;
     document.getElementById('project-interventions').textContent = entries.length;
     
+    const quotes = db[cur].quotes || [];
+    document.getElementById('project-quotes').textContent = quotes.length;
+    
+    // Calculate total time
     let totalMinutes = 0;
     entries.forEach(e => {
         if (e.in && e.out) {
@@ -1353,43 +3155,62 @@ function showTimeline() {
     
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
-    document.getElementById('project-hours').textContent = `${hours}h${minutes > 0 ? minutes : ''}`;
+    document.getElementById('project-hours').textContent = `${hours}h${minutes > 0 ? minutes.toString().padStart(2, '0') : ''}`;
     
+    // Display entries in reverse chronological order
     [...entries].reverse().forEach(e => {
         const gpsInfo = e.gps ? `📍 ${e.gps.lat.toFixed(5)}, ${e.gps.lng.toFixed(5)}` : '';
+        const duration = calculateDuration(e.in, e.out);
         
         t.innerHTML += `
             <div class="timeline-item">
-                <div style="font-size:10px; font-weight:900; color:var(--gold); margin-bottom:5px;">
+                <div style="font-size:11px; font-weight:900; color:var(--gold); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">
                     ${escapeHtml(e.date)} | ${escapeHtml(e.type)}
                 </div>
                 <div class="section-block">
-                    <strong>Équipe:</strong> ${escapeHtml(e.staff)} (${escapeHtml(e.in)} - ${escapeHtml(e.out)})
-                    ${gpsInfo ? `<br><span style="font-size:9px; color:#888;">${gpsInfo}</span>` : ''}
-                    <br><strong>Travaux:</strong> ${escapeHtml(e.done)}
+                    <strong>Équipe:</strong> ${escapeHtml(e.staff)}<br>
+                    <strong>Horaires:</strong> ${escapeHtml(e.in)} → ${escapeHtml(e.out)} ${duration ? `(${duration})` : ''}
+                    ${gpsInfo ? `<br><span style="font-size:10px; color:#888; font-family: 'Space Mono', monospace;">${gpsInfo}</span>` : ''}
+                </div>
+                ${e.context ? `<div class="client-notes">
+                    <div class="client-notes-header">📝 Contexte</div>
+                    ${escapeHtml(e.context)}
+                </div>` : ''}
+                <div class="section-block">
+                    <strong>Travaux réalisés:</strong><br>
+                    ${escapeHtml(e.done).replace(/\n/g, '<br>')}
                 </div>
                 ${e.mat ? `<div class="section-block" style="border-left-color:var(--success)">
-                    <strong>Matériel/SAV:</strong> ${escapeHtml(e.mat)}
+                    <strong>Matériel/SAV:</strong><br>
+                    ${escapeHtml(e.mat).replace(/\n/g, '<br>')}
                 </div>` : ''}
                 ${e.parts ? `<div class="section-block" style="border-left-color:var(--info)">
-                    <strong>Pièces:</strong> ${escapeHtml(e.parts)}
+                    <strong>Pièces détachées:</strong><br>
+                    ${escapeHtml(e.parts).replace(/\n/g, '<br>')}
                 </div>` : ''}
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin:10px 0;">
+                ${e.recommendations ? `<div class="section-block" style="border-left-color:var(--warning)">
+                    <strong>Recommandations:</strong><br>
+                    ${escapeHtml(e.recommendations).replace(/\n/g, '<br>')}
+                </div>` : ''}
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:15px 0;">
                     <div>
+                        <div style="font-size:10px; font-weight:700; color:#e67e22; margin-bottom:5px; text-transform:uppercase;">AVANT (${e.before.length})</div>
                         ${e.before.map(p => renderPhotoInTimeline(p, '#e67e22')).join('')}
                     </div>
                     <div>
+                        <div style="font-size:10px; font-weight:700; color:#3498db; margin-bottom:5px; text-transform:uppercase;">PENDANT (${(e.during || []).length})</div>
                         ${(e.during || []).map(p => renderPhotoInTimeline(p, '#3498db')).join('')}
                     </div>
                     <div>
+                        <div style="font-size:10px; font-weight:700; color:#2ecc71; margin-bottom:5px; text-transform:uppercase;">APRÈS (${e.after.length})</div>
                         ${e.after.map(p => renderPhotoInTimeline(p, '#2ecc71')).join('')}
                     </div>
                 </div>
-                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:15px;">
                     <img src="${escapeHtml(e.sig)}" 
-                         style="width:120px; background:white; border-radius:4px; padding:3px; border:1px solid #ddd;">
+                         style="width:140px; background:white; border-radius:6px; padding:5px; border:2px solid #ddd;">
                     <button class="no-print" 
-                            style="color:var(--danger); border:none; background:none; font-size:10px; cursor:pointer; padding:5px;" 
+                            style="color:var(--danger); border:1px solid var(--danger); background:rgba(255,77,77,0.1); font-size:11px; cursor:pointer; padding:8px 12px; border-radius:6px; font-weight:700;" 
                             onclick="confirmDeleteEntry(${e.id})">
                         🗑️ Supprimer
                     </button>
@@ -1397,13 +3218,31 @@ function showTimeline() {
             </div>
         `;
     });
+    
+    if (entries.length === 0) {
+        t.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucune intervention enregistrée</p>';
+    }
+}
+
+function calculateDuration(timeIn, timeOut) {
+    if (!timeIn || !timeOut) return '';
+    const [inH, inM] = timeIn.split(':').map(Number);
+    const [outH, outM] = timeOut.split(':').map(Number);
+    const minutes = (outH * 60 + outM) - (inH * 60 + inM);
+    if (minutes <= 0) return '';
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h}h${m > 0 ? m.toString().padStart(2, '0') : ''}`;
 }
 
 function renderPhotoInTimeline(photo, borderColor) {
+    const hasAnnotations = photo.annotations && photo.annotations.length > 0;
     return `
         <img src="${escapeHtml(photo.src)}" 
-             style="width:100%; border:2px solid ${borderColor}; border-radius:4px; margin-bottom:5px; transform: rotate(${photo.rotation || 0}deg);">
-        ${photo.note ? `<div style="font-size:9px; color:#888; margin-bottom:10px;">${escapeHtml(photo.note)}</div>` : ''}
+             style="width:100%; border:2px solid ${borderColor}; border-radius:6px; margin-bottom:8px; transform: rotate(${photo.rotation || 0}deg); cursor:pointer;"
+             onclick="openImageModal('', 0)" alt="Photo intervention">
+        ${hasAnnotations ? `<div style="font-size:9px; color:${borderColor}; margin-bottom:5px;">✏️ ${photo.annotations.length} mesure(s)</div>` : ''}
+        ${photo.note ? `<div style="font-size:10px; color:#888; margin-bottom:10px; font-weight:600;">${escapeHtml(photo.note)}</div>` : ''}
     `;
 }
 
@@ -1420,7 +3259,8 @@ function deleteEntry(id) {
     db[cur].entries = db[cur].entries.filter(e => e.id !== id);
     saveToIndexedDB();
     showTimeline();
-    showToast('Intervention supprimée', 'success');
+    updateStats();
+    showToast('✓ Intervention supprimée', 'success');
 }
 
 function newIntervention() {
@@ -1429,7 +3269,10 @@ function newIntervention() {
 
 function duplicateLastIntervention() {
     const last = db[cur].entries[db[cur].entries.length - 1];
-    if (!last) return;
+    if (!last) {
+        showToast('⚠️ Aucune intervention à dupliquer', 'warning');
+        return;
+    }
     
     selectedType = last.type;
     staff = last.staff.split(', ');
@@ -1449,7 +3292,7 @@ function duplicateLastIntervention() {
     });
     
     nextStep(1);
-    showToast('Dernière intervention dupliquée', 'success');
+    showToast('✓ Dernière intervention dupliquée', 'success');
 }
 
 function toggleStatus() {
@@ -1457,12 +3300,13 @@ function toggleStatus() {
     saveToIndexedDB();
     showTimeline();
     loadList();
-    showToast(`Client ${db[cur].status === 'done' ? 'archivé' : 'réactivé'}`, 'success');
+    updateStats();
+    showToast(`✓ Client ${db[cur].status === 'done' ? 'archivé' : 'réactivé'}`, 'success');
 }
 
 function confirmDeleteProject() {
     showModal(
-        'Supprimer le client',
+        '⚠️ Supprimer le client',
         `Toutes les interventions pour "${cur}" seront définitivement supprimées. Cette action est irréversible.`,
         'Supprimer définitivement',
         deleteFullProject
@@ -1472,7 +3316,8 @@ function confirmDeleteProject() {
 function deleteFullProject() {
     delete db[cur];
     saveToIndexedDB();
-    showToast('Client supprimé', 'success');
+    updateStats();
+    showToast('✓ Client supprimé', 'success');
     nextStep(0);
 }
 
@@ -1493,7 +3338,13 @@ function loadList(query = '', filterType = '', filterStaff = '', dateFrom = '', 
     
     const projects = Object.keys(db)
         .filter(key => key !== '_version')
-        .sort();
+        .sort((a, b) => {
+            const aDate = db[a].entries.length > 0 ? new Date(db[a].entries[db[a].entries.length - 1].timestamp) : new Date(db[a].created);
+            const bDate = db[b].entries.length > 0 ? new Date(db[b].entries[db[b].entries.length - 1].timestamp) : new Date(db[b].created);
+            return bDate - aDate;
+        });
+    
+    let displayedCount = 0;
     
     projects.forEach(id => {
         const project = db[id];
@@ -1524,7 +3375,7 @@ function loadList(query = '', filterType = '', filterStaff = '', dateFrom = '', 
         const entryCount = project.entries.length;
         
         list.innerHTML += `
-            <div class="folder-card" onclick="cur='${escapeHtml(id)}';nextStep(4);">
+            <div class="folder-card" onclick="cur='${escapeHtml(id)}';nextStep(5);">
                 <div class="folder-info">
                     <div class="folder-name">${escapeHtml(id)}</div>
                     <div class="folder-meta">
@@ -1534,10 +3385,11 @@ function loadList(query = '', filterType = '', filterStaff = '', dateFrom = '', 
                 <div class="folder-arrow">❯</div>
             </div>
         `;
+        displayedCount++;
     });
     
-    if (list.innerHTML === '') {
-        list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun dossier trouvé</p>';
+    if (displayedCount === 0) {
+        list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0; font-size:14px;">Aucun dossier trouvé</p>';
     }
 }
 
@@ -1595,7 +3447,7 @@ function loadAnalytics() {
             typeCount[e.type] = (typeCount[e.type] || 0) + 1;
             
             e.staff.split(', ').forEach(s => {
-                staffCount[s] = (staffCount[s] || 0) + 1;
+                staffCount[s.trim()] = (staffCount[s.trim()] || 0) + 1;
             });
             
             const month = new Date(e.timestamp || e.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short' });
@@ -1622,21 +3474,26 @@ function loadAnalytics() {
     const avgMinutes = entryCount > 0 ? Math.round(totalDuration / entryCount) : 0;
     const avgHours = Math.floor(avgMinutes / 60);
     const avgMins = avgMinutes % 60;
-    document.getElementById('avg-duration').textContent = `${avgHours}h${avgMins > 0 ? avgMins : ''}`;
+    document.getElementById('avg-duration').textContent = `${avgHours}h${avgMins > 0 ? avgMins.toString().padStart(2, '0') : ''}`;
     
     const topClient = Object.entries(clientCount).sort((a, b) => b[1] - a[1])[0];
-    document.getElementById('top-client').textContent = topClient ? topClient[0].substring(0, 15) : '-';
+    document.getElementById('top-client').textContent = topClient ? topClient[0].substring(0, 15) + (topClient[0].length > 15 ? '...' : '') : '-';
 }
 
 function renderChart(containerId, data) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
     
+    if (Object.keys(data).length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0;">Aucune donnée</p>';
+        return;
+    }
+    
     const max = Math.max(...Object.values(data));
     
     Object.entries(data)
         .sort((a, b) => b[1] - a[1])
-        .slice(0, 5)
+        .slice(0, 10)
         .forEach(([label, value]) => {
             const percent = (value / max) * 100;
             container.innerHTML += `
@@ -1650,93 +3507,61 @@ function renderChart(containerId, data) {
         });
 }
 
-// ========== CALENDAR ==========
-function loadCalendar() {
-    const calendar = document.getElementById('calendar-widget');
-    const now = new Date();
-    
-    calendar.innerHTML = `
-        <div class="calendar-header">
-            <button onclick="changeMonth(-1)">◀</button>
-            <span style="font-weight:bold;">${now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}</span>
-            <button onclick="changeMonth(1)">▶</button>
-        </div>
-        <div class="calendar-grid" id="calendar-days"></div>
-    `;
-    
-    renderCalendarDays(now);
+// ========== QUOTES (placeholder) ==========
+function loadQuotes() {
+    const list = document.getElementById('quotes-list');
+    list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Fonctionnalité devis à venir...</p>';
 }
 
-function renderCalendarDays(date) {
-    const grid = document.getElementById('calendar-days');
-    if (!grid) return;
-    grid.innerHTML = '';
-    
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const today = new Date();
-    
-    ['L', 'M', 'M', 'J', 'V', 'S', 'D'].forEach(d => {
-        grid.innerHTML += `<div style="font-weight:bold; font-size:10px; text-align:center;">${d}</div>`;
-    });
-    
-    for (let i = 0; i < firstDay; i++) {
-        grid.innerHTML += '<div></div>';
-    }
-    
-    for (let day = 1; day <= daysInMonth; day++) {
-        const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-        const classes = isToday ? 'calendar-day today' : 'calendar-day';
-        grid.innerHTML += `<div class="${classes}">${day}</div>`;
-    }
+function newQuote() {
+    showToast('📊 Fonctionnalité devis à venir', 'info');
 }
 
-function changeMonth(delta) {
-    showToast('Navigation calendrier à venir', 'info');
-}
-
-function scheduleIntervention() {
-    showToast('Planification à venir', 'info');
+function newProjectQuote() {
+    showToast('📊 Création de devis à venir', 'info');
 }
 
 // ========== EXPORT ==========
 function exportToCSV() {
-    let csv = '\uFEFFClient;Date;Type;Equipe;Arrivee;Depart;Travaux;Materiel;Pieces;GPS\n';
+    let csv = '\uFEFFClient;Date;Type;Equipe;Arrivee;Depart;Duree;Travaux;Materiel;Pieces;GPS_Lat;GPS_Lng\n';
     
     Object.keys(db).forEach(client => {
         if (client === '_version') return;
         
         db[client].entries.forEach(e => {
-            const gps = e.gps ? `${e.gps.lat},${e.gps.lng}` : '';
+            const gpsLat = e.gps ? e.gps.lat : '';
+            const gpsLng = e.gps ? e.gps.lng : '';
+            const duration = calculateDuration(e.in, e.out);
             csv += `"${escapeCSV(client)}";`;
             csv += `"${escapeCSV(e.date)}";`;
             csv += `"${escapeCSV(e.type)}";`;
             csv += `"${escapeCSV(e.staff)}";`;
             csv += `"${escapeCSV(e.in)}";`;
             csv += `"${escapeCSV(e.out)}";`;
+            csv += `"${escapeCSV(duration)}";`;
             csv += `"${escapeCSV(e.done)}";`;
             csv += `"${escapeCSV(e.mat)}";`;
             csv += `"${escapeCSV(e.parts || '')}";`;
-            csv += `"${escapeCSV(gps)}"\n`;
+            csv += `"${escapeCSV(gpsLat)}";`;
+            csv += `"${escapeCSV(gpsLng)}"\n`;
         });
     });
     
     downloadFile(csv, `Vertex_Export_${new Date().toISOString().split('T')[0]}.csv`, 'text/csv;charset=utf-8;');
-    showToast('Export CSV généré', 'success');
+    showToast('✅ Export CSV généré', 'success');
 }
 
 function exportBackup() {
     const backup = {
         version: CONFIG.DB_VERSION,
+        appVersion: '15.0',
         exportDate: new Date().toISOString(),
         data: db
     };
     
     const json = JSON.stringify(backup, null, 2);
     downloadFile(json, `Vertex_Backup_${new Date().toISOString().split('T')[0]}.json`, 'application/json');
-    showToast('Sauvegarde complète générée', 'success');
+    showToast('✅ Sauvegarde complète générée', 'success');
 }
 
 function importBackup(input) {
@@ -1754,18 +3579,19 @@ function importBackup(input) {
             
             showModal(
                 'Restaurer les données',
-                'Cette action remplacera toutes les données actuelles. Continuer ?',
+                `Cette action remplacera toutes les données actuelles. ${Object.keys(backup.data).length} projets seront importés. Continuer ?`,
                 'Restaurer',
                 () => {
                     db = backup.data;
                     saveToIndexedDB();
                     loadList();
                     updateStats();
-                    showToast('Données restaurées avec succès', 'success');
+                    showToast('✅ Données restaurées avec succès', 'success');
                 }
             );
         } catch (err) {
-            showToast('Erreur: fichier invalide', 'error');
+            showToast('❌ Erreur: fichier invalide', 'error');
+            console.error(err);
         }
     };
     reader.readAsText(file);
@@ -1773,17 +3599,17 @@ function importBackup(input) {
 }
 
 function exportProjectPDF() {
-    showToast('Génération PDF...', 'info');
+    showToast('🖨️ Génération PDF...', 'info');
     setTimeout(() => window.print(), 500);
 }
 
 function exportPDFReport() {
-    showToast('Rapport PDF global en cours...', 'info');
+    showToast('📄 Rapport PDF global en cours...', 'info');
     setTimeout(() => window.print(), 500);
 }
 
 function exportAnalyticsPDF() {
-    showToast('Export statistiques PDF...', 'info');
+    showToast('📊 Export statistiques PDF...', 'info');
     setTimeout(() => window.print(), 500);
 }
 
@@ -1811,8 +3637,9 @@ function sendProjectMail() {
     body += `TRAVAUX RÉALISÉS:\n${lastEntry.done}\n\n`;
     if (lastEntry.mat) body += `MATÉRIEL/SAV:\n${lastEntry.mat}\n\n`;
     if (lastEntry.parts) body += `PIÈCES:\n${lastEntry.parts}\n\n`;
+    if (lastEntry.recommendations) body += `RECOMMANDATIONS:\n${lastEntry.recommendations}\n\n`;
     if (lastEntry.gps) body += `POSITION GPS: ${lastEntry.gps.lat}, ${lastEntry.gps.lng}\n`;
-    body += `\n--- Rapport généré par Vertex Monaco V14 Ultra ---`;
+    body += `\n--- Rapport généré par Vertex Monaco V15 Pro ---`;
     
     window.location.href = `mailto:?subject=${subject}&body=${encodeURIComponent(body)}`;
 }
@@ -1822,7 +3649,7 @@ function shareWhatsApp() {
     if (!entries.length) return;
     
     const lastEntry = entries[entries.length - 1];
-    let text = `*Rapport Vertex - ${cur}*\n\n`;
+    let text = `*📋 Rapport Vertex - ${cur}*\n\n`;
     text += `📅 ${lastEntry.date}\n`;
     text += `🔧 ${lastEntry.type}\n`;
     text += `👥 ${lastEntry.staff}\n`;
@@ -1834,24 +3661,6 @@ function shareWhatsApp() {
 }
 
 // ========== UTILITIES ==========
-function resetForm() {
-    staff = [];
-    photosBefore = [];
-    photosDuring = [];
-    photosAfter = [];
-    selectedType = '';
-    
-    document.querySelectorAll('.type-chip, .staff-chip').forEach(c => c.classList.remove('selected'));
-    document.getElementById('task_done').value = '';
-    document.getElementById('task_mat').value = '';
-    document.getElementById('task_parts').value = '';
-    document.getElementById('time_in').value = '';
-    document.getElementById('time_out').value = '';
-    
-    renderGalleries();
-    clearSig();
-}
-
 function escapeHtml(text) {
     if (!text) return '';
     const div = document.createElement('div');
@@ -1861,7 +3670,7 @@ function escapeHtml(text) {
 
 function escapeCSV(text) {
     if (!text) return '';
-    return text.replace(/"/g, '""');
+    return text.toString().replace(/"/g, '""').replace(/\n/g, ' ');
 }
 
 // ========== PWA ==========
@@ -1870,7 +3679,7 @@ function installPWA() {
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then(choiceResult => {
             if (choiceResult.outcome === 'accepted') {
-                showToast('Application installée !', 'success');
+                showToast('✅ Application installée !', 'success');
             }
             deferredPrompt = null;
             document.getElementById('installPrompt').classList.remove('active');
@@ -1883,11 +3692,15 @@ function dismissInstall() {
     localStorage.setItem('pwa_dismissed', 'true');
 }
 
+// ========== WINDOW RESIZE ==========
 window.onresize = () => {
-    if (document.getElementById('step3').classList.contains('active')) {
+    if (document.getElementById('step4')?.classList.contains('active')) {
         resizeCanvas();
     }
 };
+
+// ========== END ==========
+console.log('✅ Vertex Monaco V15 Pro chargé avec succès');
 </script>
 
 </body>
