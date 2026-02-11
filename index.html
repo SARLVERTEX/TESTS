@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#D4AF37">
     <meta name="description" content="Vertex Monaco - Système de gestion technico-commercial Digital Signage">
-    <link rel="manifest" href="manifest.json">
-    <title>Vertex Monaco | Digital Signage PRO V2.0</title>
+    <title>Vertex Monaco | Digital Signage PRO V3.0</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Darker+Grotesque:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <!-- ZXing Barcode Scanner -->
+    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+    
+    <!-- QR Code Generator -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
         /* ========== VARIABLES ========== */
@@ -140,6 +145,30 @@
             transform: rotate(180deg);
         }
         
+        /* ========== AUTO-SAVE INDICATOR ========== */
+        .autosave-indicator {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: bold;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s;
+        }
+        
+        .autosave-indicator.active {
+            display: block;
+        }
+        
+        .autosave-indicator.saving {
+            background: var(--info);
+        }
+        
         /* ========== INDICATORS ========== */
         .offline-indicator { 
             position: fixed; 
@@ -165,26 +194,6 @@
         @keyframes pulse { 
             0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); } 
             50% { opacity: 0.8; transform: translateX(-50%) scale(1.02); } 
-        }
-        
-        .sync-indicator { 
-            position: fixed; 
-            top: 100px; 
-            right: 20px; 
-            background: var(--info); 
-            color: white; 
-            padding: 10px 15px; 
-            border-radius: 25px; 
-            font-size: 11px; 
-            font-weight: bold; 
-            z-index: 9999; 
-            display: none;
-            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
-        }
-        
-        .sync-indicator.active { 
-            display: block; 
-            animation: slideInRight 0.3s; 
         }
         
         @keyframes slideInRight {
@@ -217,6 +226,84 @@
         @keyframes toastSlide { 
             from { transform: translateX(-50%) translateY(-100px); opacity: 0; } 
             to { transform: translateX(-50%) translateY(0); opacity: 1; } 
+        }
+        
+        /* ========== MAIN NAVIGATION ========== */
+        .main-nav {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .nav-card {
+            background: var(--card);
+            border: 3px solid var(--border);
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+        
+        .nav-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .nav-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+        
+        .nav-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        .nav-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .nav-subtitle {
+            font-size: 12px;
+            color: #888;
+            font-weight: 600;
+        }
+        
+        .nav-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 900;
         }
         
         /* ========== PROGRESS BAR ========== */
@@ -433,10 +520,6 @@
             border-color: var(--gold);
             transform: translateY(-2px);
         }
-        
-        .staff-chip:active { 
-            transform: scale(0.95); 
-        }
 
         /* ========== CHECKLIST ========== */
         .check-item { 
@@ -472,710 +555,728 @@
             font-weight: 600;
         }
 
-        /* ========== RECEPTION PRODUIT ========== */
-        .reception-section {
-            background: var(--card);
-            border: 2px solid var(--info);
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
+        /* ========== PHOTO SYSTEM ========== */
+        .photo-box { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 15px; 
+            margin-top: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
 
-        .reception-section h4 {
-            color: var(--info);
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin: 0 0 15px 0;
+        .photo-box h4 { 
+            margin: 0 0 15px 0; 
+            font-size: 12px; 
+            color: var(--gold); 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
             font-weight: 900;
         }
 
-        .product-item {
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 12px;
+        .photo-gallery { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 15px; 
+            margin-top: 15px; 
         }
 
-        .product-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .photo-card { 
+            background: var(--bg); 
+            padding: 12px; 
+            border-radius: 12px; 
+            border: 2px solid var(--border); 
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .photo-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .photo-card img { 
+            width: 100%; 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
+            max-height: 400px; 
+            object-fit: contain; 
+            cursor: pointer; 
+            transition: transform 0.3s;
+            background: #1a1a1a;
+        }
+
+        .photo-input { 
+            background: var(--bg); 
+            border: 1px solid var(--border); 
+            color: var(--text); 
+            padding: 10px; 
+            font-size: 13px; 
+            width: 100%; 
+            border-radius: 6px; 
+            margin-bottom: 8px;
+            font-family: 'Darker Grotesque', sans-serif;
+            font-weight: 600;
+        }
+
+        .photo-size { 
+            font-size: 10px; 
+            color: #666; 
+            margin-bottom: 8px;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .photo-controls { 
+            display: flex; 
+            gap: 8px; 
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .photo-controls button { 
+            flex: 1; 
+            min-width: 80px;
+            padding: 8px 12px; 
+            font-size: 10px; 
+            border-radius: 6px; 
+            border: 1px solid var(--border); 
+            background: var(--card); 
+            color: var(--text); 
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        .photo-controls button:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        /* ========== DRAG & DROP ZONE ========== */
+        .drop-zone {
+            border: 3px dashed var(--border);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+        }
+        
+        .drop-zone-icon {
+            font-size: 48px;
             margin-bottom: 10px;
         }
-
-        .product-name {
-            font-weight: 900;
+        
+        .drop-zone-text {
+            font-size: 14px;
+            font-weight: 700;
             color: var(--gold);
-            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        
+        .drop-zone-hint {
+            font-size: 11px;
+            color: #666;
         }
 
-        .product-status {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 900;
+        /* ========== SIGNATURE ========== */
+        #sig-canvas { 
+            background: #fff; 
+            border: 3px solid var(--gold); 
+            border-radius: 12px; 
+            touch-action: none; 
+            width: 100%; 
+            height: 250px; 
+            cursor: crosshair;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn-gold { 
+            width: 100%; 
+            padding: 20px; 
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: black; 
+            border: none; 
+            font-weight: 900; 
+            border-radius: 12px; 
+            text-transform: uppercase; 
+            margin-top: 20px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-size: 15px;
+            letter-spacing: 0.1em;
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--shadow);
+        }
+
+        .btn-gold:active { 
+            transform: scale(0.98); 
+        }
+
+        .btn-gold:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline { 
+            width: 100%; 
+            padding: 14px 20px; 
+            background: transparent; 
+            color: var(--text); 
+            border: 2px solid var(--border); 
+            border-radius: 10px; 
+            margin-top: 10px; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-weight: 700;
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .status-ok { background: var(--success); color: white; }
-        .status-defect { background: var(--danger); color: white; }
-        .status-partial { background: var(--warning); color: black; }
+        .btn-outline:hover {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
 
-        .product-details {
-            font-size: 13px;
+        .btn-now { 
+            background: var(--card); 
+            color: var(--gold); 
+            border: 2px solid var(--gold); 
+            padding: 10px; 
+            border-radius: 8px; 
+            font-size: 11px; 
+            margin-top: 8px; 
+            width: 100%; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .btn-now:hover {
+            background: var(--gold);
+            color: black;
+        }
+
+        .btn-danger { 
+            width: 100%; 
+            padding: 14px 20px; 
+            background: rgba(255, 77, 77, 0.1); 
+            color: var(--danger); 
+            border: 2px solid var(--danger); 
+            border-radius: 10px; 
+            margin-top: 30px; 
+            font-size: 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ========== FORM INPUTS ========== */
+        label { 
+            display: block; 
+            margin: 20px 0 8px 0; 
+            font-size: 12px; 
+            font-weight: 900; 
+            color: var(--gold); 
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        input:not([type="checkbox"]):not([type="file"]):not([type="radio"]), 
+        textarea, 
+        select { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            color: var(--text); 
+            border-radius: 10px; 
+            font-size: 15px;
+            font-family: 'Darker Grotesque', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 20px var(--shadow);
+        }
+
+        textarea { 
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        /* ========== CARDS ========== */
+        .folder-card { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: all 0.3s;
+        }
+
+        .folder-card:hover { 
+            border-color: var(--gold); 
+            background: rgba(212, 175, 55, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--shadow);
+        }
+
+        .folder-info { 
+            flex: 1; 
+        }
+
+        .folder-name { 
+            font-weight: 900; 
+            font-size: 18px; 
+            margin-bottom: 6px;
+            color: var(--gold);
+        }
+
+        .folder-meta { 
+            font-size: 12px; 
+            color: #666;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .folder-arrow { 
+            color: var(--gold); 
+            font-size: 28px;
+            transition: transform 0.3s;
+        }
+
+        .folder-card:hover .folder-arrow {
+            transform: translateX(5px);
+        }
+
+        /* ========== STATS CARDS ========== */
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 12px; 
+            margin: 20px 0; 
+        }
+
+        .stat-card { 
+            background: var(--card); 
+            border: 2px solid var(--border); 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .stat-value { 
+            font-size: 32px; 
+            font-weight: 900; 
+            color: var(--gold);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .stat-label { 
+            font-size: 10px; 
+            color: #666; 
+            text-transform: uppercase; 
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+        }
+
+        /* ========== INVENTORY CARDS ========== */
+        .inventory-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .inventory-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        .inventory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .inventory-ref {
+            font-weight: 900;
+            font-size: 16px;
+            color: var(--gold);
+        }
+        
+        .inventory-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        
+        .status-stock { background: var(--success); color: white; }
+        .status-installed { background: var(--info); color: white; }
+        .status-defect { background: var(--danger); color: white; }
+        .status-maintenance { background: var(--warning); color: black; }
+        
+        .inventory-details {
+            font-size: 12px;
             color: #888;
             margin-top: 8px;
         }
-
-        .product-tests {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid var(--border);
+        
+        .inventory-sn {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
         }
 
-        .test-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
+        /* ========== BARCODE SCANNER ========== */
+        .scanner-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 3px solid var(--gold);
+        }
+        
+        #scanner-video {
+            width: 100%;
+            display: block;
+        }
+        
+        .scanner-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 60%;
+            border: 3px solid var(--gold);
+            border-radius: 12px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+        }
+        
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gold);
+            animation: scan 2s linear infinite;
+        }
+        
+        @keyframes scan {
+            0%, 100% { top: 0; }
+            50% { top: calc(100% - 3px); }
         }
 
-        .test-item input[type="checkbox"] {
-            margin-right: 10px;
-            accent-color: var(--success);
+        /* ========== TIMELINE ========== */
+        .timeline-item { 
+            border-left: 4px solid var(--gold); 
+            padding-left: 25px; 
+            margin-bottom: 50px; 
+            position: relative;
         }
 
-        .test-item label {
-            font-size: 12px;
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--shadow);
+        }
+
+        .section-block { 
+            background: var(--card); 
+            padding: 15px; 
+            border-radius: 10px; 
+            margin-bottom: 10px; 
+            border-left: 3px solid var(--border);
+            font-size: 14px; 
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .section-block:hover {
+            border-left-color: var(--gold);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ========== MODALS ========== */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.9); 
+            z-index: 10000; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active { 
+            display: flex; 
+            animation: fadeIn 0.3s; 
+        }
+
+        .modal-content { 
+            background: var(--card); 
+            border: 3px solid var(--gold); 
+            border-radius: 15px; 
+            padding: 30px; 
+            max-width: 500px; 
+            width: 90%; 
+            max-height: 80vh; 
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-title { 
+            font-size: 20px; 
+            font-weight: 900; 
+            color: var(--gold); 
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .modal-body { 
+            font-size: 14px; 
+            margin-bottom: 25px; 
+            line-height: 1.6;
             font-weight: 600;
         }
 
-        /* À suivre dans la partie 2... */
+        .modal-actions { 
+            display: flex; 
+            gap: 12px; 
+        }
+
+        .modal-btn { 
+            flex: 1; 
+            padding: 14px; 
+            border-radius: 10px; 
+            border: none; 
+            font-weight: 900; 
+            cursor: pointer;
+            font-size: 13px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .modal-btn.confirm { 
+            background: var(--gold); 
+            color: black;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .modal-btn.cancel { 
+            background: transparent; 
+            color: var(--text); 
+            border: 2px solid var(--border); 
+        }
+
+        /* ========== IMAGE MODAL ========== */
+        .image-modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 10001; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .image-modal.active { 
+            display: flex; 
+            animation: fadeIn 0.3s; 
+        }
+
+        .image-modal img { 
+            max-width: 100%; 
+            max-height: 90vh; 
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .image-modal-close { 
+            position: absolute; 
+            top: 30px; 
+            right: 30px; 
+            background: var(--danger); 
+            color: white; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        /* ========== STEP CONTAINER ========== */
+        .step { 
+            display: none; 
+            animation: fadeIn 0.3s ease; 
+        }
+
+        .step.active { 
+            display: block; 
+        }
+
+        /* ========== TEMPLATE SELECTOR ========== */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .template-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .template-card:hover, .template-card.selected {
+            border-color: var(--gold);
+            background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .template-icon {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .template-name {
+            font-weight: 900;
+            font-size: 14px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        
+        .template-desc {
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 20px;
+                letter-spacing: 4px;
+            }
+            
+            .main-nav {
+                grid-template-columns: 1fr;
+            }
+            
+            .type-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ========== UTILITY CLASSES ========== */
+        .no-print { }
+        @media print { 
+            .no-print { display: none !important; } 
+        }
     </style>
 </head>
 <body>
-<!-- Le HTML sera dans la partie 2 -->
-
-<style>
-/* ========== SUITE DES STYLES (après .test-item label) ========== */
-
-/* ========== PHOTO SYSTEM ========== */
-.photo-box { 
-    background: var(--card); 
-    border: 2px solid var(--border); 
-    padding: 20px; 
-    border-radius: 15px; 
-    margin-top: 20px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-.photo-box h4 { 
-    margin: 0 0 15px 0; 
-    font-size: 12px; 
-    color: var(--gold); 
-    text-transform: uppercase; 
-    letter-spacing: 2px;
-    font-weight: 900;
-}
-
-.photo-gallery { 
-    display: grid; 
-    grid-template-columns: 1fr; 
-    gap: 15px; 
-    margin-top: 15px; 
-}
-
-.photo-card { 
-    background: var(--bg); 
-    padding: 12px; 
-    border-radius: 12px; 
-    border: 2px solid var(--border); 
-    position: relative;
-    transition: all 0.3s;
-}
-
-.photo-card:hover {
-    border-color: var(--gold);
-    box-shadow: 0 4px 20px var(--shadow);
-}
-
-.photo-card img { 
-    width: 100%; 
-    border-radius: 8px; 
-    margin-bottom: 10px; 
-    max-height: 400px; 
-    object-fit: contain; 
-    cursor: pointer; 
-    transition: transform 0.3s;
-    background: #1a1a1a;
-}
-
-.photo-card img:hover { 
-    transform: scale(1.02); 
-}
-
-.photo-input { 
-    background: var(--bg); 
-    border: 1px solid var(--border); 
-    color: var(--text); 
-    padding: 10px; 
-    font-size: 13px; 
-    width: 100%; 
-    border-radius: 6px; 
-    margin-bottom: 8px;
-    font-family: 'Darker Grotesque', sans-serif;
-    font-weight: 600;
-}
-
-.photo-size { 
-    font-size: 10px; 
-    color: #666; 
-    margin-bottom: 8px;
-    font-family: 'Space Mono', monospace;
-}
-
-.photo-controls { 
-    display: flex; 
-    gap: 8px; 
-    margin-top: 8px;
-    flex-wrap: wrap;
-}
-
-.photo-controls button { 
-    flex: 1; 
-    min-width: 80px;
-    padding: 8px 12px; 
-    font-size: 10px; 
-    border-radius: 6px; 
-    border: 1px solid var(--border); 
-    background: var(--card); 
-    color: var(--text); 
-    cursor: pointer;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: all 0.2s;
-}
-
-.photo-controls button:hover {
-    border-color: var(--gold);
-    background: rgba(212, 175, 55, 0.1);
-}
-
-/* ========== ANNOTATION CANVAS ========== */
-.annotation-container {
-    position: relative;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.annotation-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    cursor: crosshair;
-    z-index: 10;
-}
-
-.annotation-tools {
-    display: flex;
-    gap: 8px;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    border-radius: 8px;
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-}
-
-.annotation-tool-btn {
-    padding: 8px 12px;
-    background: var(--card);
-    border: 2px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 700;
-    transition: all 0.2s;
-    text-transform: uppercase;
-}
-
-.annotation-tool-btn.active {
-    background: var(--gold);
-    color: black;
-    border-color: var(--gold);
-}
-
-.color-picker {
-    width: 40px;
-    height: 36px;
-    border: 2px solid var(--border);
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.measure-input {
-    flex: 1;
-    min-width: 120px;
-    padding: 8px;
-    background: var(--card);
-    border: 2px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-/* ========== SIGNATURE ========== */
-#sig-canvas { 
-    background: #fff; 
-    border: 3px solid var(--gold); 
-    border-radius: 12px; 
-    touch-action: none; 
-    width: 100%; 
-    height: 250px; 
-    cursor: crosshair;
-    box-shadow: 0 4px 20px var(--shadow);
-}
-
-/* ========== BUTTONS ========== */
-.btn-gold { 
-    width: 100%; 
-    padding: 20px; 
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-    color: black; 
-    border: none; 
-    font-weight: 900; 
-    border-radius: 12px; 
-    text-transform: uppercase; 
-    margin-top: 20px; 
-    cursor: pointer; 
-    transition: all 0.3s;
-    font-size: 15px;
-    letter-spacing: 0.1em;
-    box-shadow: 0 6px 20px var(--shadow);
-}
-
-.btn-gold:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px var(--shadow);
-}
-
-.btn-gold:active { 
-    transform: scale(0.98); 
-}
-
-.btn-gold:disabled { 
-    opacity: 0.5; 
-    cursor: not-allowed;
-    transform: none;
-}
-
-.btn-outline { 
-    width: 100%; 
-    padding: 14px 20px; 
-    background: transparent; 
-    color: var(--text); 
-    border: 2px solid var(--border); 
-    border-radius: 10px; 
-    margin-top: 10px; 
-    cursor: pointer; 
-    transition: all 0.3s;
-    font-weight: 700;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.btn-outline:hover {
-    border-color: var(--gold);
-    background: rgba(212, 175, 55, 0.1);
-    transform: translateY(-2px);
-}
-
-.btn-now { 
-    background: var(--card); 
-    color: var(--gold); 
-    border: 2px solid var(--gold); 
-    padding: 10px; 
-    border-radius: 8px; 
-    font-size: 11px; 
-    margin-top: 8px; 
-    width: 100%; 
-    cursor: pointer; 
-    transition: all 0.3s;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.btn-now:hover {
-    background: var(--gold);
-    color: black;
-}
-
-.btn-danger { 
-    width: 100%; 
-    padding: 14px 20px; 
-    background: rgba(255, 77, 77, 0.1); 
-    color: var(--danger); 
-    border: 2px solid var(--danger); 
-    border-radius: 10px; 
-    margin-top: 30px; 
-    font-size: 12px; 
-    font-weight: bold; 
-    cursor: pointer; 
-    transition: all 0.3s;
-    text-transform: uppercase;
-}
-
-.btn-danger:hover {
-    background: var(--danger);
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* ========== FORM INPUTS ========== */
-label { 
-    display: block; 
-    margin: 20px 0 8px 0; 
-    font-size: 12px; 
-    font-weight: 900; 
-    color: var(--gold); 
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-
-input:not([type="checkbox"]):not([type="file"]), 
-textarea, 
-select { 
-    width: 100%; 
-    padding: 14px; 
-    background: var(--card); 
-    border: 2px solid var(--border); 
-    color: var(--text); 
-    border-radius: 10px; 
-    font-size: 15px;
-    font-family: 'Darker Grotesque', sans-serif;
-    font-weight: 600;
-    transition: all 0.3s;
-}
-
-input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow: 0 0 20px var(--shadow);
-}
-
-textarea { 
-    resize: vertical;
-    min-height: 120px;
-    line-height: 1.6;
-}
-
-/* ========== CARDS ========== */
-.folder-card { 
-    background: var(--card); 
-    border: 2px solid var(--border); 
-    padding: 20px; 
-    border-radius: 12px; 
-    margin-bottom: 12px; 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    cursor: pointer; 
-    transition: all 0.3s;
-}
-
-.folder-card:hover { 
-    border-color: var(--gold); 
-    background: rgba(212, 175, 55, 0.08);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--shadow);
-}
-
-.folder-info { 
-    flex: 1; 
-}
-
-.folder-name { 
-    font-weight: 900; 
-    font-size: 18px; 
-    margin-bottom: 6px;
-    color: var(--gold);
-}
-
-.folder-meta { 
-    font-size: 12px; 
-    color: #666;
-    font-family: 'Space Mono', monospace;
-}
-
-.folder-arrow { 
-    color: var(--gold); 
-    font-size: 28px;
-    transition: transform 0.3s;
-}
-
-.folder-card:hover .folder-arrow {
-    transform: translateX(5px);
-}
-
-/* ========== STATS CARDS ========== */
-.stats-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-    gap: 12px; 
-    margin: 20px 0; 
-}
-
-.stat-card { 
-    background: var(--card); 
-    border: 2px solid var(--border); 
-    padding: 20px; 
-    border-radius: 12px; 
-    text-align: center;
-    transition: all 0.3s;
-}
-
-.stat-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px var(--shadow);
-}
-
-.stat-value { 
-    font-size: 32px; 
-    font-weight: 900; 
-    color: var(--gold);
-    font-family: 'Space Mono', monospace;
-}
-
-.stat-label { 
-    font-size: 10px; 
-    color: #666; 
-    text-transform: uppercase; 
-    margin-top: 8px;
-    letter-spacing: 0.05em;
-    font-weight: 700;
-}
-
-/* ========== TIMELINE ========== */
-.timeline-item { 
-    border-left: 4px solid var(--gold); 
-    padding-left: 25px; 
-    margin-bottom: 50px; 
-    position: relative;
-}
-
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    left: -8px;
-    top: 0;
-    width: 12px;
-    height: 12px;
-    background: var(--gold);
-    border-radius: 50%;
-    box-shadow: 0 0 15px var(--shadow);
-}
-
-.section-block { 
-    background: var(--card); 
-    padding: 15px; 
-    border-radius: 10px; 
-    margin-bottom: 10px; 
-    border-left: 3px solid var(--border);
-    font-size: 14px; 
-    border: 2px solid var(--border);
-    transition: all 0.3s;
-}
-
-.section-block:hover {
-    border-left-color: var(--gold);
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-}
-
-/* ========== MODALS ========== */
-.modal { 
-    display: none; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    right: 0; 
-    bottom: 0; 
-    background: rgba(0,0,0,0.9); 
-    z-index: 10000; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px;
-    backdrop-filter: blur(10px);
-}
-
-.modal.active { 
-    display: flex; 
-    animation: fadeIn 0.3s; 
-}
-
-.modal-content { 
-    background: var(--card); 
-    border: 3px solid var(--gold); 
-    border-radius: 15px; 
-    padding: 30px; 
-    max-width: 500px; 
-    width: 90%; 
-    max-height: 80vh; 
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-
-.modal-title { 
-    font-size: 20px; 
-    font-weight: 900; 
-    color: var(--gold); 
-    margin-bottom: 20px;
-    text-transform: uppercase;
-}
-
-.modal-body { 
-    font-size: 14px; 
-    margin-bottom: 25px; 
-    line-height: 1.6;
-    font-weight: 600;
-}
-
-.modal-actions { 
-    display: flex; 
-    gap: 12px; 
-}
-
-.modal-btn { 
-    flex: 1; 
-    padding: 14px; 
-    border-radius: 10px; 
-    border: none; 
-    font-weight: 900; 
-    cursor: pointer;
-    font-size: 13px;
-    text-transform: uppercase;
-    transition: all 0.3s;
-}
-
-.modal-btn.confirm { 
-    background: var(--gold); 
-    color: black;
-    box-shadow: 0 4px 15px var(--shadow);
-}
-
-.modal-btn.cancel { 
-    background: transparent; 
-    color: var(--text); 
-    border: 2px solid var(--border); 
-}
-
-/* ========== IMAGE MODAL ========== */
-.image-modal { 
-    display: none; 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    right: 0; 
-    bottom: 0; 
-    background: rgba(0,0,0,0.95); 
-    z-index: 10001; 
-    align-items: center; 
-    justify-content: center; 
-    padding: 20px;
-    backdrop-filter: blur(10px);
-}
-
-.image-modal.active { 
-    display: flex; 
-    animation: fadeIn 0.3s; 
-}
-
-.image-modal img { 
-    max-width: 100%; 
-    max-height: 90vh; 
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-}
-
-.image-modal-close { 
-    position: absolute; 
-    top: 30px; 
-    right: 30px; 
-    background: var(--danger); 
-    color: white; 
-    border: none; 
-    padding: 12px 20px; 
-    border-radius: 8px; 
-    cursor: pointer; 
-    font-weight: bold;
-    font-size: 14px;
-    transition: all 0.3s;
-}
-
-/* ========== ANIMATIONS ========== */
-@keyframes fadeIn { 
-    from { opacity: 0; transform: translateY(10px); } 
-    to { opacity: 1; transform: translateY(0); } 
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 600px) {
-    .header h1 {
-        font-size: 20px;
-        letter-spacing: 4px;
-    }
-    
-    .type-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-/* ========== STEP CONTAINER ========== */
-.step { 
-    display: none; 
-    animation: fadeIn 0.3s ease; 
-}
-
-.step.active { 
-    display: block; 
-}
-
-/* ========== UTILITY CLASSES ========== */
-.no-print { }
-@media print { 
-    .no-print { display: none !important; } 
-}
-</style>
-
-<!-- ========== DÉBUT DU HTML ========== -->
-
 
 <!-- Indicators -->
 <div class="offline-indicator" id="offlineIndicator">📡 MODE HORS LIGNE</div>
-<div class="sync-indicator" id="syncIndicator">🔄 Synchronisation...</div>
+<div class="autosave-indicator" id="autosaveIndicator">💾 Sauvegardé</div>
 
 <div class="container">
     <!-- Header -->
     <div class="header">
         <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         <h1>VERTEX MONACO</h1>
-        <p class="header-subtitle">DIGITAL SIGNAGE PRO | V2.0</p>
-        <div class="version-badge">v2.0</div>
+        <p class="header-subtitle">DIGITAL SIGNAGE PRO | V3.0</p>
+        <div class="version-badge">v3.0</div>
     </div>
 
-    <!-- HOME / PROJECT LIST -->
+    <!-- STEP 0: MAIN MENU -->
     <div class="step active" id="step0">
         <div class="stats-grid">
             <div class="stat-card">
@@ -1183,8 +1284,8 @@ textarea {
                 <div class="stat-label">Projets actifs</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="stat-total">0</div>
-                <div class="stat-label">Total interventions</div>
+                <div class="stat-value" id="stat-inventory">0</div>
+                <div class="stat-label">En stock</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="stat-hours">0h</div>
@@ -1196,35 +1297,67 @@ textarea {
             </div>
         </div>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('ongoing')">EN COURS</button>
-            <button class="tab-btn" onclick="switchTab('done')">ARCHIVES</button>
-            <button class="tab-btn" onclick="switchTab('analytics')">STATS</button>
-        </div>
-        
-        <div id="view-list">
-            <button class="btn-gold" onclick="showNewProjectOptions()">+ NOUVEAU PROJET</button>
+        <div class="main-nav">
+            <div class="nav-card" onclick="showProjectsView()">
+                <div class="nav-icon">🏢</div>
+                <div class="nav-title">Projets Clients</div>
+                <div class="nav-subtitle">Installations & SAV</div>
+                <div class="nav-badge" id="badge-projects">0</div>
+            </div>
             
-            <input type="text" id="searchBar" oninput="filterProjects()" placeholder="🔍 Rechercher un projet..." style="margin-top:20px;">
-            
-            <div id="project-list" style="margin-top:15px;"></div>
-            
-            <button class="btn-outline" onclick="exportToCSV()" style="margin-top:50px;">📊 EXPORT EXCEL (.CSV)</button>
-            <button class="btn-outline" onclick="exportBackup()">💾 SAUVEGARDER DONNÉES</button>
-            <button class="btn-outline" onclick="document.getElementById('import-file').click()">📥 RESTAURER DONNÉES</button>
-            <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(this)">
+            <div class="nav-card" onclick="showInventoryView()">
+                <div class="nav-icon">📦</div>
+                <div class="nav-title">Stock & Réceptions</div>
+                <div class="nav-subtitle">Gestion matériel</div>
+                <div class="nav-badge" id="badge-inventory" style="background:var(--info);">0</div>
+            </div>
         </div>
 
-        <div id="view-analytics" style="display:none;">
-            <p style="text-align:center; padding:40px 0; color:#666;">Statistiques à venir...</p>
-        </div>
+        <button class="btn-outline" onclick="exportToCSV()">📊 EXPORT EXCEL</button>
+        <button class="btn-outline" onclick="exportBackup()">💾 SAUVEGARDER</button>
+        <button class="btn-outline" onclick="document.getElementById('import-file').click()">📥 RESTAURER</button>
+        <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importBackup(this)">
     </div>
 
-    <!-- La suite dans la partie 3 : STEPS 1-5 + JavaScript -->
-</div>
-
-<!-- STEP 1: INFO PROJET / RÉCEPTION PRODUIT -->
+    <!-- STEP 1: PROJECTS VIEW -->
     <div class="step" id="step1">
+        <h2 style="color:var(--gold); margin-bottom:20px;">🏢 Projets Clients</h2>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchProjectTab('ongoing')">EN COURS</button>
+            <button class="tab-btn" onclick="switchProjectTab('done')">ARCHIVES</button>
+        </div>
+        
+        <button class="btn-gold" onclick="showNewProjectOptions()">+ NOUVEAU PROJET</button>
+        
+        <input type="text" id="searchBarProjects" oninput="filterProjects()" placeholder="🔍 Rechercher..." style="margin-top:20px;">
+        
+        <div id="project-list" style="margin-top:15px;"></div>
+        
+        <button class="btn-outline" onclick="nextStep(0)">← RETOUR</button>
+    </div>
+
+    <!-- STEP 2: INVENTORY VIEW -->
+    <div class="step" id="step2">
+        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Stock & Réceptions</h2>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchInventoryTab('stock')">EN STOCK</button>
+            <button class="tab-btn" onclick="switchInventoryTab('installed')">INSTALLÉ</button>
+            <button class="tab-btn" onclick="switchInventoryTab('defect')">DÉFAUT</button>
+        </div>
+        
+        <button class="btn-gold" onclick="nextStep(7)">+ NOUVELLE RÉCEPTION</button>
+        
+        <input type="text" id="searchBarInventory" oninput="filterInventory()" placeholder="🔍 Rechercher S/N, ref..." style="margin-top:20px;">
+        
+        <div id="inventory-list" style="margin-top:15px;"></div>
+        
+        <button class="btn-outline" onclick="nextStep(0)">← RETOUR</button>
+    </div>
+
+    <!-- STEP 3: PROJECT INFO / START INTERVENTION -->
+    <div class="step" id="step3">
         <div class="progress-bar">
             <div class="progress-step active">
                 <div class="progress-dot">1</div>
@@ -1252,9 +1385,17 @@ textarea {
             <div class="type-chip" onclick="selectType(this, 'MAINTENANCE')">🔧 MAINTENANCE</div>
             <div class="type-chip" onclick="selectType(this, 'SAV')">⚠️ SAV</div>
             <div class="type-chip" onclick="selectType(this, 'CONFIGURATION')">⚙️ CONFIG</div>
-            <div class="type-chip" onclick="selectType(this, 'RÉCEPTION')">📦 RÉCEPTION</div>
-            <div class="type-chip" onclick="selectType(this, 'AUDIT')">📊 AUDIT SITE</div>
+            <div class="type-chip" onclick="selectType(this, 'AUDIT')">📊 AUDIT</div>
         </div>
+
+        <label>Template d'intervention</label>
+        <select id="intervention-template" onchange="applyInterventionTemplate(this.value)">
+            <option value="">-- Choisir un template --</option>
+            <option value="videowall">Video Wall 3x3</option>
+            <option value="standalone">Écran standalone</option>
+            <option value="menu-board">Menu Board restaurant</option>
+            <option value="custom">Personnalisé</option>
+        </select>
 
         <label>Équipe sur place *</label>
         <div class="staff-grid">
@@ -1271,24 +1412,15 @@ textarea {
 
         <div id="gps-info" style="font-size:11px; color: var(--success); margin-top:15px; font-weight:700;"></div>
 
-        <!-- RÉCEPTION PRODUIT (si applicable) -->
-        <div id="reception-section" style="display:none;">
-            <div class="reception-section">
-                <h4>📦 Réception Matériel</h4>
-                <div id="reception-products"></div>
-                <button class="btn-outline" onclick="addReceptionProduct()">+ AJOUTER UN PRODUIT</button>
-            </div>
-        </div>
-
         <label>Notes / Contexte intervention</label>
-        <textarea id="client_context" rows="3" placeholder="Ex: Client souhaite affichage vidéo wall 3x3, câblage existant, besoin formation utilisateur..."></textarea>
+        <textarea id="client_context" rows="3" placeholder="Ex: Installation video wall 3x3, câblage existant, formation utilisateur..."></textarea>
 
-        <button class="btn-gold" onclick="validateStep1()">DÉMARRER L'INTERVENTION</button>
+        <button class="btn-gold" onclick="validateStep3()">DÉMARRER L'INTERVENTION</button>
         <button class="btn-outline" onclick="confirmCancel()">ANNULER</button>
     </div>
 
-    <!-- STEP 2: PHOTOS INSTALLATION -->
-    <div class="step" id="step2">
+    <!-- STEP 4: PHOTOS INSTALLATION -->
+    <div class="step" id="step4">
         <div class="progress-bar">
             <div class="progress-step completed">
                 <div class="progress-dot">✓</div>
@@ -1310,26 +1442,32 @@ textarea {
 
         <div class="photo-box">
             <h4>📸 Photos AVANT intervention</h4>
-            <p style="font-size:12px; color:#888; margin-bottom:10px;">État des lieux initial, ancien matériel, zone d'installation...</p>
+            <div class="drop-zone" id="drop-before" onclick="document.getElementById('cam-before').click()">
+                <div class="drop-zone-icon">📷</div>
+                <div class="drop-zone-text">Ajouter des photos</div>
+                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
+            </div>
             <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'before')" style="display:none;" id="cam-before">
-            <button class="btn-outline" onclick="document.getElementById('cam-before').click()">+ AJOUTER PHOTOS AVANT</button>
             <div id="gallery-before" class="photo-gallery"></div>
         </div>
 
         <div class="photo-box">
             <h4>📸 Photos PENDANT installation</h4>
-            <p style="font-size:12px; color:#888; margin-bottom:10px;">Câblage, montage, fixations, étapes clés...</p>
+            <div class="drop-zone" id="drop-during" onclick="document.getElementById('cam-during').click()">
+                <div class="drop-zone-icon">📷</div>
+                <div class="drop-zone-text">Ajouter des photos</div>
+                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
+            </div>
             <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'during')" style="display:none;" id="cam-during">
-            <button class="btn-outline" onclick="document.getElementById('cam-during').click()">+ AJOUTER PHOTOS PENDANT</button>
             <div id="gallery-during" class="photo-gallery"></div>
         </div>
 
-        <button class="btn-gold" onclick="validateStep2()">CONTINUER → TESTS</button>
-        <button class="btn-outline" onclick="nextStep(1)">← RETOUR</button>
+        <button class="btn-gold" onclick="validateStep4()">CONTINUER → TESTS</button>
+        <button class="btn-outline" onclick="nextStep(3)">← RETOUR</button>
     </div>
 
-    <!-- STEP 3: TESTS & CONFIGURATION -->
-    <div class="step" id="step3">
+    <!-- STEP 5: TESTS & CONFIGURATION -->
+    <div class="step" id="step5">
         <div class="progress-bar">
             <div class="progress-step completed">
                 <div class="progress-dot">✓</div>
@@ -1351,23 +1489,29 @@ textarea {
 
         <div class="photo-box">
             <h4>📸 Photos APRÈS installation</h4>
-            <p style="font-size:12px; color:#888; margin-bottom:10px;">Installation finale, affichages actifs, résultat...</p>
+            <div class="drop-zone" id="drop-after" onclick="document.getElementById('cam-after').click()">
+                <div class="drop-zone-icon">📷</div>
+                <div class="drop-zone-text">Ajouter des photos</div>
+                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
+            </div>
             <input type="file" accept="image/*" capture="environment" multiple onchange="handlePhotos(this, 'after')" style="display:none;" id="cam-after">
-            <button class="btn-outline" onclick="document.getElementById('cam-after').click()">+ AJOUTER PHOTOS APRÈS</button>
             <div id="gallery-after" class="photo-gallery"></div>
         </div>
 
         <label>Matériel installé / Références *</label>
-        <textarea id="task_mat" rows="4" placeholder="Ex:&#10;- Écran Samsung QM85R-B 85'' 4K (S/N: ABC123456)&#10;- Media Player BrightSign XT1144 (S/N: XYZ789)&#10;- Support mural Chief XTM1U&#10;- Câblage HDMI 2.0 Crestron 15m&#10;"></textarea>
+        <button class="btn-outline" onclick="selectFromInventory()" style="margin-bottom:10px; border-color:var(--info); color:var(--info);">
+            📦 SÉLECTIONNER DEPUIS LE STOCK
+        </button>
+        <textarea id="task_mat" rows="4" placeholder="Ex:&#10;- Écran Samsung QM85R-B 85'' 4K (S/N: ABC123456)&#10;- Media Player BrightSign XT1144 (S/N: XYZ789)"></textarea>
 
-        <label>Compte-rendu technique de l'installation *</label>
-        <textarea id="task_done" rows="6" placeholder="Ex:&#10;- Installation écran 85'' position centrale hall accueil&#10;- Fixation murale renforcée (placo + chevilles métalliques M12)&#10;- Câblage dissimulé goulotte 50x30mm&#10;- Configuration media player : résolution 3840x2160@60Hz, rotation landscape&#10;- Connexion réseau Ethernet RJ45 Cat6 sur switch existant VLAN 10&#10;- Configuration CMS BrightAuthor:connected, playlist horaires 8h-20h&#10;- Tests diffusion contenu vidéo 4K OK"></textarea>
+        <label>Compte-rendu technique *</label>
+        <textarea id="task_done" rows="6" placeholder="Travaux effectués..."></textarea>
 
         <label>Configuration réseau / Adresses IP</label>
-        <textarea id="task_network" rows="3" placeholder="Ex:&#10;Media Player: IP 192.168.1.50 / Masque 255.255.255.0 / Passerelle 192.168.1.1&#10;CMS Cloud: URL https://cms.client.com / Identifiant: display01&#10;Wi-Fi SSID: VERTEX-SIGNAGE / WPA2"></textarea>
+        <textarea id="task_network" rows="3" placeholder="IP, CMS, Wi-Fi..."></textarea>
 
         <label>Tests effectués</label>
-        <div id="tests-checklist" style="margin-top:10px;">
+        <div id="tests-checklist">
             <div class="check-item">
                 <input type="checkbox" id="test1">
                 <label for="test1">Affichage image/vidéo OK</label>
@@ -1394,12 +1538,12 @@ textarea {
             </div>
         </div>
 
-        <button class="btn-gold" onclick="validateStep3()">CONTINUER → FINALISATION</button>
-        <button class="btn-outline" onclick="nextStep(2)">← RETOUR PHOTOS</button>
+        <button class="btn-gold" onclick="validateStep5()">CONTINUER → FINALISATION</button>
+        <button class="btn-outline" onclick="nextStep(4)">← RETOUR</button>
     </div>
 
-    <!-- STEP 4: FINALISATION & SIGNATURE -->
-    <div class="step" id="step4">
+    <!-- STEP 6: FINALISATION & SIGNATURE -->
+    <div class="step" id="step6">
         <div class="progress-bar">
             <div class="progress-step completed">
                 <div class="progress-dot">✓</div>
@@ -1423,13 +1567,13 @@ textarea {
         <input type="time" id="time_out">
         <button class="btn-now" onclick="setTime('time_out')">⏰ MAINTENANT</button>
 
-        <label>Pièces détachées utilisées / Consommables</label>
-        <textarea id="task_parts" rows="3" placeholder="Ex: Chevilles M12 x8, Câble HDMI 15m, Connecteurs RJ45 x2..."></textarea>
+        <label>Pièces détachées / Consommables</label>
+        <textarea id="task_parts" rows="3" placeholder="Chevilles, câbles, connecteurs..."></textarea>
 
         <label>Recommandations / Formation client</label>
-        <textarea id="task_recommendations" rows="3" placeholder="Ex:&#10;- Formation utilisateur effectuée sur interface CMS&#10;- Conseillé nettoyage écran avec chiffon microfibre mensuel&#10;- Prévoir renouvellement contenu tous les 3 mois&#10;- RDV maintenance préventive dans 6 mois"></textarea>
+        <textarea id="task_recommendations" rows="3" placeholder="Formation effectuée, conseils maintenance..."></textarea>
 
-        <label style="margin-top:30px;">Checklist de fin d'intervention *</label>
+        <label style="margin-top:30px;">Checklist de fin *</label>
         <div id="checklist-container">
             <div class="check-item">
                 <input type="checkbox" id="check1">
@@ -1459,21 +1603,100 @@ textarea {
 
         <label style="margin-top:30px;">Signature client *</label>
         <canvas id="sig-canvas"></canvas>
-        <button class="btn-outline" onclick="clearSig()">🗑️ EFFACER LA SIGNATURE</button>
+        <button class="btn-outline" onclick="clearSig()">🗑️ EFFACER</button>
         
         <div id="save-spinner" style="display:none;">
             <div class="spinner-container">
                 <div class="spinner"></div>
-                <p class="spinner-text">Enregistrement en cours...</p>
+                <p class="spinner-text">Enregistrement...</p>
             </div>
         </div>
         
-        <button class="btn-gold" id="btn-save" onclick="saveEntry()">✓ ENREGISTRER L'INTERVENTION</button>
-        <button class="btn-outline" onclick="nextStep(3)">← RETOUR TESTS</button>
+        <button class="btn-gold" id="btn-save" onclick="saveEntry()">✓ ENREGISTRER</button>
+        <button class="btn-outline" onclick="nextStep(5)">← RETOUR</button>
     </div>
 
-    <!-- STEP 5: VIEW PROJECT -->
-    <div class="step" id="step5">
+    <!-- STEP 7: NEW RECEPTION -->
+    <div class="step" id="step7">
+        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Nouvelle Réception</h2>
+        
+        <label>Scanner code-barres / QR</label>
+        <button class="btn-outline" onclick="startBarcodeScanner()" style="border-color:var(--info); color:var(--info);">
+            📷 SCANNER CODE
+        </button>
+        
+        <div id="scanner-container" style="display:none;">
+            <div class="scanner-container">
+                <video id="scanner-video" autoplay playsinline></video>
+                <div class="scanner-overlay">
+                    <div class="scanner-line"></div>
+                </div>
+            </div>
+            <button class="btn-outline" onclick="stopBarcodeScanner()">⏹️ ARRÊTER</button>
+        </div>
+        
+        <label>Type de produit *</label>
+        <div class="template-grid">
+            <div class="template-card" onclick="selectProductTemplate(this, 'display')">
+                <div class="template-icon">🖥️</div>
+                <div class="template-name">ÉCRAN</div>
+                <div class="template-desc">Display, Monitor</div>
+            </div>
+            <div class="template-card" onclick="selectProductTemplate(this, 'player')">
+                <div class="template-icon">📺</div>
+                <div class="template-name">PLAYER</div>
+                <div class="template-desc">Media Player, Box</div>
+            </div>
+            <div class="template-card" onclick="selectProductTemplate(this, 'mount')">
+                <div class="template-icon">🔧</div>
+                <div class="template-name">SUPPORT</div>
+                <div class="template-desc">Mount, Bracket</div>
+            </div>
+            <div class="template-card" onclick="selectProductTemplate(this, 'accessory')">
+                <div class="template-icon">🔌</div>
+                <div class="template-name">ACCESSOIRE</div>
+                <div class="template-desc">Câble, Connecteur</div>
+            </div>
+        </div>
+        
+        <label>Référence produit *</label>
+        <input type="text" id="reception-ref" placeholder="Ex: Samsung QM85R-B">
+        
+        <label>Numéro de série *</label>
+        <input type="text" id="reception-sn" placeholder="S/N">
+        
+        <label>Quantité</label>
+        <input type="number" id="reception-qty" value="1" min="1">
+        
+        <label>État de réception</label>
+        <select id="reception-status">
+            <option value="stock">✓ OK - En stock</option>
+            <option value="defect">✗ Défaut constaté</option>
+        </select>
+        
+        <label>Notes / Défauts</label>
+        <textarea id="reception-notes" rows="3" placeholder="Remarques..."></textarea>
+        
+        <div class="photo-box">
+            <h4>📸 Photos produit</h4>
+            <div class="drop-zone" onclick="document.getElementById('cam-reception').click()">
+                <div class="drop-zone-icon">📷</div>
+                <div class="drop-zone-text">Ajouter des photos</div>
+                <div class="drop-zone-hint">Cliquer ou glisser-déposer</div>
+            </div>
+            <input type="file" accept="image/*" multiple onchange="handleReceptionPhotos(this)" style="display:none;" id="cam-reception">
+            <div id="gallery-reception" class="photo-gallery"></div>
+        </div>
+        
+        <label>Tests de réception</label>
+        <div id="reception-tests-container"></div>
+        
+        <button class="btn-gold" onclick="saveReception()">✓ ENREGISTRER RÉCEPTION</button>
+        <button class="btn-outline" onclick="nextStep(2)">← RETOUR</button>
+    </div>
+
+    <!-- STEP 8: VIEW PROJECT -->
+    <div class="step" id="step8">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
             <h2 id="view-n" style="color:var(--gold); margin:0; font-size:22px;"></h2>
             <div id="status-toggle-container"></div>
@@ -1502,9 +1725,29 @@ textarea {
             </button>
             <button class="btn-gold" onclick="newIntervention()">+ NOUVELLE INTERVENTION</button>
             <button class="btn-outline" onclick="exportProjectPDF()">🖨️ GÉNÉRER PDF</button>
-            <button class="btn-outline" onclick="nextStep(0)">← RETOUR ACCUEIL</button>
-            <button class="btn-danger" onclick="confirmDeleteProject()">⚠️ SUPPRIMER CE PROJET</button>
+            <button class="btn-outline" onclick="nextStep(1)">← RETOUR PROJETS</button>
+            <button class="btn-danger" onclick="confirmDeleteProject()">⚠️ SUPPRIMER</button>
         </div>
+    </div>
+
+    <!-- STEP 9: VIEW INVENTORY ITEM -->
+    <div class="step" id="step9">
+        <h2 id="inventory-item-ref" style="color:var(--gold); margin-bottom:10px;"></h2>
+        <div id="inventory-item-sn" style="font-family:'Space Mono',monospace; font-size:13px; color:#888; margin-bottom:20px;"></div>
+        
+        <div id="inventory-item-details"></div>
+        
+        <div class="photo-box">
+            <h4>📸 Photos</h4>
+            <div id="inventory-item-photos"></div>
+        </div>
+        
+        <div id="inventory-item-qr" style="text-align:center; margin:30px 0;"></div>
+        
+        <button class="btn-outline" onclick="printInventoryLabel()">🖨️ IMPRIMER ÉTIQUETTE</button>
+        <button class="btn-outline" onclick="editInventoryItem()">✏️ MODIFIER</button>
+        <button class="btn-outline" onclick="nextStep(2)">← RETOUR STOCK</button>
+        <button class="btn-danger" onclick="confirmDeleteInventoryItem()">⚠️ SUPPRIMER</button>
     </div>
 
 </div>
@@ -1521,25 +1764,15 @@ textarea {
     </div>
 </div>
 
-<div class="modal" id="annotationModal">
-    <div class="modal-content" style="max-width:90%; max-height:90vh;">
-        <div class="modal-title">✏️ Annoter la photo</div>
-        <div class="annotation-tools">
-            <button class="annotation-tool-btn active" id="tool-measure" onclick="selectAnnotationTool('measure')">📏 Mesure</button>
-            <button class="annotation-tool-btn" id="tool-arrow" onclick="selectAnnotationTool('arrow')">→ Flèche</button>
-            <button class="annotation-tool-btn" id="tool-text" onclick="selectAnnotationTool('text')">T Texte</button>
-            <input type="color" class="color-picker" id="annotation-color" value="#D4AF37">
-            <input type="text" class="measure-input" id="measure-value" placeholder="Ex: 2.5m, 180cm">
-            <button class="annotation-tool-btn" onclick="undoAnnotation()">↶ Annuler</button>
-            <button class="annotation-tool-btn" onclick="clearAnnotations()">🗑️ Tout effacer</button>
+<div class="modal" id="inventorySelectModal">
+    <div class="modal-content">
+        <div class="modal-title">Sélectionner depuis le stock</div>
+        <div class="modal-body">
+            <input type="text" id="inventory-search-modal" placeholder="🔍 Rechercher..." style="margin-bottom:15px;">
+            <div id="inventory-select-list" style="max-height:400px; overflow-y:auto;"></div>
         </div>
-        <div class="annotation-container" id="annotation-container">
-            <img id="annotation-image" src="" style="width:100%; display:block;">
-            <canvas class="annotation-canvas" id="annotation-canvas"></canvas>
-        </div>
-        <div class="modal-actions" style="margin-top:15px;">
-            <button class="modal-btn cancel" onclick="closeAnnotationModal()">Annuler</button>
-            <button class="modal-btn confirm" onclick="saveAnnotation()">✓ Enregistrer</button>
+        <div class="modal-actions">
+            <button class="modal-btn cancel" onclick="closeInventorySelectModal()">Annuler</button>
         </div>
     </div>
 </div>
@@ -1552,56 +1785,92 @@ textarea {
 <script>
 // ========== CONFIGURATION ==========
 const CONFIG = {
-    DB_NAME: 'VertexDB_DigitalSignage_V2',
-    DB_VERSION: 2,
+    DB_NAME: 'VertexDB_V3',
+    DB_VERSION: 3,
     MAX_IMAGE_SIZE: 1400,
     IMAGE_QUALITY: 0.75,
-    ANNOTATION_LINE_WIDTH: 3,
-    ANNOTATION_FONT_SIZE: 16,
+    AUTOSAVE_INTERVAL: 30000, // 30 seconds
+};
+
+// ========== TEMPLATES ==========
+const INTERVENTION_TEMPLATES = {
+    videowall: {
+        mat: "- Écran x9 (3x3)\n- Support mural renforcé x9\n- Media Player\n- Câblage HDMI",
+        done: "Installation video wall 3x3\nCâblage dissimulé\nConfiguration sync écrans",
+        network: "IP Media Player: 192.168.1.50\nCMS: ",
+    },
+    standalone: {
+        mat: "- Écran 1x\n- Support mural\n- Media Player\n- Câbles",
+        done: "Installation écran standalone\nConfiguration CMS",
+        network: "IP: 192.168.1.50",
+    },
+    "menu-board": {
+        mat: "- Écran x2 (portrait)\n- Support mural x2\n- Media Player x2",
+        done: "Installation menu board\nOrientation portrait\nPlaylist menu",
+        network: "IP Player 1: 192.168.1.50\nIP Player 2: 192.168.1.51",
+    }
+};
+
+const PRODUCT_TEST_TEMPLATES = {
+    display: [
+        { id: 'visual', label: 'État physique OK (pas de dommage)' },
+        { id: 'power', label: 'Allumage / Mise sous tension OK' },
+        { id: 'display', label: 'Affichage / Image OK (pixels morts)' },
+        { id: 'ports', label: 'Connecteurs HDMI/DP fonctionnels' },
+        { id: 'remote', label: 'Télécommande incluse et fonctionnelle' },
+    ],
+    player: [
+        { id: 'visual', label: 'État physique OK' },
+        { id: 'boot', label: 'Boot système OK' },
+        { id: 'network', label: 'Connectivité réseau OK' },
+        { id: 'ports', label: 'Ports USB/SD fonctionnels' },
+        { id: 'video', label: 'Sortie vidéo OK' },
+    ],
+    mount: [
+        { id: 'visual', label: 'Pièces complètes et non endommagées' },
+        { id: 'screws', label: 'Visserie complète' },
+        { id: 'manual', label: 'Manuel d\'installation inclus' },
+    ],
+    accessory: [
+        { id: 'visual', label: 'État physique OK' },
+        { id: 'functional', label: 'Test fonctionnel OK' },
+    ]
 };
 
 // ========== STATE ==========
-let db = {};
+let db = { projects: {}, inventory: {} };
 let indexedDB_instance = null;
 let cur = null;
+let curInventory = null;
 let staff = [];
 let photosBefore = [];
 let photosDuring = [];
 let photosAfter = [];
+let receptionPhotos = [];
 let selectedType = "";
-let currentFilter = 'ongoing';
+let selectedProductType = "";
+let currentProjectFilter = 'ongoing';
+let currentInventoryFilter = 'stock';
 let gpsCoords = null;
 let hasUnsavedChanges = false;
 let modalCallback = null;
 let isOnline = navigator.onLine;
 let currentTheme = localStorage.getItem('vertex_theme') || 'dark';
-let receptionProducts = [];
-
-// Annotation state
-let currentAnnotationPhoto = null;
-let currentAnnotationType = 'measure';
-let annotationCanvas = null;
-let annotationCtx = null;
-let isAnnotating = false;
-let annotationStartPos = null;
-let annotations = [];
-let currentAnnotationColor = '#D4AF37';
+let autosaveTimer = null;
+let barcodeScanner = null;
 
 // ========== INITIALIZATION ==========
 window.addEventListener('load', async () => {
-    console.log('🚀 Vertex Monaco Digital Signage V2.0');
+    console.log('🚀 Vertex Monaco V3.0');
     
     await initIndexedDB();
     await loadFromIndexedDB();
     applyTheme(currentTheme);
     requestGeolocation();
     setupNetworkListeners();
-    loadList();
-    updateStats();
-    
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
-    }
+    setupDragAndDrop();
+    updateAllStats();
+    startAutosave();
     
     console.log('✓ Système prêt');
 });
@@ -1620,8 +1889,8 @@ async function initIndexedDB() {
         
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
-            if (!db.objectStoreNames.contains('projects')) {
-                db.createObjectStore('projects', { keyPath: 'id' });
+            if (!db.objectStoreNames.contains('data')) {
+                db.createObjectStore('data', { keyPath: 'id' });
             }
         };
     });
@@ -1629,40 +1898,63 @@ async function initIndexedDB() {
 
 async function loadFromIndexedDB() {
     try {
-        const transaction = indexedDB_instance.transaction(['projects'], 'readonly');
-        const store = transaction.objectStore('projects');
-        const request = store.getAll();
+        const transaction = indexedDB_instance.transaction(['data'], 'readonly');
+        const store = transaction.objectStore('data');
+        const request = store.get('main');
         
         request.onsuccess = () => {
-            db = {};
-            request.result.forEach(project => {
-                db[project.id] = project.data;
-            });
+            if (request.result) {
+                db = request.result.data;
+                // Ensure structure
+                if (!db.projects) db.projects = {};
+                if (!db.inventory) db.inventory = {};
+            }
         };
     } catch (e) {
-        const stored = localStorage.getItem('vertex_v2_db');
-        if (stored) db = JSON.parse(stored);
+        const stored = localStorage.getItem('vertex_v3_db');
+        if (stored) {
+            try {
+                db = JSON.parse(stored);
+                if (!db.projects) db.projects = {};
+                if (!db.inventory) db.inventory = {};
+            } catch (e) {
+                db = { projects: {}, inventory: {} };
+            }
+        }
     }
 }
 
 async function saveToIndexedDB() {
     try {
-        const transaction = indexedDB_instance.transaction(['projects'], 'readwrite');
-        const store = transaction.objectStore('projects');
-        await store.clear();
+        const transaction = indexedDB_instance.transaction(['data'], 'readwrite');
+        const store = transaction.objectStore('data');
+        await store.put({ id: 'main', data: db });
         
-        for (const [id, data] of Object.entries(db)) {
-            if (id !== '_version') {
-                await store.put({ id, data });
-            }
-        }
-        
-        localStorage.setItem('vertex_v2_db', JSON.stringify(db));
+        localStorage.setItem('vertex_v3_db', JSON.stringify(db));
         hasUnsavedChanges = false;
+        
+        showAutosaveIndicator();
     } catch (e) {
-        console.error('Erreur sauvegarde:', e);
-        showToast('Erreur de sauvegarde', 'error');
+        console.error('Save error:', e);
+        showToast('Erreur sauvegarde', 'error');
     }
+}
+
+// ========== AUTOSAVE ==========
+function startAutosave() {
+    autosaveTimer = setInterval(() => {
+        if (hasUnsavedChanges) {
+            saveToIndexedDB();
+        }
+    }, CONFIG.AUTOSAVE_INTERVAL);
+}
+
+function showAutosaveIndicator() {
+    const indicator = document.getElementById('autosaveIndicator');
+    indicator.classList.add('active');
+    setTimeout(() => {
+        indicator.classList.remove('active');
+    }, 2000);
 }
 
 // ========== THEME ==========
@@ -1695,10 +1987,63 @@ function setupNetworkListeners() {
     }
 }
 
-// Suite dans un commentaire pour la longueur...
-// Le JavaScript continue avec toutes les fonctions : photos, annotation, signature, navigation, etc.
+// ========== DRAG & DROP ==========
+function setupDragAndDrop() {
+    ['drop-before', 'drop-during', 'drop-after'].forEach(id => {
+        const zone = document.getElementById(id);
+        if (!zone) return;
+        
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('dragover');
+        });
+        
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('dragover');
+        });
+        
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('dragover');
+            
+            const type = id.replace('drop-', '');
+            const files = Array.from(e.dataTransfer.files);
+            
+            if (files.length > 0) {
+                processPhotoFiles(files, type);
+            }
+        });
+    });
+}
 
-
+function processPhotoFiles(files, type) {
+    const imageFiles = files.filter(f => f.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+        showToast('⚠️ Aucune image trouvée', 'warning');
+        return;
+    }
+    
+    showToast(`📸 Traitement de ${imageFiles.length} photo(s)...`, 'info');
+    
+    imageFiles.forEach(file => {
+        compressImage(file, (compressedDataUrl, originalSize, compressedSize) => {
+            const imgObj = {
+                src: compressedDataUrl,
+                note: "",
+                originalSize: originalSize,
+                compressedSize: compressedSize,
+                rotation: 0
+            };
+            
+            if (type === 'before') photosBefore.push(imgObj);
+            else if (type === 'during') photosDuring.push(imgObj);
+            else photosAfter.push(imgObj);
+            
+            renderGalleries();
+            hasUnsavedChanges = true;
+        });
+    });
+}
 
 // ========== TOAST & MODALS ==========
 function showToast(message, type = 'success') {
@@ -1736,28 +2081,30 @@ function nextStep(n) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + n).classList.add('active');
     
-    if (n === 4) {
+    if (n === 6) {
         setTimeout(resizeCanvas, 200);
     }
-    if (n === 1) {
+    if (n === 3) {
         document.getElementById('c-name').textContent = cur;
-        resetForm();
-        hasUnsavedChanges = true;
-        
-        // Show/hide reception section based on type
-        const receptionSection = document.getElementById('reception-section');
-        if (selectedType === 'RÉCEPTION') {
-            receptionSection.style.display = 'block';
-        }
+        resetInterventionForm();
     }
-    if (n === 5) {
-        document.getElementById('view-n').textContent = cur;
-        showTimeline();
-        hasUnsavedChanges = false;
+    if (n === 7) {
+        resetReceptionForm();
+    }
+    if (n === 8) {
+        showProjectTimeline();
+    }
+    if (n === 9) {
+        showInventoryItem();
+    }
+    if (n === 1) {
+        loadProjectsList();
+    }
+    if (n === 2) {
+        loadInventoryList();
     }
     if (n === 0) {
-        hasUnsavedChanges = false;
-        switchTab(currentFilter);
+        updateAllStats();
     }
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1766,8 +2113,8 @@ function nextStep(n) {
 function confirmCancel() {
     if (hasUnsavedChanges) {
         showModal(
-            'Annuler l\'intervention',
-            'Les données non enregistrées seront perdues. Continuer ?',
+            'Annuler',
+            'Les données non enregistrées seront perdues.',
             'Oui, annuler',
             () => nextStep(0)
         );
@@ -1776,25 +2123,164 @@ function confirmCancel() {
     }
 }
 
-// ========== TABS ==========
-function switchTab(tab) {
-    currentFilter = tab;
-    
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    
-    if (tab === 'ongoing' || tab === 'done') {
-        document.querySelectorAll('.tab-btn')[tab === 'ongoing' ? 0 : 1].classList.add('active');
-        document.getElementById('view-list').style.display = 'block';
-        document.getElementById('view-analytics').style.display = 'none';
-        loadList();
-    } else if (tab === 'analytics') {
-        document.querySelectorAll('.tab-btn')[2].classList.add('active');
-        document.getElementById('view-list').style.display = 'none';
-        document.getElementById('view-analytics').style.display = 'block';
-    }
+// ========== MAIN VIEWS ==========
+function showProjectsView() {
+    currentProjectFilter = 'ongoing';
+    nextStep(1);
 }
 
-// ========== STEP 1 FUNCTIONS ==========
+function showInventoryView() {
+    currentInventoryFilter = 'stock';
+    nextStep(2);
+}
+
+// ========== PROJECT FUNCTIONS ==========
+function switchProjectTab(tab) {
+    currentProjectFilter = tab;
+    
+    document.querySelectorAll('#step1 .tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('#step1 .tab-btn')[tab === 'ongoing' ? 0 : 1].classList.add('active');
+    
+    loadProjectsList();
+}
+
+function loadProjectsList(query = '') {
+    const list = document.getElementById('project-list');
+    list.innerHTML = '';
+    
+    const projects = Object.keys(db.projects)
+        .filter(key => db.projects[key].status === currentProjectFilter)
+        .filter(key => !query || key.toLowerCase().includes(query.toLowerCase()))
+        .sort((a, b) => {
+            const aDate = db.projects[a].entries.length > 0 ? 
+                new Date(db.projects[a].entries[db.projects[a].entries.length - 1].timestamp) : 
+                new Date(db.projects[a].created);
+            const bDate = db.projects[b].entries.length > 0 ? 
+                new Date(db.projects[b].entries[db.projects[b].entries.length - 1].timestamp) : 
+                new Date(db.projects[b].created);
+            return bDate - aDate;
+        });
+    
+    if (projects.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun projet</p>';
+        return;
+    }
+    
+    projects.forEach(id => {
+        const project = db.projects[id];
+        const lastEntry = project.entries[project.entries.length - 1];
+        const lastDate = lastEntry ? lastEntry.date : 'Aucune intervention';
+        const entryCount = project.entries.length;
+        
+        list.innerHTML += `
+            <div class="folder-card" onclick="cur='${escapeHtml(id)}';nextStep(8);">
+                <div class="folder-info">
+                    <div class="folder-name">${escapeHtml(id)}</div>
+                    <div class="folder-meta">
+                        ${entryCount} intervention${entryCount > 1 ? 's' : ''} • ${escapeHtml(lastDate)}
+                    </div>
+                </div>
+                <div class="folder-arrow">❯</div>
+            </div>
+        `;
+    });
+}
+
+function filterProjects() {
+    const query = document.getElementById('searchBarProjects').value;
+    loadProjectsList(query);
+}
+
+function showNewProjectOptions() {
+    const name = prompt('📁 Nom du projet / client :');
+    if (!name) return;
+    
+    const trimmed = name.trim();
+    if (!trimmed) {
+        showToast('⚠️ Le nom ne peut pas être vide', 'error');
+        return;
+    }
+    
+    if (db.projects[trimmed]) {
+        showToast('⚠️ Ce projet existe déjà', 'error');
+        return;
+    }
+    
+    db.projects[trimmed] = {
+        entries: [],
+        status: 'ongoing',
+        created: new Date().toISOString()
+    };
+    
+    saveToIndexedDB();
+    loadProjectsList();
+    updateAllStats();
+    showToast('✓ Nouveau projet créé', 'success');
+}
+
+// ========== INVENTORY FUNCTIONS ==========
+function switchInventoryTab(tab) {
+    currentInventoryFilter = tab;
+    
+    document.querySelectorAll('#step2 .tab-btn').forEach(btn => btn.classList.remove('active'));
+    const index = tab === 'stock' ? 0 : tab === 'installed' ? 1 : 2;
+    document.querySelectorAll('#step2 .tab-btn')[index].classList.add('active');
+    
+    loadInventoryList();
+}
+
+function loadInventoryList(query = '') {
+    const list = document.getElementById('inventory-list');
+    list.innerHTML = '';
+    
+    const items = Object.keys(db.inventory)
+        .filter(sn => db.inventory[sn].status === currentInventoryFilter)
+        .filter(sn => !query || 
+            sn.toLowerCase().includes(query.toLowerCase()) || 
+            db.inventory[sn].ref.toLowerCase().includes(query.toLowerCase()))
+        .sort((a, b) => new Date(db.inventory[b].date) - new Date(db.inventory[a].date));
+    
+    if (items.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun élément</p>';
+        return;
+    }
+    
+    items.forEach(sn => {
+        const item = db.inventory[sn];
+        const statusClass = `status-${item.status}`;
+        const statusText = {
+            stock: '✓ EN STOCK',
+            installed: '🔧 INSTALLÉ',
+            defect: '✗ DÉFAUT',
+            maintenance: '⚙️ MAINTENANCE'
+        }[item.status];
+        
+        list.innerHTML += `
+            <div class="inventory-card" onclick="curInventory='${escapeHtml(sn)}';nextStep(9);">
+                <div class="inventory-header">
+                    <div class="inventory-ref">${escapeHtml(item.ref)}</div>
+                    <div class="inventory-status ${statusClass}">${statusText}</div>
+                </div>
+                <div class="inventory-details">
+                    ${item.type ? `📦 ${item.type.toUpperCase()}` : ''} 
+                    ${item.qty > 1 ? `• Qté: ${item.qty}` : ''}
+                    ${item.assigned_to ? `• Assigné: ${escapeHtml(item.assigned_to)}` : ''}
+                </div>
+                <div class="inventory-sn">S/N: ${escapeHtml(sn)}</div>
+                <div class="inventory-details" style="font-size:11px; margin-top:5px;">
+                    📅 ${new Date(item.date).toLocaleDateString('fr-FR')}
+                </div>
+            </div>
+        `;
+    });
+}
+
+function filterInventory() {
+    const query = document.getElementById('searchBarInventory').value;
+    loadInventoryList(query);
+}
+
+// ========== INTERVENTION WORKFLOW ==========
 function setTime(id) {
     const n = new Date();
     document.getElementById(id).value = n.getHours().toString().padStart(2, '0') + ':' + 
@@ -1806,22 +2292,22 @@ function selectType(el, type) {
     document.querySelectorAll('.type-chip').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     selectedType = type;
-    
-    // Show/hide reception section
-    const receptionSection = document.getElementById('reception-section');
-    if (type === 'RÉCEPTION') {
-        receptionSection.style.display = 'block';
-        if (receptionProducts.length === 0) {
-            addReceptionProduct();
-        }
-    } else {
-        receptionSection.style.display = 'none';
-    }
 }
 
 function toggleStaff(el) {
     el.classList.toggle('selected');
     staff = Array.from(document.querySelectorAll('.staff-chip.selected')).map(c => c.textContent);
+}
+
+function applyInterventionTemplate(templateKey) {
+    if (!templateKey || !INTERVENTION_TEMPLATES[templateKey]) return;
+    
+    const template = INTERVENTION_TEMPLATES[templateKey];
+    if (document.getElementById('task_mat')) document.getElementById('task_mat').value = template.mat;
+    if (document.getElementById('task_done')) document.getElementById('task_done').value = template.done;
+    if (document.getElementById('task_network')) document.getElementById('task_network').value = template.network;
+    
+    showToast('✓ Template appliqué', 'success');
 }
 
 function requestGeolocation() {
@@ -1842,116 +2328,34 @@ function requestGeolocation() {
     }
 }
 
-function validateStep1() {
+function validateStep3() {
     if (!selectedType) {
-        showToast('⚠️ Sélectionnez un type d\'intervention', 'error');
+        showToast('⚠️ Sélectionnez un type', 'error');
         return;
     }
     if (staff.length === 0) {
-        showToast('⚠️ Sélectionnez au moins un membre de l\'équipe', 'error');
+        showToast('⚠️ Sélectionnez l\'équipe', 'error');
         return;
     }
     if (!document.getElementById('time_in').value) {
-        showToast('⚠️ Indiquez l\'heure d\'arrivée', 'error');
+        showToast('⚠️ Heure d\'arrivée requise', 'error');
         return;
     }
-    nextStep(2);
-}
-
-function validateStep2() {
-    nextStep(3);
-}
-
-function validateStep3() {
-    const taskMat = document.getElementById('task_mat').value.trim();
-    const taskDone = document.getElementById('task_done').value.trim();
-    if (!taskMat || !taskDone) {
-        showToast('⚠️ Remplissez le matériel et le compte-rendu', 'error');
-        return;
-    }
+    hasUnsavedChanges = true;
     nextStep(4);
 }
 
-// ========== RECEPTION PRODUIT ==========
-let productCounter = 0;
-
-function addReceptionProduct() {
-    const id = productCounter++;
-    const container = document.getElementById('reception-products');
-    
-    const productDiv = document.createElement('div');
-    productDiv.className = 'product-item';
-    productDiv.id = `product-${id}`;
-    productDiv.innerHTML = `
-        <div class="product-item-header">
-            <input type="text" placeholder="Référence produit (ex: Samsung QM85R-B)" 
-                   id="product-ref-${id}" class="photo-input" style="margin:0; flex:1; margin-right:10px;">
-            <select id="product-status-${id}" class="photo-input" style="width:auto; margin:0;">
-                <option value="ok">✓ OK</option>
-                <option value="defect">✗ Défaut</option>
-                <option value="partial">◐ Partiel</option>
-            </select>
-        </div>
-        <input type="text" placeholder="Numéro de série" id="product-sn-${id}" class="photo-input" style="margin:8px 0 0 0;">
-        <textarea placeholder="Remarques / Défauts constatés" id="product-notes-${id}" class="photo-input" 
-                  rows="2" style="margin:8px 0 0 0; min-height:60px;"></textarea>
-        <div class="product-tests">
-            <div style="font-size:11px; font-weight:900; color:var(--info); margin-bottom:8px; text-transform:uppercase;">Tests réception</div>
-            <div class="test-item">
-                <input type="checkbox" id="test-visual-${id}">
-                <label for="test-visual-${id}">État physique OK (pas de dommage)</label>
-            </div>
-            <div class="test-item">
-                <input type="checkbox" id="test-power-${id}">
-                <label for="test-power-${id}">Allumage / Mise sous tension OK</label>
-            </div>
-            <div class="test-item">
-                <input type="checkbox" id="test-display-${id}">
-                <label for="test-display-${id}">Affichage / Image OK (pas de pixels morts)</label>
-            </div>
-            <div class="test-item">
-                <input type="checkbox" id="test-accessories-${id}">
-                <label for="test-accessories-${id}">Accessoires complets (câbles, télécommande...)</label>
-            </div>
-        </div>
-        <button class="btn-outline" onclick="removeReceptionProduct(${id})" 
-                style="margin-top:10px; padding:8px; font-size:11px; border-color:var(--danger); color:var(--danger);">
-            🗑️ Retirer ce produit
-        </button>
-    `;
-    
-    container.appendChild(productDiv);
-    
-    receptionProducts.push({
-        id: id,
-        ref: '',
-        sn: '',
-        status: 'ok',
-        notes: '',
-        tests: {}
-    });
+function validateStep4() {
+    nextStep(5);
 }
 
-function removeReceptionProduct(id) {
-    document.getElementById(`product-${id}`).remove();
-    receptionProducts = receptionProducts.filter(p => p.id !== id);
-}
-
-function getReceptionData() {
-    return receptionProducts.map(p => {
-        return {
-            ref: document.getElementById(`product-ref-${p.id}`)?.value || '',
-            sn: document.getElementById(`product-sn-${p.id}`)?.value || '',
-            status: document.getElementById(`product-status-${p.id}`)?.value || 'ok',
-            notes: document.getElementById(`product-notes-${p.id}`)?.value || '',
-            tests: {
-                visual: document.getElementById(`test-visual-${p.id}`)?.checked || false,
-                power: document.getElementById(`test-power-${p.id}`)?.checked || false,
-                display: document.getElementById(`test-display-${p.id}`)?.checked || false,
-                accessories: document.getElementById(`test-accessories-${p.id}`)?.checked || false
-            }
-        };
-    }).filter(p => p.ref); // Only keep products with a reference
+function validateStep5() {
+    if (!document.getElementById('task_mat').value.trim() || 
+        !document.getElementById('task_done').value.trim()) {
+        showToast('⚠️ Matériel et compte-rendu requis', 'error');
+        return;
+    }
+    nextStep(6);
 }
 
 // ========== PHOTO MANAGEMENT ==========
@@ -1959,29 +2363,30 @@ function handlePhotos(input, type) {
     const files = Array.from(input.files);
     if (files.length === 0) return;
     
+    processPhotoFiles(files, type);
+    input.value = '';
+}
+
+function handleReceptionPhotos(input) {
+    const files = Array.from(input.files);
+    if (files.length === 0) return;
+    
     showToast(`📸 Traitement de ${files.length} photo(s)...`, 'info');
     
     files.forEach(file => {
         compressImage(file, (compressedDataUrl, originalSize, compressedSize) => {
-            const imgObj = {
+            receptionPhotos.push({
                 src: compressedDataUrl,
                 note: "",
                 originalSize: originalSize,
                 compressedSize: compressedSize,
-                rotation: 0,
-                annotations: []
-            };
-            
-            if (type === 'before') photosBefore.push(imgObj);
-            else if (type === 'during') photosDuring.push(imgObj);
-            else photosAfter.push(imgObj);
-            
-            renderGalleries();
+                rotation: 0
+            });
+            renderReceptionGallery();
+            hasUnsavedChanges = true;
         });
     });
     
-    showToast(`✓ ${files.length} photo(s) ajoutée(s)`, 'success');
-    hasUnsavedChanges = true;
     input.value = '';
 }
 
@@ -2048,7 +2453,6 @@ function renderGallery(type, photos) {
     
     photos.forEach((p, i) => {
         const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB`;
-        const hasAnnotations = p.annotations && p.annotations.length > 0;
         
         container.innerHTML += `
             <div class="photo-card">
@@ -2056,21 +2460,46 @@ function renderGallery(type, photos) {
                      style="transform: rotate(${p.rotation}deg);"
                      onclick="openImageModal('${type}', ${i})"
                      alt="Photo ${type}">
-                <div class="photo-size">
-                    📦 ${sizeInfo} 
-                    ${hasAnnotations ? `| ✏️ ${p.annotations.length} mesure(s)` : ''}
-                </div>
+                <div class="photo-size">📦 ${sizeInfo}</div>
                 <input type="text" class="photo-input" placeholder="Légende..." 
-                       oninput="photos${type.charAt(0).toUpperCase() + type.slice(1)}[${i}].note=this.value" 
+                       oninput="photos${type.charAt(0).toUpperCase() + type.slice(1)}[${i}].note=this.value; hasUnsavedChanges=true;" 
                        value="${escapeHtml(p.note)}">
                 <div class="photo-controls">
                     <button onclick="rotatePhoto('${type}', ${i})">🔄</button>
-                    <button onclick="openAnnotationModal('${type}', ${i})" style="border-color:var(--gold); color:var(--gold);">
-                        ✏️ Annoter
-                    </button>
-                    <button onclick="removePhoto('${type}', ${i})" style="border-color:var(--danger); color:var(--danger);">
-                        🗑️
-                    </button>
+                    <button onclick="removePhoto('${type}', ${i})" style="border-color:var(--danger); color:var(--danger);">🗑️</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+function renderReceptionGallery() {
+    const container = document.getElementById('gallery-reception');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (receptionPhotos.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0; font-size:13px;">Aucune photo</p>';
+        return;
+    }
+    
+    receptionPhotos.forEach((p, i) => {
+        const sizeInfo = `${(p.compressedSize / 1024).toFixed(1)} KB`;
+        
+        container.innerHTML += `
+            <div class="photo-card">
+                <img src="${escapeHtml(p.src)}" 
+                     style="transform: rotate(${p.rotation}deg);"
+                     onclick="openImageModal('reception', ${i})"
+                     alt="Photo reception">
+                <div class="photo-size">📦 ${sizeInfo}</div>
+                <input type="text" class="photo-input" placeholder="Légende..." 
+                       oninput="receptionPhotos[${i}].note=this.value; hasUnsavedChanges=true;" 
+                       value="${escapeHtml(p.note)}">
+                <div class="photo-controls">
+                    <button onclick="rotateReceptionPhoto(${i})">🔄</button>
+                    <button onclick="removeReceptionPhoto(${i})" style="border-color:var(--danger); color:var(--danger);">🗑️</button>
                 </div>
             </div>
         `;
@@ -2081,6 +2510,12 @@ function rotatePhoto(type, index) {
     const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
     photoArray[index].rotation = (photoArray[index].rotation + 90) % 360;
     renderGalleries();
+    hasUnsavedChanges = true;
+}
+
+function rotateReceptionPhoto(index) {
+    receptionPhotos[index].rotation = (receptionPhotos[index].rotation + 90) % 360;
+    renderReceptionGallery();
     hasUnsavedChanges = true;
 }
 
@@ -2101,10 +2536,29 @@ function removePhoto(type, index) {
     );
 }
 
+function removeReceptionPhoto(index) {
+    showModal(
+        'Supprimer la photo',
+        'Êtes-vous sûr ?',
+        'Supprimer',
+        () => {
+            receptionPhotos.splice(index, 1);
+            renderReceptionGallery();
+            showToast('✓ Photo supprimée', 'success');
+            hasUnsavedChanges = true;
+        }
+    );
+}
+
 function openImageModal(type, index) {
-    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
-    if (photoArray[index]) {
-        document.getElementById('modalImage').src = photoArray[index].src;
+    let photo;
+    if (type === 'before') photo = photosBefore[index];
+    else if (type === 'during') photo = photosDuring[index];
+    else if (type === 'after') photo = photosAfter[index];
+    else if (type === 'reception') photo = receptionPhotos[index];
+    
+    if (photo) {
+        document.getElementById('modalImage').src = photo.src;
         document.getElementById('imageModal').classList.add('active');
     }
 }
@@ -2112,316 +2566,6 @@ function openImageModal(type, index) {
 function closeImageModal() {
     document.getElementById('imageModal').classList.remove('active');
 }
-
-// ========== ANNOTATION SYSTEM ==========
-function openAnnotationModal(type, index) {
-    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
-    const photo = photoArray[index];
-    
-    currentAnnotationPhoto = { type, index };
-    annotations = photo.annotations || [];
-    
-    const modal = document.getElementById('annotationModal');
-    const img = document.getElementById('annotation-image');
-    const canvas = document.getElementById('annotation-canvas');
-    
-    img.src = photo.src;
-    
-    img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        canvas.style.width = img.offsetWidth + 'px';
-        canvas.style.height = img.offsetHeight + 'px';
-        
-        annotationCanvas = canvas;
-        annotationCtx = canvas.getContext('2d');
-        
-        redrawAnnotations();
-        setupAnnotationListeners();
-    };
-    
-    modal.classList.add('active');
-    selectAnnotationTool('measure');
-}
-
-function selectAnnotationTool(tool) {
-    currentAnnotationType = tool;
-    
-    document.querySelectorAll('.annotation-tool-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    const toolBtn = document.getElementById(`tool-${tool}`);
-    if (toolBtn) toolBtn.classList.add('active');
-}
-
-function setupAnnotationListeners() {
-    const canvas = annotationCanvas;
-    
-    canvas.removeEventListener('mousedown', startAnnotation);
-    canvas.removeEventListener('mousemove', drawAnnotation);
-    canvas.removeEventListener('mouseup', endAnnotation);
-    canvas.removeEventListener('touchstart', startAnnotation);
-    canvas.removeEventListener('touchmove', drawAnnotation);
-    canvas.removeEventListener('touchend', endAnnotation);
-    
-    canvas.addEventListener('mousedown', startAnnotation);
-    canvas.addEventListener('mousemove', drawAnnotation);
-    canvas.addEventListener('mouseup', endAnnotation);
-    canvas.addEventListener('touchstart', startAnnotation, { passive: false });
-    canvas.addEventListener('touchmove', drawAnnotation, { passive: false });
-    canvas.addEventListener('touchend', endAnnotation);
-}
-
-function getAnnotationPos(e) {
-    const canvas = annotationCanvas;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    
-    return {
-        x: (clientX - rect.left) * scaleX,
-        y: (clientY - rect.top) * scaleY
-    };
-}
-
-function startAnnotation(e) {
-    e.preventDefault();
-    isAnnotating = true;
-    annotationStartPos = getAnnotationPos(e);
-    currentAnnotationColor = document.getElementById('annotation-color').value;
-}
-
-function drawAnnotation(e) {
-    if (!isAnnotating) return;
-    e.preventDefault();
-    
-    const pos = getAnnotationPos(e);
-    const ctx = annotationCtx;
-    
-    redrawAnnotations();
-    
-    ctx.strokeStyle = currentAnnotationColor;
-    ctx.fillStyle = currentAnnotationColor;
-    ctx.lineWidth = CONFIG.ANNOTATION_LINE_WIDTH;
-    ctx.font = `bold ${CONFIG.ANNOTATION_FONT_SIZE}px "Darker Grotesque"`;
-    
-    if (currentAnnotationType === 'measure') {
-        ctx.beginPath();
-        ctx.moveTo(annotationStartPos.x, annotationStartPos.y);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.stroke();
-        
-        ctx.beginPath();
-        ctx.arc(annotationStartPos.x, annotationStartPos.y, 4, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2);
-        ctx.fill();
-        
-        const measureValue = document.getElementById('measure-value').value || '?';
-        const midX = (annotationStartPos.x + pos.x) / 2;
-        const midY = (annotationStartPos.y + pos.y) / 2;
-        
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-        const textWidth = ctx.measureText(measureValue).width;
-        ctx.fillRect(midX - textWidth / 2 - 8, midY - CONFIG.ANNOTATION_FONT_SIZE - 4, 
-                    textWidth + 16, CONFIG.ANNOTATION_FONT_SIZE + 8);
-        
-        ctx.fillStyle = currentAnnotationColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(measureValue, midX, midY);
-    } else if (currentAnnotationType === 'arrow') {
-        drawArrow(ctx, annotationStartPos.x, annotationStartPos.y, pos.x, pos.y);
-    }
-}
-
-function drawArrow(ctx, x1, y1, x2, y2) {
-    const headLength = 15;
-    const angle = Math.atan2(y2 - y1, x2 - x1);
-    
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(x2 - headLength * Math.cos(angle - Math.PI / 6), 
-               y2 - headLength * Math.sin(angle - Math.PI / 6));
-    ctx.lineTo(x2 - headLength * Math.cos(angle + Math.PI / 6), 
-               y2 - headLength * Math.sin(angle + Math.PI / 6));
-    ctx.closePath();
-    ctx.fill();
-}
-
-function endAnnotation(e) {
-    if (!isAnnotating) return;
-    e.preventDefault();
-    
-    const pos = getAnnotationPos(e);
-    const measureValue = document.getElementById('measure-value').value || '';
-    
-    const annotation = {
-        type: currentAnnotationType,
-        start: annotationStartPos,
-        end: pos,
-        color: currentAnnotationColor,
-        measure: measureValue
-    };
-    
-    annotations.push(annotation);
-    isAnnotating = false;
-    
-    redrawAnnotations();
-}
-
-function redrawAnnotations() {
-    const ctx = annotationCtx;
-    ctx.clearRect(0, 0, annotationCanvas.width, annotationCanvas.height);
-    
-    annotations.forEach(ann => {
-        ctx.strokeStyle = ann.color;
-        ctx.fillStyle = ann.color;
-        ctx.lineWidth = CONFIG.ANNOTATION_LINE_WIDTH;
-        ctx.font = `bold ${CONFIG.ANNOTATION_FONT_SIZE}px "Darker Grotesque"`;
-        
-        if (ann.type === 'measure') {
-            ctx.beginPath();
-            ctx.moveTo(ann.start.x, ann.start.y);
-            ctx.lineTo(ann.end.x, ann.end.y);
-            ctx.stroke();
-            
-            ctx.beginPath();
-            ctx.arc(ann.start.x, ann.start.y, 4, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(ann.end.x, ann.end.y, 4, 0, Math.PI * 2);
-            ctx.fill();
-            
-            const midX = (ann.start.x + ann.end.x) / 2;
-            const midY = (ann.start.y + ann.end.y) / 2;
-            
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-            const textWidth = ctx.measureText(ann.measure).width;
-            ctx.fillRect(midX - textWidth / 2 - 8, midY - CONFIG.ANNOTATION_FONT_SIZE - 4, 
-                        textWidth + 16, CONFIG.ANNOTATION_FONT_SIZE + 8);
-            
-            ctx.fillStyle = ann.color;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(ann.measure, midX, midY);
-        } else if (ann.type === 'arrow') {
-            drawArrow(ctx, ann.start.x, ann.start.y, ann.end.x, ann.end.y);
-        }
-    });
-}
-
-function undoAnnotation() {
-    if (annotations.length > 0) {
-        annotations.pop();
-        redrawAnnotations();
-        showToast('Annotation annulée', 'info');
-    }
-}
-
-function clearAnnotations() {
-    if (annotations.length > 0) {
-        showModal(
-            'Effacer les annotations',
-            'Êtes-vous sûr ?',
-            'Effacer',
-            () => {
-                annotations = [];
-                redrawAnnotations();
-                showToast('Annotations effacées', 'success');
-            }
-        );
-    }
-}
-
-function saveAnnotation() {
-    if (!currentAnnotationPhoto) return;
-    
-    const { type, index } = currentAnnotationPhoto;
-    const photoArray = type === 'before' ? photosBefore : type === 'during' ? photosDuring : photosAfter;
-    
-    photoArray[index].annotations = [...annotations];
-    
-    const tempCanvas = document.createElement('canvas');
-    const img = document.getElementById('annotation-image');
-    tempCanvas.width = img.naturalWidth;
-    tempCanvas.height = img.naturalHeight;
-    
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCtx.drawImage(img, 0, 0);
-    
-    const scaleX = tempCanvas.width / annotationCanvas.width;
-    const scaleY = tempCanvas.height / annotationCanvas.height;
-    
-    annotations.forEach(ann => {
-        tempCtx.strokeStyle = ann.color;
-        tempCtx.fillStyle = ann.color;
-        tempCtx.lineWidth = CONFIG.ANNOTATION_LINE_WIDTH * Math.max(scaleX, scaleY);
-        tempCtx.font = `bold ${CONFIG.ANNOTATION_FONT_SIZE * Math.max(scaleX, scaleY)}px "Darker Grotesque"`;
-        
-        const startX = ann.start.x * scaleX;
-        const startY = ann.start.y * scaleY;
-        const endX = ann.end.x * scaleX;
-        const endY = ann.end.y * scaleY;
-        
-        if (ann.type === 'measure') {
-            tempCtx.beginPath();
-            tempCtx.moveTo(startX, startY);
-            tempCtx.lineTo(endX, endY);
-            tempCtx.stroke();
-            
-            tempCtx.beginPath();
-            tempCtx.arc(startX, startY, 6 * Math.max(scaleX, scaleY), 0, Math.PI * 2);
-            tempCtx.fill();
-            tempCtx.beginPath();
-            tempCtx.arc(endX, endY, 6 * Math.max(scaleX, scaleY), 0, Math.PI * 2);
-            tempCtx.fill();
-            
-            const midX = (startX + endX) / 2;
-            const midY = (startY + endY) / 2;
-            
-            tempCtx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-            const textWidth = tempCtx.measureText(ann.measure).width;
-            const fontSize = CONFIG.ANNOTATION_FONT_SIZE * Math.max(scaleX, scaleY);
-            tempCtx.fillRect(midX - textWidth / 2 - 10, midY - fontSize - 5, 
-                            textWidth + 20, fontSize + 10);
-            
-            tempCtx.fillStyle = ann.color;
-            tempCtx.textAlign = 'center';
-            tempCtx.textBaseline = 'middle';
-            tempCtx.fillText(ann.measure, midX, midY);
-        } else if (ann.type === 'arrow') {
-            drawArrow(tempCtx, startX, startY, endX, endY);
-        }
-    });
-    
-    photoArray[index].src = tempCanvas.toDataURL('image/jpeg', CONFIG.IMAGE_QUALITY);
-    photoArray[index].compressedSize = Math.round((photoArray[index].src.length * 3) / 4);
-    
-    renderGalleries();
-    closeAnnotationModal();
-    showToast(`✓ Photo annotée avec ${annotations.length} mesure(s)`, 'success');
-    hasUnsavedChanges = true;
-}
-
-function closeAnnotationModal() {
-    document.getElementById('annotationModal').classList.remove('active');
-    currentAnnotationPhoto = null;
-    annotations = [];
-    isAnnotating = false;
-}
-
-// À SUIVRE dans le prochain fichier (signature, save, export, etc.)
 
 // ========== SIGNATURE ==========
 const canvas = document.getElementById('sig-canvas');
@@ -2508,19 +2652,19 @@ function saveEntry() {
     }
     
     if (!document.getElementById('time_out').value) {
-        showToast('⚠️ Indiquez l\'heure de départ', 'error');
+        showToast('⚠️ Heure de départ requise', 'error');
         return;
     }
     
     const checks = Array.from(document.querySelectorAll('#checklist-container input[type="checkbox"]'));
     if (!checks.every(c => c.checked)) {
-        showToast('⚠️ Validez tous les points de la checklist', 'error');
+        showToast('⚠️ Validez tous les points', 'error');
         return;
     }
     
     const canvas = document.getElementById('sig-canvas');
     if (isCanvasBlank(canvas)) {
-        showToast('⚠️ Signature client requise', 'error');
+        showToast('⚠️ Signature requise', 'error');
         return;
     }
     
@@ -2530,7 +2674,7 @@ function saveEntry() {
     setTimeout(async () => {
         try {
             const testsChecked = Array.from(document.querySelectorAll('#tests-checklist input[type="checkbox"]'))
-                .map((checkbox, i) => ({
+                .map((checkbox) => ({
                     label: checkbox.nextElementSibling.textContent,
                     checked: checkbox.checked
                 }));
@@ -2555,17 +2699,20 @@ function saveEntry() {
                 after: [...photosAfter],
                 sig: canvas.toDataURL('image/png', 0.5),
                 gps: gpsCoords ? { lat: gpsCoords.lat, lng: gpsCoords.lng } : null,
-                reception: selectedType === 'RÉCEPTION' ? getReceptionData() : null
             };
             
-            db[cur].entries.push(entry);
+            db.projects[cur].entries.push(entry);
+            
+            // Update inventory if equipment was installed
+            updateInventoryFromInstallation(entry);
+            
             await saveToIndexedDB();
             
             document.getElementById('save-spinner').style.display = 'none';
             document.getElementById('btn-save').disabled = false;
             
             showToast('✅ Intervention enregistrée !', 'success');
-            nextStep(5);
+            nextStep(8);
         } catch (e) {
             document.getElementById('save-spinner').style.display = 'none';
             document.getElementById('btn-save').disabled = false;
@@ -2575,48 +2722,237 @@ function saveEntry() {
     }, 500);
 }
 
-// ========== RESET FORM ==========
-function resetForm() {
+function updateInventoryFromInstallation(entry) {
+    // Try to extract serial numbers from material description
+    const matText = entry.mat || '';
+    const snMatches = matText.match(/S\/N:\s*([A-Z0-9]+)/gi);
+    
+    if (snMatches) {
+        snMatches.forEach(match => {
+            const sn = match.replace(/S\/N:\s*/i, '').trim();
+            if (db.inventory[sn] && db.inventory[sn].status === 'stock') {
+                db.inventory[sn].status = 'installed';
+                db.inventory[sn].assigned_to = cur;
+                db.inventory[sn].installation_date = new Date().toISOString();
+            }
+        });
+    }
+}
+
+// ========== RESET FORMS ==========
+function resetInterventionForm() {
     staff = [];
     photosBefore = [];
     photosDuring = [];
     photosAfter = [];
     selectedType = '';
-    receptionProducts = [];
-    productCounter = 0;
     
     document.querySelectorAll('.type-chip, .staff-chip').forEach(c => c.classList.remove('selected'));
-    document.getElementById('task_done').value = '';
-    document.getElementById('task_mat').value = '';
+    if (document.getElementById('task_done')) document.getElementById('task_done').value = '';
+    if (document.getElementById('task_mat')) document.getElementById('task_mat').value = '';
     if (document.getElementById('task_network')) document.getElementById('task_network').value = '';
     if (document.getElementById('task_parts')) document.getElementById('task_parts').value = '';
     if (document.getElementById('task_recommendations')) document.getElementById('task_recommendations').value = '';
     if (document.getElementById('client_context')) document.getElementById('client_context').value = '';
     document.getElementById('time_in').value = '';
     document.getElementById('time_out').value = '';
-    
-    if (document.getElementById('reception-products')) {
-        document.getElementById('reception-products').innerHTML = '';
-    }
+    if (document.getElementById('intervention-template')) document.getElementById('intervention-template').value = '';
     
     renderGalleries();
     clearSig();
+    hasUnsavedChanges = true;
 }
 
-// ========== TIMELINE & PROJECT VIEW ==========
-function showTimeline() {
+function resetReceptionForm() {
+    selectedProductType = '';
+    receptionPhotos = [];
+    
+    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+    if (document.getElementById('reception-ref')) document.getElementById('reception-ref').value = '';
+    if (document.getElementById('reception-sn')) document.getElementById('reception-sn').value = '';
+    if (document.getElementById('reception-qty')) document.getElementById('reception-qty').value = '1';
+    if (document.getElementById('reception-status')) document.getElementById('reception-status').value = 'stock';
+    if (document.getElementById('reception-notes')) document.getElementById('reception-notes').value = '';
+    
+    renderReceptionGallery();
+    renderReceptionTests();
+}
+
+// ========== RECEPTION WORKFLOW ==========
+function selectProductTemplate(el, type) {
+    document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedProductType = type;
+    renderReceptionTests();
+}
+
+function renderReceptionTests() {
+    const container = document.getElementById('reception-tests-container');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (!selectedProductType || !PRODUCT_TEST_TEMPLATES[selectedProductType]) {
+        container.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0; font-size:13px;">Sélectionnez un type de produit</p>';
+        return;
+    }
+    
+    const tests = PRODUCT_TEST_TEMPLATES[selectedProductType];
+    
+    tests.forEach(test => {
+        container.innerHTML += `
+            <div class="check-item">
+                <input type="checkbox" id="reception-test-${test.id}">
+                <label for="reception-test-${test.id}">${test.label}</label>
+            </div>
+        `;
+    });
+}
+
+function saveReception() {
+    const ref = document.getElementById('reception-ref').value.trim();
+    const sn = document.getElementById('reception-sn').value.trim();
+    
+    if (!ref || !sn) {
+        showToast('⚠️ Référence et S/N requis', 'error');
+        return;
+    }
+    
+    if (!selectedProductType) {
+        showToast('⚠️ Sélectionnez un type de produit', 'error');
+        return;
+    }
+    
+    if (db.inventory[sn]) {
+        showToast('⚠️ Ce S/N existe déjà', 'error');
+        return;
+    }
+    
+    const tests = {};
+    if (PRODUCT_TEST_TEMPLATES[selectedProductType]) {
+        PRODUCT_TEST_TEMPLATES[selectedProductType].forEach(test => {
+            const checkbox = document.getElementById(`reception-test-${test.id}`);
+            tests[test.id] = checkbox ? checkbox.checked : false;
+        });
+    }
+    
+    const item = {
+        ref: ref,
+        sn: sn,
+        type: selectedProductType,
+        qty: parseInt(document.getElementById('reception-qty').value) || 1,
+        status: document.getElementById('reception-status').value,
+        notes: document.getElementById('reception-notes').value,
+        tests: tests,
+        photos: [...receptionPhotos],
+        date: new Date().toISOString(),
+        assigned_to: null,
+    };
+    
+    db.inventory[sn] = item;
+    saveToIndexedDB();
+    
+    showToast('✅ Réception enregistrée !', 'success');
+    updateAllStats();
+    nextStep(2);
+}
+
+// ========== BARCODE SCANNER ==========
+function startBarcodeScanner() {
+    const container = document.getElementById('scanner-container');
+    const video = document.getElementById('scanner-video');
+    
+    container.style.display = 'block';
+    
+    const codeReader = new ZXing.BrowserMultiFormatReader();
+    
+    codeReader.decodeFromVideoDevice(null, video, (result, err) => {
+        if (result) {
+            const code = result.text;
+            document.getElementById('reception-sn').value = code;
+            showToast(`✓ Code scanné: ${code}`, 'success');
+            stopBarcodeScanner();
+        }
+    });
+    
+    barcodeScanner = codeReader;
+}
+
+function stopBarcodeScanner() {
+    if (barcodeScanner) {
+        barcodeScanner.reset();
+        barcodeScanner = null;
+    }
+    
+    const container = document.getElementById('scanner-container');
+    if (container) container.style.display = 'none';
+}
+
+// ========== INVENTORY SELECTION ==========
+function selectFromInventory() {
+    const modal = document.getElementById('inventorySelectModal');
+    const list = document.getElementById('inventory-select-list');
+    
+    list.innerHTML = '';
+    
+    const stockItems = Object.keys(db.inventory)
+        .filter(sn => db.inventory[sn].status === 'stock');
+    
+    if (stockItems.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0;">Aucun équipement en stock</p>';
+    } else {
+        stockItems.forEach(sn => {
+            const item = db.inventory[sn];
+            list.innerHTML += `
+                <div class="inventory-card" onclick="addInventoryToMaterial('${escapeHtml(sn)}')">
+                    <div class="inventory-header">
+                        <div class="inventory-ref">${escapeHtml(item.ref)}</div>
+                        <div class="inventory-status status-stock">STOCK</div>
+                    </div>
+                    <div class="inventory-sn">S/N: ${escapeHtml(sn)}</div>
+                </div>
+            `;
+        });
+    }
+    
+    modal.classList.add('active');
+}
+
+function addInventoryToMaterial(sn) {
+    const item = db.inventory[sn];
+    const currentMat = document.getElementById('task_mat').value;
+    const newLine = `- ${item.ref} (S/N: ${sn})`;
+    
+    document.getElementById('task_mat').value = currentMat ? 
+        `${currentMat}\n${newLine}` : newLine;
+    
+    closeInventorySelectModal();
+    showToast('✓ Équipement ajouté', 'success');
+    hasUnsavedChanges = true;
+}
+
+function closeInventorySelectModal() {
+    document.getElementById('inventorySelectModal').classList.remove('active');
+}
+
+// ========== PROJECT TIMELINE ==========
+function showProjectTimeline() {
     const t = document.getElementById('timeline');
     t.innerHTML = '';
     
-    const isDone = db[cur].status === 'done';
+    const isDone = db.projects[cur].status === 'done';
     document.getElementById('status-toggle-container').innerHTML = `
         <button class="status-pill ${isDone ? 'status-done' : 'status-ongoing'}" 
-                onclick="toggleStatus()" style="padding:8px 16px; border-radius:25px; font-size:11px; cursor:pointer; border:none;">
+                onclick="toggleProjectStatus()" 
+                style="padding:8px 16px; border-radius:25px; font-size:11px; cursor:pointer; border:none; 
+                       background:${isDone ? 'var(--border)' : 'var(--success)'}; color:white; font-weight:900;">
             ${isDone ? '📦 ARCHIVÉ' : '✅ ACTIF'}
         </button>
     `;
     
-    const entries = db[cur].entries;
+    document.getElementById('view-n').textContent = cur;
+    
+    const entries = db.projects[cur].entries;
     document.getElementById('project-interventions').textContent = entries.length;
     
     let totalMinutes = 0;
@@ -2630,7 +2966,6 @@ function showTimeline() {
             if (minutes > 0) totalMinutes += minutes;
         }
         
-        // Estimate screens from material description
         const matText = (e.mat || '').toLowerCase();
         const screenMatch = matText.match(/(\d+)\s*(?:écran|screen|display)/i);
         if (screenMatch) totalScreens += parseInt(screenMatch[1]);
@@ -2648,39 +2983,11 @@ function showTimeline() {
         
         let testsHTML = '';
         if (e.tests && e.tests.length > 0) {
-            testsHTML = '<div class="section-block" style="border-left-color:var(--success)"><strong>Tests effectués:</strong><br>';
+            testsHTML = '<div class="section-block" style="border-left-color:var(--success)"><strong>Tests:</strong><br>';
             e.tests.forEach(test => {
                 testsHTML += `${test.checked ? '✓' : '✗'} ${escapeHtml(test.label)}<br>`;
             });
             testsHTML += '</div>';
-        }
-        
-        let receptionHTML = '';
-        if (e.reception && e.reception.length > 0) {
-            receptionHTML = '<div class="reception-section" style="margin:15px 0;"><h4>📦 Réception Produits</h4>';
-            e.reception.forEach(prod => {
-                const statusClass = prod.status === 'ok' ? 'status-ok' : prod.status === 'defect' ? 'status-defect' : 'status-partial';
-                const statusText = prod.status === 'ok' ? '✓ OK' : prod.status === 'defect' ? '✗ Défaut' : '◐ Partiel';
-                receptionHTML += `
-                    <div class="product-item">
-                        <div class="product-item-header">
-                            <div class="product-name">${escapeHtml(prod.ref)}</div>
-                            <div class="product-status ${statusClass}">${statusText}</div>
-                        </div>
-                        ${prod.sn ? `<div class="product-details">S/N: ${escapeHtml(prod.sn)}</div>` : ''}
-                        ${prod.notes ? `<div class="product-details" style="margin-top:8px;">${escapeHtml(prod.notes)}</div>` : ''}
-                        <div class="product-tests">
-                            <div style="font-size:10px; color:#888; margin-top:8px;">
-                                ${prod.tests.visual ? '✓' : '✗'} État physique | 
-                                ${prod.tests.power ? '✓' : '✗'} Allumage | 
-                                ${prod.tests.display ? '✓' : '✗'} Affichage | 
-                                ${prod.tests.accessories ? '✓' : '✗'} Accessoires
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            receptionHTML += '</div>';
         }
         
         t.innerHTML += `
@@ -2696,18 +3003,17 @@ function showTimeline() {
                 ${e.context ? `<div class="section-block" style="border-left-color:var(--info);">
                     <strong>📝 Contexte:</strong><br>${escapeHtml(e.context).replace(/\n/g, '<br>')}
                 </div>` : ''}
-                ${receptionHTML}
                 <div class="section-block">
                     <strong>🔧 Travaux:</strong><br>${escapeHtml(e.done).replace(/\n/g, '<br>')}
                 </div>
                 <div class="section-block" style="border-left-color:var(--warning);">
-                    <strong>🖥️ Matériel installé:</strong><br>${escapeHtml(e.mat).replace(/\n/g, '<br>')}
+                    <strong>🖥️ Matériel:</strong><br>${escapeHtml(e.mat).replace(/\n/g, '<br>')}
                 </div>
                 ${e.network ? `<div class="section-block" style="border-left-color:var(--info);">
-                    <strong>🌐 Configuration réseau:</strong><br>${escapeHtml(e.network).replace(/\n/g, '<br>')}
+                    <strong>🌐 Réseau:</strong><br>${escapeHtml(e.network).replace(/\n/g, '<br>')}
                 </div>` : ''}
                 ${e.parts ? `<div class="section-block">
-                    <strong>📦 Pièces/Consommables:</strong><br>${escapeHtml(e.parts).replace(/\n/g, '<br>')}
+                    <strong>📦 Pièces:</strong><br>${escapeHtml(e.parts).replace(/\n/g, '<br>')}
                 </div>` : ''}
                 ${e.recommendations ? `<div class="section-block" style="border-left-color:var(--success);">
                     <strong>💡 Recommandations:</strong><br>${escapeHtml(e.recommendations).replace(/\n/g, '<br>')}
@@ -2716,22 +3022,23 @@ function showTimeline() {
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:15px 0;">
                     <div>
                         <div style="font-size:10px; font-weight:700; color:#e67e22; margin-bottom:5px;">AVANT (${e.before.length})</div>
-                        ${e.before.map(p => renderPhotoInTimeline(p, '#e67e22')).join('')}
+                        ${e.before.map(p => renderPhotoInTimeline(p)).join('')}
                     </div>
                     <div>
                         <div style="font-size:10px; font-weight:700; color:#3498db; margin-bottom:5px;">PENDANT (${(e.during || []).length})</div>
-                        ${(e.during || []).map(p => renderPhotoInTimeline(p, '#3498db')).join('')}
+                        ${(e.during || []).map(p => renderPhotoInTimeline(p)).join('')}
                     </div>
                     <div>
                         <div style="font-size:10px; font-weight:700; color:#2ecc71; margin-bottom:5px;">APRÈS (${e.after.length})</div>
-                        ${e.after.map(p => renderPhotoInTimeline(p, '#2ecc71')).join('')}
+                        ${e.after.map(p => renderPhotoInTimeline(p)).join('')}
                     </div>
                 </div>
                 <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:15px;">
                     <img src="${escapeHtml(e.sig)}" 
                          style="width:140px; background:white; border-radius:6px; padding:5px; border:2px solid #ddd;">
                     <button class="no-print" 
-                            style="color:var(--danger); border:1px solid var(--danger); background:rgba(255,77,77,0.1); font-size:11px; cursor:pointer; padding:8px 12px; border-radius:6px; font-weight:700;" 
+                            style="color:var(--danger); border:1px solid var(--danger); background:rgba(255,77,77,0.1); 
+                                   font-size:11px; cursor:pointer; padding:8px 12px; border-radius:6px; font-weight:700;" 
                             onclick="confirmDeleteEntry(${e.id})">
                         🗑️ Supprimer
                     </button>
@@ -2756,127 +3063,190 @@ function calculateDuration(timeIn, timeOut) {
     return `${h}h${m > 0 ? m.toString().padStart(2, '0') : ''}`;
 }
 
-function renderPhotoInTimeline(photo, borderColor) {
-    const hasAnnotations = photo.annotations && photo.annotations.length > 0;
+function renderPhotoInTimeline(photo) {
     return `
         <img src="${escapeHtml(photo.src)}" 
-             style="width:100%; border:2px solid ${borderColor}; border-radius:6px; margin-bottom:8px; transform: rotate(${photo.rotation || 0}deg); cursor:pointer;"
-             onclick="openImageModal('', 0)" alt="Photo">
-        ${hasAnnotations ? `<div style="font-size:9px; color:${borderColor}; margin-bottom:5px;">✏️ ${photo.annotations.length} mesure(s)</div>` : ''}
+             style="width:100%; border:2px solid var(--gold); border-radius:6px; margin-bottom:8px; 
+                    transform: rotate(${photo.rotation || 0}deg); cursor:pointer;"
+             onclick="openImageModal('timeline', 0)" alt="Photo">
         ${photo.note ? `<div style="font-size:10px; color:#888; margin-bottom:10px;">${escapeHtml(photo.note)}</div>` : ''}
     `;
+}
+
+function newIntervention() {
+    nextStep(3);
+}
+
+function toggleProjectStatus() {
+    db.projects[cur].status = (db.projects[cur].status === 'done' ? 'ongoing' : 'done');
+    saveToIndexedDB();
+    showProjectTimeline();
+    updateAllStats();
+    showToast(`✓ Projet ${db.projects[cur].status === 'done' ? 'archivé' : 'réactivé'}`, 'success');
 }
 
 function confirmDeleteEntry(id) {
     showModal(
         'Supprimer l\'intervention',
-        'Action irréversible. Continuer ?',
+        'Action irréversible.',
         'Supprimer',
         () => deleteEntry(id)
     );
 }
 
 function deleteEntry(id) {
-    db[cur].entries = db[cur].entries.filter(e => e.id !== id);
+    db.projects[cur].entries = db.projects[cur].entries.filter(e => e.id !== id);
     saveToIndexedDB();
-    showTimeline();
-    updateStats();
+    showProjectTimeline();
+    updateAllStats();
     showToast('✓ Intervention supprimée', 'success');
-}
-
-function newIntervention() {
-    nextStep(1);
-}
-
-function toggleStatus() {
-    db[cur].status = (db[cur].status === 'done' ? 'ongoing' : 'done');
-    saveToIndexedDB();
-    showTimeline();
-    loadList();
-    updateStats();
-    showToast(`✓ Projet ${db[cur].status === 'done' ? 'archivé' : 'réactivé'}`, 'success');
 }
 
 function confirmDeleteProject() {
     showModal(
         '⚠️ Supprimer le projet',
-        `Toutes les interventions pour "${cur}" seront supprimées. Irréversible.`,
+        `Toutes les interventions pour "${cur}" seront supprimées.`,
         'Supprimer',
         deleteFullProject
     );
 }
 
 function deleteFullProject() {
-    delete db[cur];
+    delete db.projects[cur];
     saveToIndexedDB();
-    updateStats();
+    updateAllStats();
     showToast('✓ Projet supprimé', 'success');
-    nextStep(0);
+    nextStep(1);
 }
 
-// ========== LIST & STATS ==========
-function filterProjects() {
-    const query = document.getElementById('searchBar').value.toLowerCase();
-    loadList(query);
-}
-
-function loadList(query = '') {
-    const list = document.getElementById('project-list');
-    list.innerHTML = '';
+// ========== INVENTORY ITEM VIEW ==========
+function showInventoryItem() {
+    const item = db.inventory[curInventory];
+    if (!item) {
+        showToast('⚠️ Élément introuvable', 'error');
+        nextStep(2);
+        return;
+    }
     
-    const projects = Object.keys(db)
-        .filter(key => key !== '_version')
-        .sort((a, b) => {
-            const aDate = db[a].entries.length > 0 ? new Date(db[a].entries[db[a].entries.length - 1].timestamp) : new Date(db[a].created);
-            const bDate = db[b].entries.length > 0 ? new Date(db[b].entries[db[b].entries.length - 1].timestamp) : new Date(db[b].created);
-            return bDate - aDate;
+    document.getElementById('inventory-item-ref').textContent = item.ref;
+    document.getElementById('inventory-item-sn').textContent = `S/N: ${curInventory}`;
+    
+    const statusClass = `status-${item.status}`;
+    const statusText = {
+        stock: '✓ EN STOCK',
+        installed: '🔧 INSTALLÉ',
+        defect: '✗ DÉFAUT',
+        maintenance: '⚙️ MAINTENANCE'
+    }[item.status];
+    
+    let testsHTML = '';
+    if (item.tests && Object.keys(item.tests).length > 0) {
+        testsHTML = '<div class="section-block"><strong>Tests de réception:</strong><br>';
+        Object.entries(item.tests).forEach(([key, value]) => {
+            const label = PRODUCT_TEST_TEMPLATES[item.type]?.find(t => t.id === key)?.label || key;
+            testsHTML += `${value ? '✓' : '✗'} ${label}<br>`;
         });
+        testsHTML += '</div>';
+    }
     
-    let displayedCount = 0;
+    document.getElementById('inventory-item-details').innerHTML = `
+        <div class="section-block">
+            <strong>Type:</strong> ${item.type ? item.type.toUpperCase() : 'N/A'}<br>
+            <strong>Statut:</strong> <span class="inventory-status ${statusClass}">${statusText}</span><br>
+            <strong>Quantité:</strong> ${item.qty || 1}<br>
+            <strong>Date réception:</strong> ${new Date(item.date).toLocaleDateString('fr-FR')}<br>
+            ${item.assigned_to ? `<strong>Assigné à:</strong> ${escapeHtml(item.assigned_to)}<br>` : ''}
+            ${item.installation_date ? `<strong>Date installation:</strong> ${new Date(item.installation_date).toLocaleDateString('fr-FR')}<br>` : ''}
+        </div>
+        ${item.notes ? `<div class="section-block"><strong>Notes:</strong><br>${escapeHtml(item.notes)}</div>` : ''}
+        ${testsHTML}
+    `;
     
-    projects.forEach(id => {
-        const project = db[id];
-        
-        if (project.status !== currentFilter) return;
-        if (query && !id.toLowerCase().includes(query)) return;
-        
-        const lastEntry = project.entries[project.entries.length - 1];
-        const lastDate = lastEntry ? lastEntry.date : 'Aucune intervention';
-        const entryCount = project.entries.length;
-        
-        list.innerHTML += `
-            <div class="folder-card" onclick="cur='${escapeHtml(id)}';nextStep(5);">
-                <div class="folder-info">
-                    <div class="folder-name">${escapeHtml(id)}</div>
-                    <div class="folder-meta">
-                        ${entryCount} intervention${entryCount > 1 ? 's' : ''} • ${escapeHtml(lastDate)}
-                    </div>
-                </div>
-                <div class="folder-arrow">❯</div>
-            </div>
-        `;
-        displayedCount++;
+    // Photos
+    const photosContainer = document.getElementById('inventory-item-photos');
+    if (item.photos && item.photos.length > 0) {
+        photosContainer.innerHTML = item.photos.map(p => `
+            <img src="${escapeHtml(p.src)}" 
+                 style="width:100%; border-radius:8px; margin-bottom:10px; cursor:pointer;"
+                 onclick="openImageModal('inventory', 0)" alt="Photo">
+            ${p.note ? `<div style="font-size:12px; color:#888; margin-bottom:10px;">${escapeHtml(p.note)}</div>` : ''}
+        `).join('');
+    } else {
+        photosContainer.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0;">Aucune photo</p>';
+    }
+    
+    // Generate QR code
+    generateInventoryQR(curInventory, item);
+}
+
+function generateInventoryQR(sn, item) {
+    const container = document.getElementById('inventory-item-qr');
+    container.innerHTML = '';
+    
+    const qrDiv = document.createElement('div');
+    qrDiv.id = 'qrcode-display';
+    container.appendChild(qrDiv);
+    
+    const qrData = JSON.stringify({
+        sn: sn,
+        ref: item.ref,
+        type: item.type,
+        vertex: 'monaco'
     });
     
-    if (displayedCount === 0) {
-        list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun projet</p>';
-    }
+    new QRCode(qrDiv, {
+        text: qrData,
+        width: 200,
+        height: 200,
+        colorDark: "#D4AF37",
+        colorLight: "#000000",
+    });
+    
+    const label = document.createElement('div');
+    label.style.cssText = 'font-size:12px; margin-top:10px; color:#888;';
+    label.textContent = `QR Code • ${item.ref}`;
+    container.appendChild(label);
 }
 
-function updateStats() {
-    let activeCount = 0;
+function printInventoryLabel() {
+    window.print();
+}
+
+function editInventoryItem() {
+    // Future implementation
+    showToast('🔧 Fonction en développement', 'info');
+}
+
+function confirmDeleteInventoryItem() {
+    showModal(
+        '⚠️ Supprimer l\'équipement',
+        `Supprimer ${curInventory} ?`,
+        'Supprimer',
+        deleteInventoryItem
+    );
+}
+
+function deleteInventoryItem() {
+    delete db.inventory[curInventory];
+    saveToIndexedDB();
+    updateAllStats();
+    showToast('✓ Équipement supprimé', 'success');
+    nextStep(2);
+}
+
+// ========== STATS ==========
+function updateAllStats() {
+    let activeProjects = 0;
     let totalInterventions = 0;
     let totalMinutes = 0;
     let thisMonth = 0;
+    let stockCount = 0;
     
     const now = new Date();
     const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     
-    Object.keys(db).forEach(key => {
-        if (key === '_version') return;
-        const project = db[key];
-        
-        if (project.status === 'ongoing') activeCount++;
+    Object.values(db.projects || {}).forEach(project => {
+        if (project.status === 'ongoing') activeProjects++;
         totalInterventions += project.entries.length;
         
         project.entries.forEach(e => {
@@ -2892,49 +3262,28 @@ function updateStats() {
         });
     });
     
-    document.getElementById('stat-active').textContent = activeCount;
-    document.getElementById('stat-total').textContent = totalInterventions;
+    Object.values(db.inventory || {}).forEach(item => {
+        if (item.status === 'stock') stockCount++;
+    });
+    
+    document.getElementById('stat-active').textContent = activeProjects;
+    document.getElementById('stat-inventory').textContent = stockCount;
+    document.getElementById('stat-month').textContent = thisMonth;
     
     const hours = Math.floor(totalMinutes / 60);
     document.getElementById('stat-hours').textContent = `${hours}h`;
-    document.getElementById('stat-month').textContent = thisMonth;
+    
+    // Update badges
+    document.getElementById('badge-projects').textContent = activeProjects;
+    document.getElementById('badge-inventory').textContent = stockCount;
 }
 
-// ========== PROJECT MANAGEMENT ==========
-function showNewProjectOptions() {
-    const name = prompt('📁 Nom du projet / client :');
-    if (!name) return;
-    
-    const trimmed = name.trim();
-    if (!trimmed) {
-        showToast('⚠️ Le nom ne peut pas être vide', 'error');
-        return;
-    }
-    
-    if (db[trimmed]) {
-        showToast('⚠️ Ce projet existe déjà', 'error');
-        return;
-    }
-    
-    db[trimmed] = {
-        entries: [],
-        status: 'ongoing',
-        created: new Date().toISOString()
-    };
-    
-    saveToIndexedDB();
-    loadList();
-    showToast('✓ Nouveau projet créé', 'success');
-}
-
-// ========== EXPORT FUNCTIONS ==========
+// ========== EXPORT ==========
 function exportToCSV() {
-    let csv = '\uFEFFProjet;Date;Type;Equipe;Arrivee;Depart;Duree;Materiel;Travaux;Reseau;GPS_Lat;GPS_Lng\n';
+    let csv = '\uFEFFProjet;Date;Type;Equipe;Arrivee;Depart;Duree;Materiel;Travaux;GPS_Lat;GPS_Lng\n';
     
-    Object.keys(db).forEach(client => {
-        if (client === '_version') return;
-        
-        db[client].entries.forEach(e => {
+    Object.entries(db.projects || {}).forEach(([client, project]) => {
+        project.entries.forEach(e => {
             const gpsLat = e.gps ? e.gps.lat : '';
             const gpsLng = e.gps ? e.gps.lng : '';
             const duration = calculateDuration(e.in, e.out);
@@ -2947,7 +3296,6 @@ function exportToCSV() {
             csv += `"${escapeCSV(duration)}";`;
             csv += `"${escapeCSV(e.mat)}";`;
             csv += `"${escapeCSV(e.done)}";`;
-            csv += `"${escapeCSV(e.network || '')}";`;
             csv += `"${escapeCSV(gpsLat)}";`;
             csv += `"${escapeCSV(gpsLng)}"\n`;
         });
@@ -2960,7 +3308,7 @@ function exportToCSV() {
 function exportBackup() {
     const backup = {
         version: CONFIG.DB_VERSION,
-        appVersion: '2.0',
+        appVersion: '3.0',
         exportDate: new Date().toISOString(),
         data: db
     };
@@ -2979,19 +3327,20 @@ function importBackup(input) {
         try {
             const backup = JSON.parse(e.target.result);
             
-            if (!backup.data || !backup.version) {
+            if (!backup.data) {
                 throw new Error('Format invalide');
             }
             
             showModal(
                 'Restaurer les données',
-                `${Object.keys(backup.data).length} projets seront importés. Continuer ?`,
+                `Restaurer ${Object.keys(backup.data.projects || {}).length} projets et ${Object.keys(backup.data.inventory || {}).length} équipements ?`,
                 'Restaurer',
                 () => {
                     db = backup.data;
+                    if (!db.projects) db.projects = {};
+                    if (!db.inventory) db.inventory = {};
                     saveToIndexedDB();
-                    loadList();
-                    updateStats();
+                    updateAllStats();
                     showToast('✅ Données restaurées', 'success');
                 }
             );
@@ -3017,7 +3366,7 @@ function downloadFile(content, filename, type) {
 }
 
 function sendProjectMail() {
-    const entries = db[cur].entries;
+    const entries = db.projects[cur].entries;
     if (!entries.length) return;
     
     const lastEntry = entries[entries.length - 1];
@@ -3033,7 +3382,7 @@ function sendProjectMail() {
     if (lastEntry.network) body += `RÉSEAU:\n${lastEntry.network}\n\n`;
     if (lastEntry.recommendations) body += `RECOMMANDATIONS:\n${lastEntry.recommendations}\n\n`;
     if (lastEntry.gps) body += `GPS: ${lastEntry.gps.lat}, ${lastEntry.gps.lng}\n`;
-    body += `\n--- Vertex Monaco Digital Signage ---`;
+    body += `\n--- Vertex Monaco V3.0 ---`;
     
     window.location.href = `mailto:?subject=${subject}&body=${encodeURIComponent(body)}`;
 }
@@ -3052,14 +3401,24 @@ function escapeCSV(text) {
 }
 
 window.onresize = () => {
-    if (document.getElementById('step4')?.classList.contains('active')) {
+    if (document.getElementById('step6')?.classList.contains('active')) {
         resizeCanvas();
     }
 };
 
-console.log('✅ Vertex Monaco Digital Signage V2.0 - Système chargé');
+// Cleanup on unload
+window.addEventListener('beforeunload', (e) => {
+    if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+    
+    if (barcodeScanner) {
+        stopBarcodeScanner();
+    }
+});
 
-console.log('✅ Vertex Monaco Digital Signage System Loaded');
+console.log('✅ Vertex Monaco V3.0 - Système chargé');
 </script>
 
 </body>
