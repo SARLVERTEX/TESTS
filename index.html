@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#D4AF37">
-    <title>VERTEX MONACO | V4.0 ULTIMATE</title>
+    <title>VERTEX MONACO | V5.0 DELUXE ✨</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Darker+Grotesque:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
     <style>
         :root { 
             --gold: #D4AF37; 
+            --gold-glow: rgba(212, 175, 55, 0.3);
             --bg: #000; 
             --card: #121212; 
             --text: #fff; 
@@ -17,18 +17,64 @@
             --danger: #ff4d4d; 
             --warning: #f39c12;
             --info: #3498db;
+            --purple: #9b59b6;
+            --pink: #e91e63;
             --border: #282828;
         }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
         
         body {
             font-family: 'Darker Grotesque', sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
+            overflow-x: hidden;
         }
         
+        /* ========== SATISFYING ANIMATIONS ========== */
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px var(--gold-glow); }
+            50% { box-shadow: 0 0 40px var(--gold-glow), 0 0 60px var(--gold-glow); }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        /* ========== CONTAINER ========== */
         .container { 
             max-width: 600px; 
             margin: 0 auto; 
@@ -36,11 +82,14 @@
             padding-bottom: 100px; 
         }
         
+        /* ========== HEADER ========== */
         .header {
             text-align: center;
             padding: 30px 0;
             border-bottom: 3px solid var(--gold);
             margin-bottom: 30px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            animation: slideUp 0.6s ease;
         }
         
         .header h1 {
@@ -48,6 +97,8 @@
             font-size: 24px;
             color: var(--gold);
             font-weight: 900;
+            text-shadow: 0 0 20px var(--gold-glow);
+            animation: glow 3s infinite;
         }
         
         .header-subtitle {
@@ -55,10 +106,11 @@
             color: var(--gold);
             letter-spacing: 3px;
             margin-top: 8px;
-            opacity: 0.8;
+            opacity: 0.9;
+            animation: float 3s ease-in-out infinite;
         }
         
-        /* MAIN NAVIGATION */
+        /* ========== NAVIGATION ========== */
         .main-nav {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -73,56 +125,67 @@
             padding: 30px 20px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s ease;
+            animation-fill-mode: backwards;
+        }
+        
+        .nav-card:nth-child(1) { animation-delay: 0.1s; }
+        .nav-card:nth-child(2) { animation-delay: 0.2s; }
+        .nav-card:nth-child(3) { animation-delay: 0.3s; }
+        .nav-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(212, 175, 55, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: all 0.6s;
+        }
+        
+        .nav-card:hover::before {
+            left: 100%;
         }
         
         .nav-card:hover {
             border-color: var(--gold);
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px var(--gold-glow);
         }
         
-        .nav-icon { font-size: 48px; margin-bottom: 10px; }
-        .nav-title { font-size: 18px; font-weight: 900; color: var(--gold); margin-bottom: 5px; }
+        .nav-card:active {
+            transform: translateY(-8px) scale(0.98);
+            animation: pop 0.3s ease;
+        }
+        
+        .nav-icon { 
+            font-size: 48px; 
+            margin-bottom: 10px;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        
+        .nav-title { 
+            font-size: 18px; 
+            font-weight: 900; 
+            color: var(--gold); 
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        
         .nav-subtitle { font-size: 12px; color: #888; }
         
-        /* TABS */
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-        }
-        
-        .tab-btn {
-            flex: 1;
-            padding: 14px 20px;
-            background: transparent;
-            border: none;
-            color: #666;
-            font-size: 13px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            position: relative;
-        }
-        
-        .tab-btn.active {
-            color: var(--gold);
-        }
-        
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--gold);
-        }
-        
-        /* BUTTONS */
+        /* ========== BUTTONS ========== */
         .btn-gold {
             width: 100%;
             padding: 20px;
@@ -134,12 +197,37 @@
             text-transform: uppercase;
             margin-top: 20px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-size: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--gold-glow);
+        }
+        
+        .btn-gold::before {
+            content: '✨';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            opacity: 0;
+            transition: all 0.3s;
         }
         
         .btn-gold:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px var(--gold-glow);
+        }
+        
+        .btn-gold:hover::before {
+            left: 20px;
+            opacity: 1;
+        }
+        
+        .btn-gold:active {
+            transform: translateY(-3px) scale(0.98);
+            animation: pop 0.3s ease;
         }
         
         .btn-outline {
@@ -154,48 +242,224 @@
             font-weight: 700;
             font-size: 13px;
             text-transform: uppercase;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
         .btn-outline:hover {
             border-color: var(--gold);
             background: rgba(212, 175, 55, 0.1);
+            transform: translateY(-2px);
         }
         
-        /* FORMS */
-        label {
-            display: block;
-            margin: 20px 0 8px 0;
-            font-size: 12px;
-            font-weight: 900;
-            color: var(--gold);
-            text-transform: uppercase;
+        .btn-outline:active {
+            animation: pop 0.2s ease;
         }
         
-        input:not([type="checkbox"]):not([type="file"]),
-        textarea,
-        select {
-            width: 100%;
-            padding: 14px;
+        /* ========== PHOTO ANNOTATION EDITOR ========== */
+        .annotation-editor {
             background: var(--card);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        .annotation-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tool-btn {
+            padding: 12px 20px;
+            background: var(--bg);
             border: 2px solid var(--border);
             color: var(--text);
             border-radius: 10px;
-            font-size: 15px;
-            font-family: 'Darker Grotesque', sans-serif;
-            font-weight: 600;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
         }
         
-        input:focus, textarea:focus, select:focus {
+        .tool-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: var(--gold);
+            box-shadow: 0 5px 20px var(--gold-glow);
+        }
+        
+        .tool-btn.active {
+            background: var(--gold);
+            color: black;
+            border-color: var(--gold);
+            animation: pop 0.3s ease;
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+        
+        .tool-btn:active {
+            transform: translateY(-3px) scale(0.95);
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 5px 20px currentColor;
+        }
+        
+        .color-btn.active {
+            border-color: white;
+            transform: scale(1.3);
+            animation: pop 0.3s ease;
+            box-shadow: 0 0 30px currentColor;
+        }
+        
+        .color-btn:active {
+            animation: pop 0.2s ease;
+        }
+        
+        .canvas-container {
+            position: relative;
+            border: 3px solid var(--gold);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1a1a1a;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: glow 3s infinite;
+        }
+        
+        #annotationCanvas {
+            display: block;
+            width: 100%;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        
+        .measure-input-overlay {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        
+        .measure-input-overlay input {
+            width: 200px;
+            padding: 10px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        .measure-input-overlay input:focus {
             outline: none;
             border-color: var(--gold);
+            box-shadow: 0 0 20px var(--gold-glow);
+            animation: pop 0.3s ease;
         }
         
-        textarea {
-            resize: vertical;
-            min-height: 120px;
+        .measure-input-overlay button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: var(--gold);
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-weight: 900;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
         }
         
-        /* CARDS */
+        .measure-input-overlay button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px var(--gold-glow);
+        }
+        
+        .measure-input-overlay button:active {
+            animation: pop 0.2s ease;
+        }
+        
+        /* ========== ANNOTATIONS LIST ========== */
+        .annotations-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .annotation-item {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .annotation-item:hover {
+            border-color: var(--gold);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px var(--gold-glow);
+        }
+        
+        .annotation-info {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .annotation-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 900;
+            transition: all 0.3s;
+        }
+        
+        .annotation-delete:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 5px 20px rgba(255, 77, 77, 0.5);
+        }
+        
+        .annotation-delete:active {
+            animation: pop 0.2s ease;
+        }
+        
+        /* ========== CARDS ========== */
         .card {
             background: var(--card);
             border: 2px solid var(--border);
@@ -203,238 +467,23 @@
             padding: 15px;
             margin-bottom: 12px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideUp 0.4s ease;
+            animation-fill-mode: backwards;
         }
         
         .card:hover {
             border-color: var(--gold);
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px var(--gold-glow);
         }
         
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
+        .card:active {
+            transform: translateY(-5px) scale(0.98);
+            animation: pop 0.2s ease;
         }
         
-        .card-title {
-            font-weight: 900;
-            font-size: 18px;
-            color: var(--gold);
-        }
-        
-        .card-meta {
-            font-size: 12px;
-            color: #888;
-            margin-top: 8px;
-        }
-        
-        /* INVENTORY CARD WITH PHOTO */
-        .inventory-card {
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
-        }
-        
-        .inventory-photo {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 2px solid var(--gold);
-            flex-shrink: 0;
-        }
-        
-        .inventory-photo-placeholder {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            background: var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            flex-shrink: 0;
-        }
-        
-        .inventory-info {
-            flex: 1;
-        }
-        
-        /* TEST CHECKLIST */
-        .test-item {
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .test-item input[type="checkbox"] {
-            width: 24px;
-            height: 24px;
-            accent-color: var(--gold);
-            cursor: pointer;
-        }
-        
-        .test-item.checked {
-            border-color: var(--success);
-            background: rgba(46, 204, 113, 0.1);
-        }
-        
-        .test-item label {
-            margin: 0;
-            flex: 1;
-            cursor: pointer;
-            text-transform: none;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .test-item-actions {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .test-item-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 11px;
-            cursor: pointer;
-        }
-        
-        .test-item-btn:hover {
-            border-color: var(--gold);
-        }
-        
-        /* CLIENT INFO SECTIONS */
-        .info-section {
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .info-section-title {
-            font-size: 14px;
-            font-weight: 900;
-            color: var(--gold);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .info-row {
-            display: flex;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        .info-label {
-            font-weight: 700;
-            min-width: 120px;
-            color: #999;
-        }
-        
-        .info-value {
-            flex: 1;
-            word-break: break-word;
-        }
-        
-        /* PHOTO GALLERY */
-        .photo-gallery {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .photo-card {
-            background: var(--bg);
-            padding: 12px;
-            border-radius: 12px;
-            border: 2px solid var(--border);
-        }
-        
-        .photo-card img {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-        
-        /* MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal.active {
-            display: flex;
-        }
-        
-        .modal-content {
-            background: var(--card);
-            border: 3px solid var(--gold);
-            border-radius: 15px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-title {
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--gold);
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-        
-        .modal-close {
-            float: right;
-            background: none;
-            border: none;
-            color: var(--text);
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        /* BADGE */
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-        
-        .badge-success { background: var(--success); color: white; }
-        .badge-warning { background: var(--warning); color: white; }
-        .badge-danger { background: var(--danger); color: white; }
-        .badge-info { background: var(--info); color: white; }
-        
-        /* TOAST */
+        /* ========== TOAST NOTIFICATIONS ========== */
         .toast {
             position: fixed;
             top: 30px;
@@ -447,36 +496,157 @@
             font-size: 14px;
             font-weight: bold;
             z-index: 9999;
-            animation: slideDown 0.3s ease;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
+        .toast::before {
+            content: '✨';
+            font-size: 20px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+        
+        .toast.success { background: var(--success); }
         .toast.error { background: var(--danger); }
         .toast.warning { background: var(--warning); }
         
-        @keyframes slideDown {
-            from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        /* ========== CONFETTI ========== */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--gold);
+            pointer-events: none;
+            z-index: 10000;
+            animation: confetti 2s ease-out forwards;
         }
         
-        /* STEP SYSTEM */
+        /* ========== PROGRESS BAR ========== */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--info) 100%);
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: shimmer 2s infinite;
+            background-size: 200% 100%;
+        }
+        
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background: var(--card);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 100px var(--gold-glow);
+        }
+        
+        /* ========== FORMS ========== */
+        label {
+            display: block;
+            margin: 20px 0 8px 0;
+            font-size: 12px;
+            font-weight: 900;
+            color: var(--gold);
+            text-transform: uppercase;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        input:not([type="checkbox"]):not([type="file"]):not([type="color"]),
+        textarea,
+        select {
+            width: 100%;
+            padding: 14px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: 'Darker Grotesque', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 30px var(--gold-glow);
+            transform: scale(1.02);
+            animation: pop 0.3s ease;
+        }
+        
+        /* ========== STEP SYSTEM ========== */
         .step {
             display: none;
         }
         
         .step.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: slideUp 0.4s ease;
         }
+        
+        /* ========== UTILITIES ========== */
+        .hidden { display: none !important; }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
-        /* UTILITIES */
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
-        .mb-20 { margin-bottom: 20px; }
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gold);
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
     </style>
 </head>
 <body>
@@ -484,7 +654,7 @@
 <div class="container">
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p class="header-subtitle">V4.0 ULTIMATE • DIGITAL SIGNAGE</p>
+        <p class="header-subtitle">V5.0 DELUXE ✨ ÉDITION SATISFAISANTE</p>
     </div>
 
     <!-- STEP 0: MAIN MENU -->
@@ -499,270 +669,120 @@
             <div class="nav-card" onclick="goTo(2)">
                 <div class="nav-icon">📦</div>
                 <div class="nav-title">STOCK</div>
-                <div class="nav-subtitle">Inventaire & Réceptions</div>
+                <div class="nav-subtitle">Inventaire</div>
+            </div>
+            
+            <div class="nav-card" onclick="goTo(5)">
+                <div class="nav-icon">📐</div>
+                <div class="nav-title">MESURES</div>
+                <div class="nav-subtitle">États des lieux</div>
             </div>
             
             <div class="nav-card" onclick="goTo(10)">
-                <div class="nav-icon">💻</div>
-                <div class="nav-title">LOGICIELS</div>
-                <div class="nav-subtitle">CMS & Tests logiciels</div>
-            </div>
-            
-            <div class="nav-card" onclick="goTo(11)">
                 <div class="nav-icon">⚙️</div>
                 <div class="nav-title">RÉGLAGES</div>
-                <div class="nav-subtitle">Paramètres & Sauvegarde</div>
+                <div class="nav-subtitle">Paramètres</div>
             </div>
         </div>
     </div>
 
-    <!-- STEP 1: PROJECTS LIST -->
+    <!-- STEP 5: PHOTO MEASUREMENTS -->
+    <div class="step" id="step5">
+        <h2 style="color:var(--gold); margin-bottom:20px; animation: float 3s ease-in-out infinite;">
+            📐 États des Lieux & Mesures
+        </h2>
+        
+        <label>📸 Importer une photo</label>
+        <input type="file" id="measurePhoto" accept="image/*" capture="environment" onchange="loadPhotoForMeasure(this)">
+        
+        <div id="photoEditorContainer" class="hidden">
+            <div class="annotation-editor">
+                <div class="annotation-toolbar">
+                    <button class="tool-btn" onclick="selectTool('arrow')" data-tool="arrow">➡️</button>
+                    <button class="tool-btn" onclick="selectTool('line')" data-tool="line">📏</button>
+                    <button class="tool-btn" onclick="selectTool('measure')" data-tool="measure">📐</button>
+                    <button class="tool-btn" onclick="selectTool('rect')" data-tool="rect">⬜</button>
+                    <button class="tool-btn" onclick="selectTool('circle')" data-tool="circle">⭕</button>
+                    <button class="tool-btn" onclick="selectTool('text')" data-tool="text">📝</button>
+                </div>
+                
+                <div class="color-picker">
+                    <div class="color-btn" style="background: #D4AF37;" onclick="selectColor('#D4AF37')"></div>
+                    <div class="color-btn" style="background: #ff4d4d;" onclick="selectColor('#ff4d4d')"></div>
+                    <div class="color-btn" style="background: #2ecc71;" onclick="selectColor('#2ecc71')"></div>
+                    <div class="color-btn" style="background: #3498db;" onclick="selectColor('#3498db')"></div>
+                    <div class="color-btn" style="background: #f39c12;" onclick="selectColor('#f39c12')"></div>
+                    <div class="color-btn" style="background: #9b59b6;" onclick="selectColor('#9b59b6')"></div>
+                    <div class="color-btn" style="background: #e91e63;" onclick="selectColor('#e91e63')"></div>
+                    <div class="color-btn" style="background: #ffffff;" onclick="selectColor('#ffffff')"></div>
+                </div>
+                
+                <div class="canvas-container">
+                    <canvas id="annotationCanvas"></canvas>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="btn-outline" onclick="undoAnnotation()">↩️ ANNULER</button>
+                    <button class="btn-outline" onclick="clearAnnotations()">🗑️ EFFACER TOUT</button>
+                </div>
+                
+                <div class="annotations-list" id="annotationsList"></div>
+                
+                <button class="btn-gold" onclick="saveAnnotatedPhoto()">✅ ENREGISTRER PHOTO</button>
+            </div>
+        </div>
+        
+        <div id="savedMeasures"></div>
+        
+        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
+    </div>
+
+    <!-- Other steps (1, 2, 10) - simplified placeholders -->
     <div class="step" id="step1">
-        <h2 style="color:var(--gold); margin-bottom:20px;">🏢 Projets Clients</h2>
-        
-        <button class="btn-gold" onclick="newProject()">+ NOUVEAU PROJET</button>
-        
-        <input type="text" id="searchProjects" placeholder="🔍 Rechercher..." style="margin-top:20px;" oninput="filterProjects()">
-        
-        <div id="projectsList" style="margin-top:15px;"></div>
-        
+        <h2 style="color:var(--gold); margin-bottom:20px;">🏢 Projets</h2>
+        <p style="text-align:center; color:#666; padding:40px 0;">Module projets à venir...</p>
         <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
     </div>
-
-    <!-- STEP 2: INVENTORY LIST -->
+    
     <div class="step" id="step2">
-        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Stock & Inventaire</h2>
-        
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchInventoryTab('stock')">EN STOCK</button>
-            <button class="tab-btn" onclick="switchInventoryTab('installed')">INSTALLÉ</button>
-            <button class="tab-btn" onclick="switchInventoryTab('defect')">DÉFAUT</button>
-        </div>
-        
-        <button class="btn-gold" onclick="goTo(3)">+ NOUVELLE RÉCEPTION</button>
-        
-        <input type="text" id="searchInventory" placeholder="🔍 Rechercher S/N, ref..." style="margin-top:20px;" oninput="filterInventory()">
-        
-        <div id="inventoryList" style="margin-top:15px;"></div>
-        
+        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Stock</h2>
+        <p style="text-align:center; color:#666; padding:40px 0;">Module stock à venir...</p>
         <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
     </div>
-
-    <!-- STEP 3: NEW RECEPTION -->
-    <div class="step" id="step3">
-        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Nouvelle Réception</h2>
-        
-        <label>Type de produit *</label>
-        <select id="productType" onchange="updateTestTemplate()">
-            <option value="">-- Sélectionner --</option>
-            <option value="display">🖥️ ÉCRAN / DISPLAY</option>
-            <option value="player">📺 MEDIA PLAYER</option>
-            <option value="led_module">💡 MODULE LED</option>
-            <option value="mount">🔧 SUPPORT / FIXATION</option>
-            <option value="cable">🔌 CÂBLE / CONNECTEUR</option>
-            <option value="other">📦 AUTRE</option>
-        </select>
-        
-        <label>Référence produit *</label>
-        <input type="text" id="receptionRef" placeholder="Ex: Samsung QM85R-B">
-        
-        <label>Numéro de série *</label>
-        <input type="text" id="receptionSN" placeholder="S/N">
-        
-        <label>Quantité</label>
-        <input type="number" id="receptionQty" value="1" min="1">
-        
-        <label>📸 Photo produit (affichée dans l'inventaire)</label>
-        <input type="file" id="receptionMainPhoto" accept="image/*" onchange="previewMainPhoto(this)">
-        <div id="mainPhotoPreview" style="margin-top:10px;"></div>
-        
-        <label>Tests de réception</label>
-        <div id="testsContainer"></div>
-        
-        <button class="btn-outline" onclick="addCustomTest()" style="border-color:var(--info); color:var(--info);">
-            + AJOUTER ÉTAPE DE TEST
-        </button>
-        
-        <label>Notes / Défauts constatés</label>
-        <textarea id="receptionNotes" placeholder="Remarques..."></textarea>
-        
-        <label>Photos supplémentaires</label>
-        <input type="file" id="receptionPhotos" accept="image/*" multiple onchange="handleReceptionPhotos(this)">
-        <div id="receptionGallery" class="photo-gallery"></div>
-        
-        <label>Statut</label>
-        <select id="receptionStatus">
-            <option value="stock">✓ OK - En stock</option>
-            <option value="defect">✗ Défaut constaté</option>
-        </select>
-        
-        <button class="btn-gold" onclick="saveReception()">✓ ENREGISTRER</button>
-        <button class="btn-outline" onclick="goTo(2)">← ANNULER</button>
-    </div>
-
-    <!-- STEP 4: VIEW CLIENT -->
-    <div class="step" id="step4">
-        <h2 id="clientName" style="color:var(--gold); margin-bottom:20px;"></h2>
-        
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchClientTab('info')">INFOS</button>
-            <button class="tab-btn" onclick="switchClientTab('interventions')">INTERVENTIONS</button>
-            <button class="tab-btn" onclick="switchClientTab('equipement')">ÉQUIPEMENT</button>
-        </div>
-        
-        <div id="clientTabContent"></div>
-        
-        <button class="btn-gold" onclick="editClientInfo()">✏️ MODIFIER</button>
-        <button class="btn-outline" onclick="goTo(1)">← RETOUR</button>
-    </div>
-
-    <!-- STEP 10: SOFTWARE -->
+    
     <div class="step" id="step10">
-        <h2 style="color:var(--gold); margin-bottom:20px;">💻 Logiciels & Tests</h2>
-        
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchSoftwareTab('cms')">CMS</button>
-            <button class="tab-btn" onclick="switchSoftwareTab('firmware')">FIRMWARE</button>
-            <button class="tab-btn" onclick="switchSoftwareTab('tests')">TESTS</button>
-        </div>
-        
-        <button class="btn-gold" onclick="newSoftwareEntry()">+ NOUVELLE ENTRÉE</button>
-        
-        <div id="softwareList" style="margin-top:15px;"></div>
-        
-        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
-    </div>
-
-    <!-- STEP 11: SETTINGS -->
-    <div class="step" id="step11">
         <h2 style="color:var(--gold); margin-bottom:20px;">⚙️ Réglages</h2>
-        
-        <button class="btn-outline mb-20" onclick="exportBackup()">💾 SAUVEGARDER</button>
-        <button class="btn-outline mb-20" onclick="document.getElementById('importFile').click()">📥 RESTAURER</button>
-        <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importBackup(this)">
-        
+        <button class="btn-outline" onclick="exportData()">💾 SAUVEGARDER</button>
         <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
-    </div>
-</div>
-
-<!-- MODALS -->
-<div class="modal" id="editClientModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('editClientModal')">×</button>
-        <div class="modal-title">Informations Client</div>
-        
-        <label>Nom du client *</label>
-        <input type="text" id="editClientName">
-        
-        <label>📞 Contact direct</label>
-        <input type="text" id="editClientContact" placeholder="Nom, tél, email...">
-        
-        <label>🔑 Clés / Codes d'accès</label>
-        <textarea id="editClientKeys" rows="3" placeholder="Code porte, clé remise, badge..."></textarea>
-        
-        <label>📍 Accès exact</label>
-        <textarea id="editClientAccess" rows="3" placeholder="Parking, étage, ascenseur..."></textarea>
-        
-        <label>📋 Consignes spécifiques</label>
-        <textarea id="editClientInstructions" rows="4" placeholder="Horaires d'accès, procédures..."></textarea>
-        
-        <label>⚙️ Spécifications matériel</label>
-        <textarea id="editClientSpecs" rows="4" placeholder="Configuration réseau, CMS utilisé..."></textarea>
-        
-        <button class="btn-gold" onclick="saveClientInfo()">✓ ENREGISTRER</button>
-    </div>
-</div>
-
-<div class="modal" id="newTestModal">
-    <div class="modal-content">
-        <button class="modal-close" onclick="closeModal('newTestModal')">×</button>
-        <div class="modal-title">Nouvelle étape de test</div>
-        
-        <label>Description du test</label>
-        <input type="text" id="customTestLabel" placeholder="Ex: Vérifier luminosité uniforme">
-        
-        <button class="btn-gold" onclick="addTestToList()">+ AJOUTER</button>
     </div>
 </div>
 
 <script>
 // ========== CONFIG ==========
 const CONFIG = {
-    DB_NAME: 'VertexDB_V4',
-    VERSION: 4
-};
-
-// ========== TEST TEMPLATES ==========
-const TEST_TEMPLATES = {
-    display: [
-        'État physique OK (pas de dommage)',
-        'Allumage / Mise sous tension OK',
-        'Affichage image OK (pas de pixels morts)',
-        'Test résolutions (Full HD, 4K si applicable)',
-        'Ports HDMI/DP fonctionnels',
-        'Luminosité conforme aux specs',
-        'Uniformité de l\'affichage',
-        'Télécommande incluse et fonctionnelle'
-    ],
-    player: [
-        'État physique OK',
-        'Boot système OK',
-        'Connexion réseau Ethernet OK',
-        'Connexion WiFi OK',
-        'Sortie HDMI fonctionnelle',
-        'Ports USB fonctionnels',
-        'Lecture média test OK',
-        'CMS compatible (si applicable)'
-    ],
-    led_module: [
-        'État physique modules OK',
-        'Alimentation 5V OK',
-        'Test pixels rouges OK',
-        'Test pixels verts OK',
-        'Test pixels bleus OK',
-        'Test pixels blancs OK',
-        'Uniformité luminosité OK',
-        'Aucun pixel mort détecté',
-        'Connecteurs fonctionnels'
-    ],
-    mount: [
-        'Pièces complètes (inventaire)',
-        'Aucun dommage visible',
-        'Visserie complète',
-        'Manuel d\'installation inclus',
-        'Compatibilité vérifiée'
-    ],
-    cable: [
-        'État physique OK',
-        'Connecteurs non endommagés',
-        'Test continuité OK',
-        'Longueur conforme'
-    ],
-    other: [
-        'État physique OK',
-        'Test fonctionnel OK'
-    ]
+    DB_NAME: 'VertexDB_V5',
+    VERSION: 5
 };
 
 // ========== STATE ==========
 let db = {
-    projects: {},
-    inventory: {},
-    software: {}
+    measures: []
 };
 
-let currentProject = null;
-let currentInventoryFilter = 'stock';
-let currentClientTab = 'info';
-let currentSoftwareTab = 'cms';
-let receptionTests = [];
-let receptionMainPhotoData = null;
-let receptionPhotos = [];
+let canvas, ctx;
+let currentTool = 'arrow';
+let currentColor = '#D4AF37';
+let isDrawing = false;
+let startX, startY;
+let annotations = [];
+let tempAnnotation = null;
+let baseImage = null;
+let measureInputActive = false;
 
 // ========== INIT ==========
 window.addEventListener('load', () => {
     loadData();
-    console.log('✅ Vertex V4.0 chargé');
+    console.log('✨ Vertex V5.0 Deluxe chargé');
 });
 
 function loadData() {
@@ -770,9 +790,7 @@ function loadData() {
     if (stored) {
         db = JSON.parse(stored);
     }
-    if (!db.projects) db.projects = {};
-    if (!db.inventory) db.inventory = {};
-    if (!db.software) db.software = {};
+    if (!db.measures) db.measures = [];
 }
 
 function saveData() {
@@ -783,458 +801,471 @@ function saveData() {
 function goTo(step) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
     document.getElementById('step' + step).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     
-    if (step === 1) loadProjects();
-    if (step === 2) loadInventory();
-    if (step === 3) resetReceptionForm();
-    if (step === 4) loadClientView();
-    if (step === 10) loadSoftware();
-    
-    window.scrollTo(0, 0);
+    // Confetti on navigation for satisfaction!
+    if (step === 5) {
+        createConfetti(10);
+    }
 }
 
-// ========== TOAST ==========
+// ========== SATISFYING EFFECTS ==========
 function showToast(msg, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.textContent = msg;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-// ========== MODALS ==========
-function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-}
-
-// ========== PROJECTS ==========
-function newProject() {
-    const name = prompt('Nom du client/projet :');
-    if (!name || !name.trim()) return;
     
-    const key = name.trim();
-    if (db.projects[key]) {
-        showToast('Ce projet existe déjà', 'error');
-        return;
+    // Confetti for success!
+    if (type === 'success') {
+        createConfetti(5);
     }
     
-    db.projects[key] = {
-        name: key,
-        created: new Date().toISOString(),
-        contact: '',
-        keys: '',
-        access: '',
-        instructions: '',
-        specs: '',
-        interventions: [],
-        equipment: []
-    };
-    
-    saveData();
-    loadProjects();
-    showToast('✓ Projet créé', 'success');
+    setTimeout(() => {
+        toast.style.animation = 'slideUp 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
-function loadProjects() {
-    const list = document.getElementById('projectsList');
-    const query = document.getElementById('searchProjects').value.toLowerCase();
+function createConfetti(count) {
+    const colors = ['#D4AF37', '#ff4d4d', '#2ecc71', '#3498db', '#9b59b6', '#e91e63'];
     
-    list.innerHTML = '';
-    
-    const projects = Object.keys(db.projects).filter(k => 
-        k.toLowerCase().includes(query)
-    ).sort();
-    
-    if (projects.length === 0) {
-        list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun projet</p>';
-        return;
-    }
-    
-    projects.forEach(key => {
-        const p = db.projects[key];
-        const interventionCount = p.interventions?.length || 0;
-        
-        list.innerHTML += `
-            <div class="card" onclick="currentProject='${escapeHtml(key)}';goTo(4);">
-                <div class="card-header">
-                    <div class="card-title">${escapeHtml(key)}</div>
-                </div>
-                <div class="card-meta">
-                    ${interventionCount} intervention${interventionCount > 1 ? 's' : ''}
-                    ${p.contact ? ' • ' + escapeHtml(p.contact.split('\n')[0]) : ''}
-                </div>
-            </div>
-        `;
-    });
-}
-
-function filterProjects() {
-    loadProjects();
-}
-
-// ========== CLIENT VIEW ==========
-function switchClientTab(tab) {
-    currentClientTab = tab;
-    document.querySelectorAll('#step4 .tab-btn').forEach(b => b.classList.remove('active'));
-    const index = tab === 'info' ? 0 : tab === 'interventions' ? 1 : 2;
-    document.querySelectorAll('#step4 .tab-btn')[index].classList.add('active');
-    loadClientView();
-}
-
-function loadClientView() {
-    const client = db.projects[currentProject];
-    if (!client) return;
-    
-    document.getElementById('clientName').textContent = client.name;
-    const content = document.getElementById('clientTabContent');
-    
-    if (currentClientTab === 'info') {
-        content.innerHTML = `
-            <div class="info-section">
-                <div class="info-section-title">📞 CONTACT</div>
-                <div class="info-value">${escapeHtml(client.contact) || 'Non renseigné'}</div>
-            </div>
+    for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            document.body.appendChild(confetti);
             
-            <div class="info-section">
-                <div class="info-section-title">🔑 CLÉS / CODES</div>
-                <div class="info-value">${escapeHtml(client.keys) || 'Non renseigné'}</div>
-            </div>
-            
-            <div class="info-section">
-                <div class="info-section-title">📍 ACCÈS</div>
-                <div class="info-value">${escapeHtml(client.access) || 'Non renseigné'}</div>
-            </div>
-            
-            <div class="info-section">
-                <div class="info-section-title">📋 CONSIGNES</div>
-                <div class="info-value">${escapeHtml(client.instructions) || 'Non renseigné'}</div>
-            </div>
-            
-            <div class="info-section">
-                <div class="info-section-title">⚙️ SPÉCIFICATIONS</div>
-                <div class="info-value">${escapeHtml(client.specs) || 'Non renseigné'}</div>
-            </div>
-        `;
-    } else if (currentClientTab === 'interventions') {
-        content.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Module interventions à venir</p>';
-    } else if (currentClientTab === 'equipement') {
-        content.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Équipement installé à venir</p>';
+            setTimeout(() => confetti.remove(), 2000);
+        }, i * 50);
     }
 }
 
-function editClientInfo() {
-    const client = db.projects[currentProject];
-    if (!client) return;
-    
-    document.getElementById('editClientName').value = client.name;
-    document.getElementById('editClientContact').value = client.contact || '';
-    document.getElementById('editClientKeys').value = client.keys || '';
-    document.getElementById('editClientAccess').value = client.access || '';
-    document.getElementById('editClientInstructions').value = client.instructions || '';
-    document.getElementById('editClientSpecs').value = client.specs || '';
-    
-    document.getElementById('editClientModal').classList.add('active');
-}
-
-function saveClientInfo() {
-    const client = db.projects[currentProject];
-    if (!client) return;
-    
-    const newName = document.getElementById('editClientName').value.trim();
-    
-    if (!newName) {
-        showToast('Le nom ne peut pas être vide', 'error');
-        return;
-    }
-    
-    // Si le nom a changé
-    if (newName !== currentProject && db.projects[newName]) {
-        showToast('Ce nom existe déjà', 'error');
-        return;
-    }
-    
-    client.name = newName;
-    client.contact = document.getElementById('editClientContact').value;
-    client.keys = document.getElementById('editClientKeys').value;
-    client.access = document.getElementById('editClientAccess').value;
-    client.instructions = document.getElementById('editClientInstructions').value;
-    client.specs = document.getElementById('editClientSpecs').value;
-    
-    // Si le nom a changé, recréer l'entrée
-    if (newName !== currentProject) {
-        db.projects[newName] = client;
-        delete db.projects[currentProject];
-        currentProject = newName;
-    }
-    
-    saveData();
-    closeModal('editClientModal');
-    loadClientView();
-    showToast('✓ Infos enregistrées', 'success');
-}
-
-// ========== INVENTORY ==========
-function switchInventoryTab(tab) {
-    currentInventoryFilter = tab;
-    document.querySelectorAll('#step2 .tab-btn').forEach(b => b.classList.remove('active'));
-    const index = tab === 'stock' ? 0 : tab === 'installed' ? 1 : 2;
-    document.querySelectorAll('#step2 .tab-btn')[index].classList.add('active');
-    loadInventory();
-}
-
-function loadInventory() {
-    const list = document.getElementById('inventoryList');
-    const query = document.getElementById('searchInventory').value.toLowerCase();
-    
-    list.innerHTML = '';
-    
-    const items = Object.keys(db.inventory).filter(sn => {
-        const item = db.inventory[sn];
-        return item.status === currentInventoryFilter && 
-               (sn.toLowerCase().includes(query) || 
-                item.ref.toLowerCase().includes(query));
-    }).sort((a, b) => new Date(db.inventory[b].date) - new Date(db.inventory[a].date));
-    
-    if (items.length === 0) {
-        list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucun élément</p>';
-        return;
-    }
-    
-    items.forEach(sn => {
-        const item = db.inventory[sn];
-        const statusBadge = {
-            stock: '<span class="badge badge-success">EN STOCK</span>',
-            installed: '<span class="badge badge-info">INSTALLÉ</span>',
-            defect: '<span class="badge badge-danger">DÉFAUT</span>'
-        }[item.status];
-        
-        const photoHTML = item.mainPhoto ? 
-            `<img src="${item.mainPhoto}" class="inventory-photo" alt="${item.ref}">` :
-            `<div class="inventory-photo-placeholder">📦</div>`;
-        
-        list.innerHTML += `
-            <div class="card">
-                <div class="inventory-card">
-                    ${photoHTML}
-                    <div class="inventory-info">
-                        <div class="card-title" style="margin-bottom:5px;">${escapeHtml(item.ref)}</div>
-                        <div style="font-family:'Space Mono',monospace; font-size:12px; color:#888; margin-bottom:8px;">
-                            S/N: ${escapeHtml(sn)}
-                        </div>
-                        ${statusBadge}
-                        <div class="card-meta">
-                            ${item.type ? item.type.toUpperCase() : ''} 
-                            ${item.qty > 1 ? '• Qté: ' + item.qty : ''}
-                            • ${new Date(item.date).toLocaleDateString('fr-FR')}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    });
-}
-
-function filterInventory() {
-    loadInventory();
-}
-
-// ========== RECEPTION ==========
-function resetReceptionForm() {
-    document.getElementById('productType').value = '';
-    document.getElementById('receptionRef').value = '';
-    document.getElementById('receptionSN').value = '';
-    document.getElementById('receptionQty').value = '1';
-    document.getElementById('receptionNotes').value = '';
-    document.getElementById('receptionStatus').value = 'stock';
-    document.getElementById('receptionMainPhoto').value = '';
-    document.getElementById('receptionPhotos').value = '';
-    document.getElementById('mainPhotoPreview').innerHTML = '';
-    document.getElementById('receptionGallery').innerHTML = '';
-    document.getElementById('testsContainer').innerHTML = '';
-    receptionTests = [];
-    receptionMainPhotoData = null;
-    receptionPhotos = [];
-}
-
-function updateTestTemplate() {
-    const type = document.getElementById('productType').value;
-    const container = document.getElementById('testsContainer');
-    
-    if (!type) {
-        container.innerHTML = '';
-        receptionTests = [];
-        return;
-    }
-    
-    const template = TEST_TEMPLATES[type] || [];
-    receptionTests = template.map((label, i) => ({
-        id: Date.now() + i,
-        label: label,
-        checked: false,
-        custom: false
-    }));
-    
-    renderTests();
-}
-
-function renderTests() {
-    const container = document.getElementById('testsContainer');
-    container.innerHTML = '';
-    
-    receptionTests.forEach((test, index) => {
-        const checkedClass = test.checked ? 'checked' : '';
-        const removeBtn = test.custom ? 
-            `<button class="test-item-btn" onclick="removeTest(${index})">✕</button>` : '';
-        
-        container.innerHTML += `
-            <div class="test-item ${checkedClass}">
-                <input type="checkbox" id="test-${test.id}" 
-                       ${test.checked ? 'checked' : ''}
-                       onchange="toggleTest(${index})">
-                <label for="test-${test.id}">${escapeHtml(test.label)}</label>
-                <div class="test-item-actions">
-                    ${removeBtn}
-                </div>
-            </div>
-        `;
-    });
-}
-
-function toggleTest(index) {
-    receptionTests[index].checked = !receptionTests[index].checked;
-    renderTests();
-}
-
-function removeTest(index) {
-    receptionTests.splice(index, 1);
-    renderTests();
-}
-
-function addCustomTest() {
-    document.getElementById('customTestLabel').value = '';
-    document.getElementById('newTestModal').classList.add('active');
-}
-
-function addTestToList() {
-    const label = document.getElementById('customTestLabel').value.trim();
-    if (!label) {
-        showToast('Entrez une description', 'error');
-        return;
-    }
-    
-    receptionTests.push({
-        id: Date.now(),
-        label: label,
-        checked: false,
-        custom: true
-    });
-    
-    renderTests();
-    closeModal('newTestModal');
-    showToast('✓ Test ajouté', 'success');
-}
-
-function previewMainPhoto(input) {
+// ========== PHOTO LOADING ==========
+function loadPhotoForMeasure(input) {
     const file = input.files[0];
     if (!file) return;
     
     const reader = new FileReader();
     reader.onload = (e) => {
-        receptionMainPhotoData = e.target.result;
-        document.getElementById('mainPhotoPreview').innerHTML = `
-            <img src="${e.target.result}" style="width:100%; max-width:200px; border-radius:8px; border:2px solid var(--gold);">
-        `;
+        baseImage = new Image();
+        baseImage.onload = () => {
+            document.getElementById('photoEditorContainer').classList.remove('hidden');
+            initCanvas();
+            showToast('✨ Photo chargée !', 'success');
+        };
+        baseImage.src = e.target.result;
     };
     reader.readAsDataURL(file);
 }
 
-function handleReceptionPhotos(input) {
-    const files = Array.from(input.files);
-    if (files.length === 0) return;
+function initCanvas() {
+    canvas = document.getElementById('annotationCanvas');
+    ctx = canvas.getContext('2d');
     
-    files.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            receptionPhotos.push({
-                src: e.target.result,
-                note: ''
-            });
-            renderReceptionGallery();
-        };
-        reader.readAsDataURL(file);
-    });
+    const maxWidth = 550;
+    const scale = maxWidth / baseImage.width;
+    canvas.width = baseImage.width * scale;
+    canvas.height = baseImage.height * scale;
+    
+    annotations = [];
+    redraw();
+    
+    setupCanvasEvents();
 }
 
-function renderReceptionGallery() {
-    const gallery = document.getElementById('receptionGallery');
-    gallery.innerHTML = '';
+function setupCanvasEvents() {
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('touchstart', handleTouch);
+    canvas.addEventListener('touchmove', handleTouch);
+    canvas.addEventListener('touchend', stopDrawing);
+}
+
+function getMousePos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
     
-    receptionPhotos.forEach((photo, i) => {
-        gallery.innerHTML += `
-            <div class="photo-card">
-                <img src="${photo.src}" alt="Photo ${i+1}">
-                <input type="text" placeholder="Légende..." 
-                       value="${escapeHtml(photo.note)}"
-                       oninput="receptionPhotos[${i}].note=this.value"
-                       style="width:100%; padding:8px; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:6px;">
+    if (e.touches) {
+        return {
+            x: (e.touches[0].clientX - rect.left) * scaleX,
+            y: (e.touches[0].clientY - rect.top) * scaleY
+        };
+    }
+    return {
+        x: (e.clientX - rect.left) * scaleX,
+        y: (e.clientY - rect.top) * scaleY
+    };
+}
+
+function handleTouch(e) {
+    e.preventDefault();
+    if (e.type === 'touchstart') startDrawing(e);
+    else if (e.type === 'touchmove') draw(e);
+}
+
+// ========== TOOL SELECTION ==========
+function selectTool(tool) {
+    currentTool = tool;
+    
+    document.querySelectorAll('.tool-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
+    
+    // Satisfying sound effect simulation
+    showToast(`📐 ${tool.toUpperCase()} sélectionné`, 'success');
+}
+
+function selectColor(color) {
+    currentColor = color;
+    
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    event.target.classList.add('active');
+    
+    // Visual feedback
+    event.target.style.animation = 'none';
+    setTimeout(() => {
+        event.target.style.animation = '';
+    }, 10);
+}
+
+// ========== DRAWING ==========
+function startDrawing(e) {
+    if (measureInputActive) return;
+    
+    isDrawing = true;
+    const pos = getMousePos(e);
+    startX = pos.x;
+    startY = pos.y;
+    
+    if (currentTool === 'text') {
+        const text = prompt('📝 Entrer le texte :');
+        if (text) {
+            annotations.push({
+                type: 'text',
+                x: startX,
+                y: startY,
+                text: text,
+                color: currentColor
+            });
+            renderAnnotationsList();
+            redraw();
+            showToast('✨ Texte ajouté !', 'success');
+        }
+        isDrawing = false;
+    }
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    
+    const pos = getMousePos(e);
+    
+    tempAnnotation = {
+        type: currentTool,
+        startX: startX,
+        startY: startY,
+        endX: pos.x,
+        endY: pos.y,
+        color: currentColor
+    };
+    
+    redraw();
+    drawAnnotation(tempAnnotation);
+}
+
+function stopDrawing(e) {
+    if (!isDrawing) return;
+    
+    isDrawing = false;
+    
+    if (tempAnnotation) {
+        if (currentTool === 'measure') {
+            showMeasureInput(tempAnnotation);
+        } else {
+            annotations.push(tempAnnotation);
+            renderAnnotationsList();
+            showToast('✅ Annotation ajoutée !', 'success');
+        }
+        tempAnnotation = null;
+        redraw();
+    }
+}
+
+function showMeasureInput(annotation) {
+    measureInputActive = true;
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'measure-input-overlay';
+    overlay.style.left = '50%';
+    overlay.style.top = '50%';
+    overlay.style.transform = 'translate(-50%, -50%)';
+    
+    overlay.innerHTML = `
+        <input type="text" id="measureValue" placeholder="Ex: 2.80m" autofocus>
+        <button onclick="confirmMeasure()">✅ CONFIRMER</button>
+    `;
+    
+    document.body.appendChild(overlay);
+    document.getElementById('measureValue').focus();
+    
+    // Store temp annotation
+    window.tempMeasureAnnotation = annotation;
+}
+
+function confirmMeasure() {
+    const value = document.getElementById('measureValue').value.trim();
+    if (!value) {
+        showToast('⚠️ Entrer une valeur', 'warning');
+        return;
+    }
+    
+    const annotation = window.tempMeasureAnnotation;
+    annotation.measure = value;
+    annotations.push(annotation);
+    
+    document.querySelector('.measure-input-overlay').remove();
+    measureInputActive = false;
+    
+    renderAnnotationsList();
+    redraw();
+    createConfetti(8);
+    showToast(`✨ Mesure "${value}" ajoutée !`, 'success');
+}
+
+// ========== DRAWING FUNCTIONS ==========
+function drawAnnotation(ann) {
+    ctx.strokeStyle = ann.color;
+    ctx.fillStyle = ann.color;
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    
+    switch (ann.type) {
+        case 'arrow':
+            drawArrow(ann.startX, ann.startY, ann.endX, ann.endY);
+            break;
+        case 'line':
+            ctx.beginPath();
+            ctx.moveTo(ann.startX, ann.startY);
+            ctx.lineTo(ann.endX, ann.endY);
+            ctx.stroke();
+            break;
+        case 'measure':
+            drawMeasureLine(ann);
+            break;
+        case 'rect':
+            ctx.strokeRect(ann.startX, ann.startY, ann.endX - ann.startX, ann.endY - ann.startY);
+            break;
+        case 'circle':
+            const radius = Math.sqrt(Math.pow(ann.endX - ann.startX, 2) + Math.pow(ann.endY - ann.startY, 2));
+            ctx.beginPath();
+            ctx.arc(ann.startX, ann.startY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            break;
+        case 'text':
+            ctx.font = 'bold 24px "Darker Grotesque"';
+            ctx.fillText(ann.text, ann.x, ann.y);
+            break;
+    }
+}
+
+function drawArrow(x1, y1, x2, y2) {
+    const headlen = 20;
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - headlen * Math.cos(angle - Math.PI / 6), y2 - headlen * Math.sin(angle - Math.PI / 6));
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - headlen * Math.cos(angle + Math.PI / 6), y2 - headlen * Math.sin(angle + Math.PI / 6));
+    ctx.stroke();
+}
+
+function drawMeasureLine(ann) {
+    // Line
+    ctx.beginPath();
+    ctx.moveTo(ann.startX, ann.startY);
+    ctx.lineTo(ann.endX, ann.endY);
+    ctx.stroke();
+    
+    // End caps
+    const perpAngle = Math.atan2(ann.endY - ann.startY, ann.endX - ann.startX) + Math.PI / 2;
+    const capLength = 15;
+    
+    ctx.beginPath();
+    ctx.moveTo(ann.startX + capLength * Math.cos(perpAngle), ann.startY + capLength * Math.sin(perpAngle));
+    ctx.lineTo(ann.startX - capLength * Math.cos(perpAngle), ann.startY - capLength * Math.sin(perpAngle));
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.moveTo(ann.endX + capLength * Math.cos(perpAngle), ann.endY + capLength * Math.sin(perpAngle));
+    ctx.lineTo(ann.endX - capLength * Math.cos(perpAngle), ann.endY - capLength * Math.sin(perpAngle));
+    ctx.stroke();
+    
+    // Text
+    if (ann.measure) {
+        const midX = (ann.startX + ann.endX) / 2;
+        const midY = (ann.startY + ann.endY) / 2;
+        
+        ctx.fillStyle = '#000';
+        ctx.fillRect(midX - 40, midY - 20, 80, 30);
+        
+        ctx.fillStyle = ann.color;
+        ctx.font = 'bold 20px "Space Mono"';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(ann.measure, midX, midY);
+    }
+}
+
+function redraw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    if (baseImage) {
+        ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+    }
+    
+    annotations.forEach(ann => drawAnnotation(ann));
+}
+
+// ========== ANNOTATIONS LIST ==========
+function renderAnnotationsList() {
+    const list = document.getElementById('annotationsList');
+    list.innerHTML = '';
+    
+    if (annotations.length === 0) {
+        list.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0;">Aucune annotation</p>';
+        return;
+    }
+    
+    annotations.forEach((ann, i) => {
+        const label = ann.type === 'measure' && ann.measure ? 
+            `📐 ${ann.measure}` : 
+            `${getToolEmoji(ann.type)} ${ann.type}`;
+        
+        list.innerHTML += `
+            <div class="annotation-item">
+                <div class="annotation-info">
+                    <span style="color: ${ann.color};">●</span> ${label}
+                </div>
+                <button class="annotation-delete" onclick="deleteAnnotation(${i})">✕</button>
             </div>
         `;
     });
 }
 
-function saveReception() {
-    const ref = document.getElementById('receptionRef').value.trim();
-    const sn = document.getElementById('receptionSN').value.trim();
-    const type = document.getElementById('productType').value;
-    
-    if (!ref || !sn || !type) {
-        showToast('Référence, S/N et Type requis', 'error');
-        return;
-    }
-    
-    if (db.inventory[sn]) {
-        showToast('Ce S/N existe déjà', 'error');
-        return;
-    }
-    
-    db.inventory[sn] = {
-        ref: ref,
-        sn: sn,
-        type: type,
-        qty: parseInt(document.getElementById('receptionQty').value) || 1,
-        mainPhoto: receptionMainPhotoData,
-        tests: receptionTests,
-        notes: document.getElementById('receptionNotes').value,
-        photos: receptionPhotos,
-        status: document.getElementById('receptionStatus').value,
-        date: new Date().toISOString()
+function getToolEmoji(type) {
+    const emojis = {
+        arrow: '➡️',
+        line: '📏',
+        measure: '📐',
+        rect: '⬜',
+        circle: '⭕',
+        text: '📝'
     };
+    return emojis[type] || '📌';
+}
+
+function deleteAnnotation(index) {
+    annotations.splice(index, 1);
+    renderAnnotationsList();
+    redraw();
+    showToast('🗑️ Annotation supprimée', 'success');
+}
+
+function undoAnnotation() {
+    if (annotations.length === 0) {
+        showToast('⚠️ Aucune annotation', 'warning');
+        return;
+    }
+    annotations.pop();
+    renderAnnotationsList();
+    redraw();
+    showToast('↩️ Annulé', 'success');
+}
+
+function clearAnnotations() {
+    if (annotations.length === 0) return;
+    
+    if (confirm('🗑️ Effacer toutes les annotations ?')) {
+        annotations = [];
+        renderAnnotationsList();
+        redraw();
+        showToast('✨ Annotations effacées', 'success');
+    }
+}
+
+// ========== SAVE ==========
+function saveAnnotatedPhoto() {
+    if (annotations.length === 0) {
+        showToast('⚠️ Aucune annotation', 'warning');
+        return;
+    }
+    
+    const finalImage = canvas.toDataURL('image/jpeg', 0.9);
+    
+    db.measures.push({
+        id: Date.now(),
+        image: finalImage,
+        annotations: annotations.length,
+        date: new Date().toISOString()
+    });
     
     saveData();
-    showToast('✓ Réception enregistrée', 'success');
-    goTo(2);
+    
+    // MASSIVE CONFETTI !
+    createConfetti(30);
+    showToast('🎉 Photo enregistrée avec succès !', 'success');
+    
+    setTimeout(() => {
+        document.getElementById('photoEditorContainer').classList.add('hidden');
+        document.getElementById('measurePhoto').value = '';
+        loadSavedMeasures();
+    }, 1500);
 }
 
-// ========== SOFTWARE ==========
-function switchSoftwareTab(tab) {
-    currentSoftwareTab = tab;
-    document.querySelectorAll('#step10 .tab-btn').forEach(b => b.classList.remove('active'));
-    const index = tab === 'cms' ? 0 : tab === 'firmware' ? 1 : 2;
-    document.querySelectorAll('#step10 .tab-btn')[index].classList.add('active');
-    loadSoftware();
+function loadSavedMeasures() {
+    const container = document.getElementById('savedMeasures');
+    container.innerHTML = '';
+    
+    if (db.measures.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucune mesure enregistrée</p>';
+        return;
+    }
+    
+    container.innerHTML = '<h3 style="color:var(--gold); margin:30px 0 20px 0;">📐 Mesures enregistrées</h3>';
+    
+    db.measures.reverse().forEach((measure, i) => {
+        container.innerHTML += `
+            <div class="card" style="cursor: default;">
+                <img src="${measure.image}" style="width:100%; border-radius:8px; margin-bottom:10px;">
+                <div style="font-size:12px; color:#888;">
+                    ${measure.annotations} annotation${measure.annotations > 1 ? 's' : ''} • 
+                    ${new Date(measure.date).toLocaleDateString('fr-FR')}
+                </div>
+            </div>
+        `;
+    });
 }
 
-function loadSoftware() {
-    const list = document.getElementById('softwareList');
-    list.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Module logiciels à venir</p>';
-}
-
-function newSoftwareEntry() {
-    showToast('Fonction à venir', 'info');
-}
-
-// ========== EXPORT / IMPORT ==========
-function exportBackup() {
+// ========== EXPORT ==========
+function exportData() {
     const backup = {
         version: CONFIG.VERSION,
         date: new Date().toISOString(),
@@ -1248,40 +1279,18 @@ function exportBackup() {
     link.download = `Vertex_Backup_${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     
-    showToast('✅ Sauvegarde créée', 'success');
+    createConfetti(15);
+    showToast('💾 Sauvegarde créée !', 'success');
 }
 
-function importBackup(input) {
-    const file = input.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            const backup = JSON.parse(e.target.result);
-            db = backup.data;
-            if (!db.projects) db.projects = {};
-            if (!db.inventory) db.inventory = {};
-            if (!db.software) db.software = {};
-            saveData();
-            showToast('✅ Données restaurées', 'success');
-        } catch (err) {
-            showToast('❌ Fichier invalide', 'error');
-        }
-    };
-    reader.readAsText(file);
-    input.value = '';
-}
+// ========== INIT SAVED MEASURES ==========
+window.addEventListener('load', () => {
+    if (document.getElementById('savedMeasures')) {
+        loadSavedMeasures();
+    }
+});
 
-// ========== UTILITIES ==========
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-console.log('✅ Vertex V4.0 Ultimate - Chargé');
+console.log('✨ Vertex V5.0 Deluxe - Édition Satisfaisante');
 </script>
 
 </body>
