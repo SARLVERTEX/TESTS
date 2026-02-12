@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#D4AF37">
-    <title>VERTEX MONACO | V5.0 DELUXE ✨</title>
+    <meta name="theme-color" content="#0A1929">
+    <title>VERTEX MONACO | V7.0 ULTIMATE ✨</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Darker+Grotesque:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root { 
             --gold: #D4AF37; 
             --gold-glow: rgba(212, 175, 55, 0.3);
-            --bg: #000; 
-            --card: #121212; 
+            --bg: #0A1929;
+            --bg-light: #132F4C;
+            --card: #1A2027; 
             --text: #fff; 
             --success: #2ecc71; 
             --danger: #ff4d4d; 
@@ -19,7 +20,7 @@
             --info: #3498db;
             --purple: #9b59b6;
             --pink: #e91e63;
-            --border: #282828;
+            --border: #2d3843;
         }
         
         * { 
@@ -37,10 +38,10 @@
             overflow-x: hidden;
         }
         
-        /* ========== SATISFYING ANIMATIONS ========== */
+        /* ========== ANIMATIONS ========== */
         @keyframes pop {
             0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
+            50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
         
@@ -69,9 +70,19 @@
             to { transform: translateY(0); opacity: 1; }
         }
         
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
         @keyframes confetti {
             0% { transform: translateY(0) rotate(0deg); opacity: 1; }
             100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
         
         /* ========== CONTAINER ========== */
@@ -89,7 +100,7 @@
             border-bottom: 3px solid var(--gold);
             margin-bottom: 30px;
             background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
-            animation: slideUp 0.6s ease;
+            animation: slideDown 0.6s ease;
         }
         
         .header h1 {
@@ -144,12 +155,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent,
-                rgba(212, 175, 55, 0.1),
-                transparent
-            );
+            background: linear-gradient(45deg, transparent, rgba(212, 175, 55, 0.1), transparent);
             transform: rotate(45deg);
             transition: all 0.6s;
         }
@@ -202,6 +208,12 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 4px 15px var(--gold-glow);
+            font-family: 'Darker Grotesque', sans-serif;
+        }
+        
+        .btn-gold:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
         
         .btn-gold::before {
@@ -215,17 +227,17 @@
             transition: all 0.3s;
         }
         
-        .btn-gold:hover {
+        .btn-gold:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 8px 30px var(--gold-glow);
         }
         
-        .btn-gold:hover::before {
+        .btn-gold:hover:not(:disabled)::before {
             left: 20px;
             opacity: 1;
         }
         
-        .btn-gold:active {
+        .btn-gold:active:not(:disabled) {
             transform: translateY(-3px) scale(0.98);
             animation: pop 0.3s ease;
         }
@@ -243,6 +255,7 @@
             font-size: 13px;
             text-transform: uppercase;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-family: 'Darker Grotesque', sans-serif;
         }
         
         .btn-outline:hover {
@@ -250,213 +263,23 @@
             background: rgba(212, 175, 55, 0.1);
             transform: translateY(-2px);
         }
-        
-        .btn-outline:active {
-            animation: pop 0.2s ease;
-        }
-        
-        /* ========== PHOTO ANNOTATION EDITOR ========== */
-        .annotation-editor {
-            background: var(--card);
-            border: 3px solid var(--gold);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            animation: slideUp 0.4s ease;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-        }
-        
-        .annotation-toolbar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .tool-btn {
-            padding: 12px 20px;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            color: var(--text);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 20px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        
-        .tool-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            border-color: var(--gold);
-            box-shadow: 0 5px 20px var(--gold-glow);
-        }
-        
-        .tool-btn.active {
-            background: var(--gold);
-            color: black;
-            border-color: var(--gold);
-            animation: pop 0.3s ease;
-            box-shadow: 0 0 30px var(--gold-glow);
-        }
-        
-        .tool-btn:active {
-            transform: translateY(-3px) scale(0.95);
-        }
-        
-        .color-picker {
-            display: flex;
-            gap: 8px;
-            margin: 15px 0;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .color-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 3px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-        }
-        
-        .color-btn:hover {
-            transform: scale(1.2) rotate(10deg);
-            box-shadow: 0 5px 20px currentColor;
-        }
-        
-        .color-btn.active {
-            border-color: white;
-            transform: scale(1.3);
-            animation: pop 0.3s ease;
-            box-shadow: 0 0 30px currentColor;
-        }
-        
-        .color-btn:active {
-            animation: pop 0.2s ease;
-        }
-        
-        .canvas-container {
-            position: relative;
-            border: 3px solid var(--gold);
-            border-radius: 12px;
-            overflow: hidden;
-            background: #1a1a1a;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            animation: glow 3s infinite;
-        }
-        
-        #annotationCanvas {
-            display: block;
-            width: 100%;
-            cursor: crosshair;
-            touch-action: none;
-        }
-        
-        .measure-input-overlay {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid var(--gold);
-            border-radius: 8px;
-            padding: 15px;
-            z-index: 1000;
-            animation: slideUp 0.3s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-        }
-        
-        .measure-input-overlay input {
-            width: 200px;
-            padding: 10px;
-            background: var(--card);
-            border: 2px solid var(--border);
-            color: var(--text);
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            text-align: center;
-        }
-        
-        .measure-input-overlay input:focus {
-            outline: none;
-            border-color: var(--gold);
-            box-shadow: 0 0 20px var(--gold-glow);
-            animation: pop 0.3s ease;
-        }
-        
-        .measure-input-overlay button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: var(--gold);
-            color: black;
-            border: none;
-            border-radius: 8px;
-            font-weight: 900;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s;
-        }
-        
-        .measure-input-overlay button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px var(--gold-glow);
-        }
-        
-        .measure-input-overlay button:active {
-            animation: pop 0.2s ease;
-        }
-        
-        /* ========== ANNOTATIONS LIST ========== */
-        .annotations-list {
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .annotation-item {
-            background: var(--bg);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: slideUp 0.3s ease;
-        }
-        
-        .annotation-item:hover {
-            border-color: var(--gold);
-            transform: translateX(5px);
-            box-shadow: 0 5px 20px var(--gold-glow);
-        }
-        
-        .annotation-info {
-            flex: 1;
-            font-size: 14px;
-            font-weight: 700;
-        }
-        
-        .annotation-delete {
+
+        .btn-danger {
             background: var(--danger);
             color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 900;
-            transition: all 0.3s;
+            border-color: var(--danger);
         }
-        
-        .annotation-delete:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 0 5px 20px rgba(255, 77, 77, 0.5);
+
+        .btn-danger:hover {
+            background: #cc0000;
         }
-        
-        .annotation-delete:active {
-            animation: pop 0.2s ease;
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 12px;
+            display: inline-block;
+            width: auto;
+            margin: 5px;
         }
         
         /* ========== CARDS ========== */
@@ -477,13 +300,41 @@
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 10px 30px var(--gold-glow);
         }
-        
-        .card:active {
-            transform: translateY(-5px) scale(0.98);
-            animation: pop 0.2s ease;
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
         }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--gold);
+        }
+
+        .card-content {
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .badge-success { background: var(--success); color: white; }
+        .badge-warning { background: var(--warning); color: white; }
+        .badge-danger { background: var(--danger); color: white; }
+        .badge-info { background: var(--info); color: white; }
         
-        /* ========== TOAST NOTIFICATIONS ========== */
+        /* ========== TOAST ========== */
         .toast {
             position: fixed;
             top: 30px;
@@ -496,17 +347,11 @@
             font-size: 14px;
             font-weight: bold;
             z-index: 9999;
-            animation: slideUp 0.3s ease;
+            animation: slideDown 0.3s ease;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-        
-        .toast::before {
-            content: '✨';
-            font-size: 20px;
-            animation: bounce 1s ease-in-out infinite;
         }
         
         .toast.success { background: var(--success); }
@@ -524,25 +369,6 @@
             animation: confetti 2s ease-out forwards;
         }
         
-        /* ========== PROGRESS BAR ========== */
-        .progress-container {
-            width: 100%;
-            height: 6px;
-            background: var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--gold) 0%, var(--info) 100%);
-            border-radius: 10px;
-            transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            animation: shimmer 2s infinite;
-            background-size: 200% 100%;
-        }
-        
         /* ========== MODAL ========== */
         .modal {
             display: none;
@@ -551,7 +377,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(10, 25, 41, 0.95);
             z-index: 10000;
             align-items: center;
             justify-content: center;
@@ -561,7 +387,6 @@
         
         .modal.active {
             display: flex;
-            animation: fadeIn 0.3s ease;
         }
         
         .modal-content {
@@ -575,6 +400,38 @@
             overflow-y: auto;
             animation: slideUp 0.4s ease;
             box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 100px var(--gold-glow);
+            position: relative;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: var(--gold);
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            background: rgba(212, 175, 55, 0.2);
+            transform: rotate(90deg);
         }
         
         /* ========== FORMS ========== */
@@ -585,7 +442,6 @@
             font-weight: 900;
             color: var(--gold);
             text-transform: uppercase;
-            animation: float 3s ease-in-out infinite;
         }
         
         input:not([type="checkbox"]):not([type="file"]):not([type="color"]),
@@ -593,7 +449,7 @@
         select {
             width: 100%;
             padding: 14px;
-            background: var(--card);
+            background: var(--bg);
             border: 2px solid var(--border);
             color: var(--text);
             border-radius: 10px;
@@ -607,8 +463,344 @@
             outline: none;
             border-color: var(--gold);
             box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: var(--card);
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        input[type="file"]:hover {
+            border-color: var(--gold);
+            background: var(--bg-light);
+        }
+
+        /* ========== STATS ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            animation: slideUp 0.4s ease;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--gold);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        /* ========== FILTERS ========== */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-family: 'Darker Grotesque', sans-serif;
+        }
+
+        .filter-btn.active {
+            background: var(--gold);
+            color: black;
+            border-color: var(--gold);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--gold);
+        }
+
+        /* ========== SEARCH ========== */
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            padding-left: 45px;
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            z-index: 1;
+        }
+
+        /* ========== PROGRESS BAR ========== */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--info) 100%);
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* ========== PHOTO EDITOR ========== */
+        .photo-upload-zone {
+            border: 3px dashed var(--border);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: var(--card);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px 0;
+        }
+
+        .photo-upload-zone:hover {
+            border-color: var(--gold);
+            background: var(--bg-light);
             transform: scale(1.02);
-            animation: pop 0.3s ease;
+        }
+
+        .photo-upload-zone.has-image {
+            border-style: solid;
+            border-color: var(--gold);
+            padding: 0;
+            cursor: default;
+        }
+
+        .photo-upload-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .photo-upload-text {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .photo-upload-hint {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .annotation-editor {
+            background: var(--card);
+            border: 3px solid var(--gold);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            animation: slideUp 0.4s ease;
+        }
+        
+        .annotation-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .tool-btn {
+            padding: 12px 20px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            color: var(--text);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .tool-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: var(--gold);
+            box-shadow: 0 5px 20px var(--gold-glow);
+        }
+        
+        .tool-btn.active {
+            background: var(--gold);
+            color: black;
+            border-color: var(--gold);
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 5px 20px currentColor;
+        }
+        
+        .color-btn.active {
+            border-color: white;
+            transform: scale(1.3);
+            box-shadow: 0 0 30px currentColor;
+        }
+        
+        .canvas-container {
+            position: relative;
+            border: 3px solid var(--gold);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        #annotationCanvas {
+            display: block;
+            width: 100%;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .annotations-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .annotation-item {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        
+        .annotation-item:hover {
+            border-color: var(--gold);
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px var(--gold-glow);
+        }
+
+        .annotation-item.selected {
+            border-color: var(--gold);
+            background: var(--bg-light);
+        }
+        
+        .annotation-info {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        
+        .annotation-delete {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 900;
+            transition: all 0.3s;
+        }
+        
+        .annotation-delete:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(255, 77, 77, 0.5);
+        }
+
+        /* ========== LOADING ========== */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== AUTO SAVE INDICATOR ========== */
+        .auto-save {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #888;
+            z-index: 9999;
+            animation: slideUp 0.3s ease;
+        }
+
+        .auto-save.saving {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .auto-save.saved {
+            border-color: var(--success);
+            color: var(--success);
         }
         
         /* ========== STEP SYSTEM ========== */
@@ -623,11 +815,9 @@
         
         /* ========== UTILITIES ========== */
         .hidden { display: none !important; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+        .text-center { text-align: center; }
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
         
         /* ========== SCROLLBAR ========== */
         ::-webkit-scrollbar {
@@ -644,8 +834,83 @@
         }
         
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--gold);
             box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        /* ========== TABS ========== */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #888;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            font-family: 'Darker Grotesque', sans-serif;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab-btn:hover {
+            color: var(--gold);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        /* ========== SUB MODULES ========== */
+        .sub-nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sub-nav-card {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .sub-nav-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px var(--gold-glow);
+        }
+
+        .sub-nav-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .sub-nav-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--gold);
         }
     </style>
 </head>
@@ -654,31 +919,42 @@
 <div class="container">
     <div class="header">
         <h1>VERTEX MONACO</h1>
-        <p class="header-subtitle">V5.0 DELUXE ✨ ÉDITION SATISFAISANTE</p>
+        <p class="header-subtitle">V7.0 ULTIMATE ✨ ARCHITECTURE MODULAIRE</p>
     </div>
 
     <!-- STEP 0: MAIN MENU -->
     <div class="step active" id="step0">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="statProjets">0</div>
+                <div class="stat-label">Projets actifs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="statStock">0</div>
+                <div class="stat-label">Articles stock</div>
+            </div>
+        </div>
+
         <div class="main-nav">
-            <div class="nav-card" onclick="goTo(1)">
+            <div class="nav-card" onclick="APP.navigation.goTo(1)">
                 <div class="nav-icon">🏢</div>
                 <div class="nav-title">PROJETS</div>
-                <div class="nav-subtitle">Clients & Interventions</div>
+                <div class="nav-subtitle">Clients & Chantiers</div>
             </div>
             
-            <div class="nav-card" onclick="goTo(2)">
+            <div class="nav-card" onclick="APP.navigation.goTo(2)">
                 <div class="nav-icon">📦</div>
                 <div class="nav-title">STOCK</div>
                 <div class="nav-subtitle">Inventaire</div>
             </div>
             
-            <div class="nav-card" onclick="goTo(5)">
+            <div class="nav-card" onclick="APP.navigation.goTo(5)">
                 <div class="nav-icon">📐</div>
                 <div class="nav-title">MESURES</div>
                 <div class="nav-subtitle">États des lieux</div>
             </div>
             
-            <div class="nav-card" onclick="goTo(10)">
+            <div class="nav-card" onclick="APP.navigation.goTo(10)">
                 <div class="nav-icon">⚙️</div>
                 <div class="nav-title">RÉGLAGES</div>
                 <div class="nav-subtitle">Paramètres</div>
@@ -686,35 +962,121 @@
         </div>
     </div>
 
-    <!-- STEP 5: PHOTO MEASUREMENTS -->
+    <!-- STEP 1: PROJETS MODULE -->
+    <div class="step" id="step1">
+        <h2 style="color:var(--gold); margin-bottom:20px;">🏢 Gestion des Projets</h2>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="APP.projects.switchTab('list')">LISTE</button>
+            <button class="tab-btn" onclick="APP.projects.switchTab('budget')">BUDGET</button>
+            <button class="tab-btn" onclick="APP.projects.switchTab('timeline')">TIMELINE</button>
+        </div>
+
+        <!-- TAB: Liste -->
+        <div class="tab-content active" id="tab-project-list">
+            <div class="search-box">
+                <input type="text" id="searchProjects" placeholder="Rechercher..." onkeyup="APP.projects.filter()">
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" onclick="APP.projects.filterByStatus('tous')">Tous</button>
+                <button class="filter-btn" onclick="APP.projects.filterByStatus('nouveau')">Nouveau</button>
+                <button class="filter-btn" onclick="APP.projects.filterByStatus('en_cours')">En cours</button>
+                <button class="filter-btn" onclick="APP.projects.filterByStatus('termine')">Terminé</button>
+            </div>
+
+            <button class="btn-gold" onclick="APP.projects.openModal()">+ NOUVEAU PROJET</button>
+
+            <div id="projectsList" class="mt-20"></div>
+        </div>
+
+        <!-- TAB: Budget -->
+        <div class="tab-content" id="tab-project-budget">
+            <div id="projectBudgetView"></div>
+        </div>
+
+        <!-- TAB: Timeline -->
+        <div class="tab-content" id="tab-project-timeline">
+            <div id="projectTimelineView"></div>
+        </div>
+
+        <button class="btn-outline" onclick="APP.navigation.goTo(0)">← RETOUR</button>
+    </div>
+
+    <!-- STEP 2: STOCK MODULE -->
+    <div class="step" id="step2">
+        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Gestion du Stock</h2>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="APP.stock.switchTab('inventory')">INVENTAIRE</button>
+            <button class="tab-btn" onclick="APP.stock.switchTab('movements')">MOUVEMENTS</button>
+            <button class="tab-btn" onclick="APP.stock.switchTab('alerts')">ALERTES</button>
+        </div>
+
+        <!-- TAB: Inventaire -->
+        <div class="tab-content active" id="tab-stock-inventory">
+            <div class="search-box">
+                <input type="text" id="searchStock" placeholder="Rechercher..." onkeyup="APP.stock.filter()">
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" onclick="APP.stock.filterByCategory('tous')">Tous</button>
+                <button class="filter-btn" onclick="APP.stock.filterByCategory('materiaux')">Matériaux</button>
+                <button class="filter-btn" onclick="APP.stock.filterByCategory('outils')">Outils</button>
+                <button class="filter-btn" onclick="APP.stock.filterByCategory('quincaillerie')">Quincaillerie</button>
+            </div>
+
+            <button class="btn-gold" onclick="APP.stock.openModal()">+ NOUVEL ARTICLE</button>
+
+            <div id="stockList" class="mt-20"></div>
+        </div>
+
+        <!-- TAB: Mouvements -->
+        <div class="tab-content" id="tab-stock-movements">
+            <div id="stockMovementsView"></div>
+        </div>
+
+        <!-- TAB: Alertes -->
+        <div class="tab-content" id="tab-stock-alerts">
+            <div id="stockAlertsView"></div>
+        </div>
+
+        <button class="btn-outline" onclick="APP.navigation.goTo(0)">← RETOUR</button>
+    </div>
+
+    <!-- STEP 5: MESURES MODULE -->
     <div class="step" id="step5">
-        <h2 style="color:var(--gold); margin-bottom:20px; animation: float 3s ease-in-out infinite;">
-            📐 États des Lieux & Mesures
-        </h2>
+        <h2 style="color:var(--gold); margin-bottom:20px;">📐 États des Lieux & Mesures</h2>
         
-        <label>📸 Importer une photo</label>
-        <input type="file" id="measurePhoto" accept="image/*" capture="environment" onchange="loadPhotoForMeasure(this)">
+        <div class="photo-upload-zone" id="photoUploadZone" onclick="document.getElementById('measurePhoto').click()">
+            <div class="photo-upload-icon">📸</div>
+            <div class="photo-upload-text">Cliquer pour importer une photo</div>
+            <div class="photo-upload-hint">ou glisser-déposer ici</div>
+        </div>
+        
+        <input type="file" id="measurePhoto" accept="image/*" capture="environment" onchange="APP.measures.loadPhoto(this)" style="display:none;">
         
         <div id="photoEditorContainer" class="hidden">
             <div class="annotation-editor">
                 <div class="annotation-toolbar">
-                    <button class="tool-btn" onclick="selectTool('arrow')" data-tool="arrow">➡️</button>
-                    <button class="tool-btn" onclick="selectTool('line')" data-tool="line">📏</button>
-                    <button class="tool-btn" onclick="selectTool('measure')" data-tool="measure">📐</button>
-                    <button class="tool-btn" onclick="selectTool('rect')" data-tool="rect">⬜</button>
-                    <button class="tool-btn" onclick="selectTool('circle')" data-tool="circle">⭕</button>
-                    <button class="tool-btn" onclick="selectTool('text')" data-tool="text">📝</button>
+                    <button class="tool-btn" onclick="APP.measures.selectTool('select')" data-tool="select">👆</button>
+                    <button class="tool-btn" onclick="APP.measures.selectTool('arrow')" data-tool="arrow">➡️</button>
+                    <button class="tool-btn" onclick="APP.measures.selectTool('line')" data-tool="line">📏</button>
+                    <button class="tool-btn" onclick="APP.measures.selectTool('measure')" data-tool="measure">📐</button>
+                    <button class="tool-btn" onclick="APP.measures.selectTool('rect')" data-tool="rect">⬜</button>
+                    <button class="tool-btn" onclick="APP.measures.selectTool('circle')" data-tool="circle">⭕</button>
+                    <button class="tool-btn" onclick="APP.measures.selectTool('text')" data-tool="text">📝</button>
                 </div>
                 
                 <div class="color-picker">
-                    <div class="color-btn" style="background: #D4AF37;" onclick="selectColor('#D4AF37')"></div>
-                    <div class="color-btn" style="background: #ff4d4d;" onclick="selectColor('#ff4d4d')"></div>
-                    <div class="color-btn" style="background: #2ecc71;" onclick="selectColor('#2ecc71')"></div>
-                    <div class="color-btn" style="background: #3498db;" onclick="selectColor('#3498db')"></div>
-                    <div class="color-btn" style="background: #f39c12;" onclick="selectColor('#f39c12')"></div>
-                    <div class="color-btn" style="background: #9b59b6;" onclick="selectColor('#9b59b6')"></div>
-                    <div class="color-btn" style="background: #e91e63;" onclick="selectColor('#e91e63')"></div>
-                    <div class="color-btn" style="background: #ffffff;" onclick="selectColor('#ffffff')"></div>
+                    <div class="color-btn active" style="background: #D4AF37;" onclick="APP.measures.selectColor('#D4AF37')"></div>
+                    <div class="color-btn" style="background: #ff4d4d;" onclick="APP.measures.selectColor('#ff4d4d')"></div>
+                    <div class="color-btn" style="background: #2ecc71;" onclick="APP.measures.selectColor('#2ecc71')"></div>
+                    <div class="color-btn" style="background: #3498db;" onclick="APP.measures.selectColor('#3498db')"></div>
+                    <div class="color-btn" style="background: #f39c12;" onclick="APP.measures.selectColor('#f39c12')"></div>
+                    <div class="color-btn" style="background: #9b59b6;" onclick="APP.measures.selectColor('#9b59b6')"></div>
+                    <div class="color-btn" style="background: #e91e63;" onclick="APP.measures.selectColor('#e91e63')"></div>
+                    <div class="color-btn" style="background: #ffffff;" onclick="APP.measures.selectColor('#ffffff')"></div>
                 </div>
                 
                 <div class="canvas-container">
@@ -722,576 +1084,140 @@
                 </div>
                 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="btn-outline" onclick="undoAnnotation()">↩️ ANNULER</button>
-                    <button class="btn-outline" onclick="clearAnnotations()">🗑️ EFFACER TOUT</button>
+                    <button class="btn-outline" onclick="APP.measures.undo()">↩️ ANNULER</button>
+                    <button class="btn-outline" onclick="APP.measures.deleteSelected()">🗑️ SUPPRIMER</button>
+                    <button class="btn-outline" onclick="APP.measures.clear()">🗑️ TOUT EFFACER</button>
                 </div>
                 
                 <div class="annotations-list" id="annotationsList"></div>
                 
-                <button class="btn-gold" onclick="saveAnnotatedPhoto()">✅ ENREGISTRER PHOTO</button>
+                <button class="btn-gold" onclick="APP.measures.save()">✅ ENREGISTRER PHOTO</button>
             </div>
         </div>
         
         <div id="savedMeasures"></div>
         
-        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
+        <button class="btn-outline" onclick="APP.navigation.goTo(0)">← RETOUR</button>
     </div>
 
-    <!-- Other steps (1, 2, 10) - simplified placeholders -->
-    <div class="step" id="step1">
-        <h2 style="color:var(--gold); margin-bottom:20px;">🏢 Projets</h2>
-        <p style="text-align:center; color:#666; padding:40px 0;">Module projets à venir...</p>
-        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
-    </div>
-    
-    <div class="step" id="step2">
-        <h2 style="color:var(--gold); margin-bottom:20px;">📦 Stock</h2>
-        <p style="text-align:center; color:#666; padding:40px 0;">Module stock à venir...</p>
-        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
-    </div>
-    
+    <!-- STEP 10: RÉGLAGES -->
     <div class="step" id="step10">
         <h2 style="color:var(--gold); margin-bottom:20px;">⚙️ Réglages</h2>
-        <button class="btn-outline" onclick="exportData()">💾 SAUVEGARDER</button>
-        <button class="btn-outline" onclick="goTo(0)">← RETOUR</button>
+        
+        <div class="card" style="cursor: default;">
+            <h3 style="color: var(--gold); margin-bottom: 15px;">💾 Sauvegarde automatique</h3>
+            <p style="color: #888; font-size: 14px;">
+                Vos données sont sauvegardées automatiquement à chaque modification.
+            </p>
+        </div>
+
+        <button class="btn-outline" onclick="APP.data.export()">💾 EXPORTER DONNÉES</button>
+        <button class="btn-outline btn-danger" onclick="APP.data.reset()">🗑️ RÉINITIALISER</button>
+        <button class="btn-outline" onclick="APP.navigation.goTo(0)">← RETOUR</button>
     </div>
 </div>
 
-<script>
-// ========== CONFIG ==========
-const CONFIG = {
-    DB_NAME: 'VertexDB_V5',
-    VERSION: 5
-};
+<!-- MODALS -->
+<div class="modal" id="projectModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="APP.projects.closeModal()">×</button>
+        <h3 class="modal-header" id="projectModalTitle">Nouveau Projet</h3>
 
-// ========== STATE ==========
-let db = {
-    measures: []
-};
+        <label>Nom du projet</label>
+        <input type="text" id="projectName" placeholder="Ex: Rénovation Villa Monaco">
 
-let canvas, ctx;
-let currentTool = 'arrow';
-let currentColor = '#D4AF37';
-let isDrawing = false;
-let startX, startY;
-let annotations = [];
-let tempAnnotation = null;
-let baseImage = null;
-let measureInputActive = false;
+        <label>Client</label>
+        <input type="text" id="projectClient" placeholder="Nom du client">
 
-// ========== INIT ==========
-window.addEventListener('load', () => {
-    loadData();
-    console.log('✨ Vertex V5.0 Deluxe chargé');
-});
+        <label>Téléphone</label>
+        <input type="tel" id="projectPhone" placeholder="+377 98 06 XX XX">
 
-function loadData() {
-    const stored = localStorage.getItem(CONFIG.DB_NAME);
-    if (stored) {
-        db = JSON.parse(stored);
-    }
-    if (!db.measures) db.measures = [];
-}
+        <label>Email</label>
+        <input type="email" id="projectEmail" placeholder="client@example.mc">
 
-function saveData() {
-    localStorage.setItem(CONFIG.DB_NAME, JSON.stringify(db));
-}
+        <label>Adresse</label>
+        <textarea id="projectAddress" placeholder="Adresse du chantier"></textarea>
 
-// ========== NAVIGATION ==========
-function goTo(step) {
-    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-    document.getElementById('step' + step).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Confetti on navigation for satisfaction!
-    if (step === 5) {
-        createConfetti(10);
-    }
-}
+        <label>Date de début</label>
+        <input type="date" id="projectStartDate">
 
-// ========== SATISFYING EFFECTS ==========
-function showToast(msg, type = 'success') {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    
-    // Confetti for success!
-    if (type === 'success') {
-        createConfetti(5);
-    }
-    
-    setTimeout(() => {
-        toast.style.animation = 'slideUp 0.3s ease reverse';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
-}
+        <label>Date de fin prévue</label>
+        <input type="date" id="projectEndDate">
 
-function createConfetti(count) {
-    const colors = ['#D4AF37', '#ff4d4d', '#2ecc71', '#3498db', '#9b59b6', '#e91e63'];
-    
-    for (let i = 0; i < count; i++) {
-        setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.animationDelay = Math.random() * 0.5 + 's';
-            document.body.appendChild(confetti);
-            
-            setTimeout(() => confetti.remove(), 2000);
-        }, i * 50);
-    }
-}
+        <label>Budget (€)</label>
+        <input type="number" id="projectBudget" placeholder="150000">
 
-// ========== PHOTO LOADING ==========
-function loadPhotoForMeasure(input) {
-    const file = input.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        baseImage = new Image();
-        baseImage.onload = () => {
-            document.getElementById('photoEditorContainer').classList.remove('hidden');
-            initCanvas();
-            showToast('✨ Photo chargée !', 'success');
-        };
-        baseImage.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-}
+        <label>Statut</label>
+        <select id="projectStatus">
+            <option value="nouveau">Nouveau</option>
+            <option value="en_cours">En cours</option>
+            <option value="termine">Terminé</option>
+        </select>
 
-function initCanvas() {
-    canvas = document.getElementById('annotationCanvas');
-    ctx = canvas.getContext('2d');
-    
-    const maxWidth = 550;
-    const scale = maxWidth / baseImage.width;
-    canvas.width = baseImage.width * scale;
-    canvas.height = baseImage.height * scale;
-    
-    annotations = [];
-    redraw();
-    
-    setupCanvasEvents();
-}
+        <label>Notes</label>
+        <textarea id="projectNotes" placeholder="Notes et observations"></textarea>
 
-function setupCanvasEvents() {
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('touchstart', handleTouch);
-    canvas.addEventListener('touchmove', handleTouch);
-    canvas.addEventListener('touchend', stopDrawing);
-}
+        <button class="btn-gold" onclick="APP.projects.save()">✅ ENREGISTRER</button>
+        <button class="btn-outline" onclick="APP.projects.closeModal()">ANNULER</button>
+    </div>
+</div>
 
-function getMousePos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    
-    if (e.touches) {
-        return {
-            x: (e.touches[0].clientX - rect.left) * scaleX,
-            y: (e.touches[0].clientY - rect.top) * scaleY
-        };
-    }
-    return {
-        x: (e.clientX - rect.left) * scaleX,
-        y: (e.clientY - rect.top) * scaleY
-    };
-}
+<div class="modal" id="stockModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="APP.stock.closeModal()">×</button>
+        <h3 class="modal-header" id="stockModalTitle">Nouvel Article</h3>
 
-function handleTouch(e) {
-    e.preventDefault();
-    if (e.type === 'touchstart') startDrawing(e);
-    else if (e.type === 'touchmove') draw(e);
-}
+        <label>Nom de l'article</label>
+        <input type="text" id="stockName" placeholder="Ex: Sac ciment 25kg">
 
-// ========== TOOL SELECTION ==========
-function selectTool(tool) {
-    currentTool = tool;
-    
-    document.querySelectorAll('.tool-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    document.querySelector(`[data-tool="${tool}"]`).classList.add('active');
-    
-    // Satisfying sound effect simulation
-    showToast(`📐 ${tool.toUpperCase()} sélectionné`, 'success');
-}
+        <label>Catégorie</label>
+        <select id="stockCategory">
+            <option value="materiaux">Matériaux</option>
+            <option value="outils">Outils</option>
+            <option value="quincaillerie">Quincaillerie</option>
+        </select>
 
-function selectColor(color) {
-    currentColor = color;
-    
-    document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    event.target.classList.add('active');
-    
-    // Visual feedback
-    event.target.style.animation = 'none';
-    setTimeout(() => {
-        event.target.style.animation = '';
-    }, 10);
-}
+        <label>Référence</label>
+        <input type="text" id="stockReference" placeholder="Ex: CIM25-GREY">
 
-// ========== DRAWING ==========
-function startDrawing(e) {
-    if (measureInputActive) return;
-    
-    isDrawing = true;
-    const pos = getMousePos(e);
-    startX = pos.x;
-    startY = pos.y;
-    
-    if (currentTool === 'text') {
-        const text = prompt('📝 Entrer le texte :');
-        if (text) {
-            annotations.push({
-                type: 'text',
-                x: startX,
-                y: startY,
-                text: text,
-                color: currentColor
-            });
-            renderAnnotationsList();
-            redraw();
-            showToast('✨ Texte ajouté !', 'success');
-        }
-        isDrawing = false;
-    }
-}
+        <label>Quantité</label>
+        <input type="number" id="stockQuantity" placeholder="150" min="0">
 
-function draw(e) {
-    if (!isDrawing) return;
-    
-    const pos = getMousePos(e);
-    
-    tempAnnotation = {
-        type: currentTool,
-        startX: startX,
-        startY: startY,
-        endX: pos.x,
-        endY: pos.y,
-        color: currentColor
-    };
-    
-    redraw();
-    drawAnnotation(tempAnnotation);
-}
+        <label>Unité</label>
+        <input type="text" id="stockUnit" placeholder="Ex: sac, pièce, m, kg">
 
-function stopDrawing(e) {
-    if (!isDrawing) return;
-    
-    isDrawing = false;
-    
-    if (tempAnnotation) {
-        if (currentTool === 'measure') {
-            showMeasureInput(tempAnnotation);
-        } else {
-            annotations.push(tempAnnotation);
-            renderAnnotationsList();
-            showToast('✅ Annotation ajoutée !', 'success');
-        }
-        tempAnnotation = null;
-        redraw();
-    }
-}
+        <label>Seuil d'alerte</label>
+        <input type="number" id="stockAlert" placeholder="20" min="0">
 
-function showMeasureInput(annotation) {
-    measureInputActive = true;
-    
-    const overlay = document.createElement('div');
-    overlay.className = 'measure-input-overlay';
-    overlay.style.left = '50%';
-    overlay.style.top = '50%';
-    overlay.style.transform = 'translate(-50%, -50%)';
-    
-    overlay.innerHTML = `
-        <input type="text" id="measureValue" placeholder="Ex: 2.80m" autofocus>
-        <button onclick="confirmMeasure()">✅ CONFIRMER</button>
-    `;
-    
-    document.body.appendChild(overlay);
-    document.getElementById('measureValue').focus();
-    
-    // Store temp annotation
-    window.tempMeasureAnnotation = annotation;
-}
+        <label>Prix unitaire (€)</label>
+        <input type="number" id="stockPrice" placeholder="12.50" step="0.01" min="0">
 
-function confirmMeasure() {
-    const value = document.getElementById('measureValue').value.trim();
-    if (!value) {
-        showToast('⚠️ Entrer une valeur', 'warning');
-        return;
-    }
-    
-    const annotation = window.tempMeasureAnnotation;
-    annotation.measure = value;
-    annotations.push(annotation);
-    
-    document.querySelector('.measure-input-overlay').remove();
-    measureInputActive = false;
-    
-    renderAnnotationsList();
-    redraw();
-    createConfetti(8);
-    showToast(`✨ Mesure "${value}" ajoutée !`, 'success');
-}
+        <label>Fournisseur</label>
+        <input type="text" id="stockSupplier" placeholder="BTP Monaco">
 
-// ========== DRAWING FUNCTIONS ==========
-function drawAnnotation(ann) {
-    ctx.strokeStyle = ann.color;
-    ctx.fillStyle = ann.color;
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    
-    switch (ann.type) {
-        case 'arrow':
-            drawArrow(ann.startX, ann.startY, ann.endX, ann.endY);
-            break;
-        case 'line':
-            ctx.beginPath();
-            ctx.moveTo(ann.startX, ann.startY);
-            ctx.lineTo(ann.endX, ann.endY);
-            ctx.stroke();
-            break;
-        case 'measure':
-            drawMeasureLine(ann);
-            break;
-        case 'rect':
-            ctx.strokeRect(ann.startX, ann.startY, ann.endX - ann.startX, ann.endY - ann.startY);
-            break;
-        case 'circle':
-            const radius = Math.sqrt(Math.pow(ann.endX - ann.startX, 2) + Math.pow(ann.endY - ann.startY, 2));
-            ctx.beginPath();
-            ctx.arc(ann.startX, ann.startY, radius, 0, Math.PI * 2);
-            ctx.stroke();
-            break;
-        case 'text':
-            ctx.font = 'bold 24px "Darker Grotesque"';
-            ctx.fillText(ann.text, ann.x, ann.y);
-            break;
-    }
-}
+        <label>Emplacement</label>
+        <input type="text" id="stockLocation" placeholder="Dépôt A - Rayon 3">
 
-function drawArrow(x1, y1, x2, y2) {
-    const headlen = 20;
-    const angle = Math.atan2(y2 - y1, x2 - x1);
-    
-    ctx.beginPath();
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(x2 - headlen * Math.cos(angle - Math.PI / 6), y2 - headlen * Math.sin(angle - Math.PI / 6));
-    ctx.moveTo(x2, y2);
-    ctx.lineTo(x2 - headlen * Math.cos(angle + Math.PI / 6), y2 - headlen * Math.sin(angle + Math.PI / 6));
-    ctx.stroke();
-}
+        <label>Notes</label>
+        <textarea id="stockNotes" placeholder="Notes complémentaires"></textarea>
 
-function drawMeasureLine(ann) {
-    // Line
-    ctx.beginPath();
-    ctx.moveTo(ann.startX, ann.startY);
-    ctx.lineTo(ann.endX, ann.endY);
-    ctx.stroke();
-    
-    // End caps
-    const perpAngle = Math.atan2(ann.endY - ann.startY, ann.endX - ann.startX) + Math.PI / 2;
-    const capLength = 15;
-    
-    ctx.beginPath();
-    ctx.moveTo(ann.startX + capLength * Math.cos(perpAngle), ann.startY + capLength * Math.sin(perpAngle));
-    ctx.lineTo(ann.startX - capLength * Math.cos(perpAngle), ann.startY - capLength * Math.sin(perpAngle));
-    ctx.stroke();
-    
-    ctx.beginPath();
-    ctx.moveTo(ann.endX + capLength * Math.cos(perpAngle), ann.endY + capLength * Math.sin(perpAngle));
-    ctx.lineTo(ann.endX - capLength * Math.cos(perpAngle), ann.endY - capLength * Math.sin(perpAngle));
-    ctx.stroke();
-    
-    // Text
-    if (ann.measure) {
-        const midX = (ann.startX + ann.endX) / 2;
-        const midY = (ann.startY + ann.endY) / 2;
-        
-        ctx.fillStyle = '#000';
-        ctx.fillRect(midX - 40, midY - 20, 80, 30);
-        
-        ctx.fillStyle = ann.color;
-        ctx.font = 'bold 20px "Space Mono"';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(ann.measure, midX, midY);
-    }
-}
+        <button class="btn-gold" onclick="APP.stock.save()">✅ ENREGISTRER</button>
+        <button class="btn-outline" onclick="APP.stock.closeModal()">ANNULER</button>
+    </div>
+</div>
 
-function redraw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    if (baseImage) {
-        ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
-    }
-    
-    annotations.forEach(ann => drawAnnotation(ann));
-}
+<div class="modal" id="detailModal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="APP.ui.closeModal('detailModal')">×</button>
+        <div id="detailModalContent"></div>
+    </div>
+</div>
 
-// ========== ANNOTATIONS LIST ==========
-function renderAnnotationsList() {
-    const list = document.getElementById('annotationsList');
-    list.innerHTML = '';
-    
-    if (annotations.length === 0) {
-        list.innerHTML = '<p style="text-align:center; color:#666; padding:20px 0;">Aucune annotation</p>';
-        return;
-    }
-    
-    annotations.forEach((ann, i) => {
-        const label = ann.type === 'measure' && ann.measure ? 
-            `📐 ${ann.measure}` : 
-            `${getToolEmoji(ann.type)} ${ann.type}`;
-        
-        list.innerHTML += `
-            <div class="annotation-item">
-                <div class="annotation-info">
-                    <span style="color: ${ann.color};">●</span> ${label}
-                </div>
-                <button class="annotation-delete" onclick="deleteAnnotation(${i})">✕</button>
-            </div>
-        `;
-    });
-}
+<!-- AUTO SAVE INDICATOR -->
+<div class="auto-save hidden" id="autoSaveIndicator">
+    <span id="autoSaveText">Sauvegardé</span>
+</div>
 
-function getToolEmoji(type) {
-    const emojis = {
-        arrow: '➡️',
-        line: '📏',
-        measure: '📐',
-        rect: '⬜',
-        circle: '⭕',
-        text: '📝'
-    };
-    return emojis[type] || '📌';
-}
-
-function deleteAnnotation(index) {
-    annotations.splice(index, 1);
-    renderAnnotationsList();
-    redraw();
-    showToast('🗑️ Annotation supprimée', 'success');
-}
-
-function undoAnnotation() {
-    if (annotations.length === 0) {
-        showToast('⚠️ Aucune annotation', 'warning');
-        return;
-    }
-    annotations.pop();
-    renderAnnotationsList();
-    redraw();
-    showToast('↩️ Annulé', 'success');
-}
-
-function clearAnnotations() {
-    if (annotations.length === 0) return;
-    
-    if (confirm('🗑️ Effacer toutes les annotations ?')) {
-        annotations = [];
-        renderAnnotationsList();
-        redraw();
-        showToast('✨ Annotations effacées', 'success');
-    }
-}
-
-// ========== SAVE ==========
-function saveAnnotatedPhoto() {
-    if (annotations.length === 0) {
-        showToast('⚠️ Aucune annotation', 'warning');
-        return;
-    }
-    
-    const finalImage = canvas.toDataURL('image/jpeg', 0.9);
-    
-    db.measures.push({
-        id: Date.now(),
-        image: finalImage,
-        annotations: annotations.length,
-        date: new Date().toISOString()
-    });
-    
-    saveData();
-    
-    // MASSIVE CONFETTI !
-    createConfetti(30);
-    showToast('🎉 Photo enregistrée avec succès !', 'success');
-    
-    setTimeout(() => {
-        document.getElementById('photoEditorContainer').classList.add('hidden');
-        document.getElementById('measurePhoto').value = '';
-        loadSavedMeasures();
-    }, 1500);
-}
-
-function loadSavedMeasures() {
-    const container = document.getElementById('savedMeasures');
-    container.innerHTML = '';
-    
-    if (db.measures.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666; padding:40px 0;">Aucune mesure enregistrée</p>';
-        return;
-    }
-    
-    container.innerHTML = '<h3 style="color:var(--gold); margin:30px 0 20px 0;">📐 Mesures enregistrées</h3>';
-    
-    db.measures.reverse().forEach((measure, i) => {
-        container.innerHTML += `
-            <div class="card" style="cursor: default;">
-                <img src="${measure.image}" style="width:100%; border-radius:8px; margin-bottom:10px;">
-                <div style="font-size:12px; color:#888;">
-                    ${measure.annotations} annotation${measure.annotations > 1 ? 's' : ''} • 
-                    ${new Date(measure.date).toLocaleDateString('fr-FR')}
-                </div>
-            </div>
-        `;
-    });
-}
-
-// ========== EXPORT ==========
-function exportData() {
-    const backup = {
-        version: CONFIG.VERSION,
-        date: new Date().toISOString(),
-        data: db
-    };
-    
-    const json = JSON.stringify(backup, null, 2);
-    const blob = new Blob([json], { type: 'application/json' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `Vertex_Backup_${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    
-    createConfetti(15);
-    showToast('💾 Sauvegarde créée !', 'success');
-}
-
-// ========== INIT SAVED MEASURES ==========
-window.addEventListener('load', () => {
-    if (document.getElementById('savedMeasures')) {
-        loadSavedMeasures();
-    }
-});
-
-console.log('✨ Vertex V5.0 Deluxe - Édition Satisfaisante');
-</script>
-
+<script src="vertex-app.js"></script>
 </body>
 </html>
