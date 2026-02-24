@@ -1,0 +1,2184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VERTEX Video Generator ULTIMATE | Pro Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #020617;
+            --bg-secondary: #0f172a;
+            --bg-tertiary: rgba(15, 23, 42, 0.6);
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --text-tertiary: #cbd5e1;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --accent: #FFD700;
+            --accent-dark: #B8860B;
+            --success: #10b981;
+            --error: #ef4444;
+            --canvas-bg: #000000;
+        }
+        
+        body.light-mode {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #e2e8f0;
+            --bg-tertiary: rgba(255, 255, 255, 0.8);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-tertiary: #64748b;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --canvas-bg: #ffffff;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 1.5rem;
+            -webkit-font-smoothing: antialiased;
+            transition: all 0.3s ease;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .header-left {
+            flex: 1;
+        }
+        
+        .brand {
+            color: var(--accent);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            font-size: 0.625rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-style: italic;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--text-primary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 2rem;
+            padding: 0.35rem;
+            display: flex;
+            gap: 0.35rem;
+            cursor: pointer;
+        }
+        
+        .theme-toggle-btn {
+            padding: 0.4rem 0.9rem;
+            border-radius: 1.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+        }
+        
+        .theme-toggle-btn.active {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .icon-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--bg-tertiary);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        
+        .icon-btn:hover {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+        }
+        
+        .icon-btn.active {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--accent);
+        }
+        
+        .workspace {
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        
+        @media (max-width: 1400px) {
+            .workspace {
+                grid-template-columns: 300px 1fr;
+            }
+            
+            .workspace > :last-child {
+                grid-column: 1 / -1;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: var(--bg-tertiary);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            font-style: italic;
+            color: var(--accent);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--bg-secondary);
+            padding: 0.35rem;
+            border-radius: 0.75rem;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.6rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .tab:hover {
+            color: var(--text-primary);
+        }
+        
+        .tab.active {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .canvas-container {
+            position: relative;
+            background: var(--canvas-bg);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+        }
+        
+        #previewCanvas {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .format-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .format-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            padding: 0.9rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .format-btn:hover {
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+        
+        .format-btn.active {
+            border-color: var(--accent);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .format-name {
+            font-weight: 900;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 0.2rem;
+            color: var(--text-primary);
+        }
+        
+        .format-size {
+            font-size: 0.6rem;
+            color: var(--text-secondary);
+        }
+        
+        .template-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+        
+        .template-btn {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 2px solid var(--border-color);
+            padding: 1.25rem;
+            border-radius: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+        
+        .template-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .template-btn:hover::before {
+            opacity: 0.1;
+        }
+        
+        .template-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .template-name {
+            font-weight: 900;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-style: italic;
+            margin-bottom: 0.4rem;
+            position: relative;
+            color: var(--text-primary);
+        }
+        
+        .template-desc {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            position: relative;
+        }
+        
+        .preset-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        
+        .preset-btn {
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .preset-btn:hover {
+            border-color: var(--accent);
+        }
+        
+        .preset-colors {
+            display: flex;
+            gap: 0.25rem;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .preset-color {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 0.25rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .preset-name {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        .label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .input, .textarea, .select {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.7rem 0.9rem;
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+        
+        .input:focus, .textarea:focus, .select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+        
+        .textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .upload-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--bg-secondary);
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+        
+        .upload-zone.drag-over {
+            border-color: var(--accent);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .upload-text strong {
+            color: var(--accent);
+        }
+        
+        .uploaded-media {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .media-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .media-item:hover {
+            border-color: var(--accent);
+        }
+        
+        .media-item.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+        
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .media-remove {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: rgba(239, 68, 68, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            cursor: pointer;
+        }
+        
+        .media-item:hover .media-remove {
+            opacity: 1;
+        }
+        
+        .color-picker-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .color-input {
+            width: 35px;
+            height: 35px;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .color-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: black;
+            font-weight: 900;
+            text-transform: uppercase;
+            padding: 0.9rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            box-shadow: none;
+        }
+        
+        .btn-ai {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+        }
+        
+        .btn-ai:hover {
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
+        }
+        
+        .btn-small {
+            padding: 0.6rem 1rem;
+            font-size: 0.7rem;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--error);
+            padding: 0.65rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .recording-indicator.active {
+            display: flex;
+        }
+        
+        .recording-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--error);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .progress-bar.active {
+            display: block;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, #FFA500 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            border-radius: 3px;
+            background: var(--bg-secondary);
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .ai-panel {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 0.9rem;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ai-panel-title {
+            font-weight: 900;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #8b5cf6;
+            margin-bottom: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .ai-suggestions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .ai-suggestion {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            padding: 0.7rem 0.9rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+        }
+        
+        .ai-suggestion:hover {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+            transform: translateX(4px);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 0.9rem;
+            height: 0.9rem;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-top-color: #8b5cf6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .hashtags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+        
+        .hashtag {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.7rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .hashtag:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--accent);
+        }
+        
+        .animation-preview {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem;
+            background: var(--bg-secondary);
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .projects-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .project-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .project-item:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+        
+        .project-name {
+            font-weight: 900;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .project-date {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        
+        .project-actions button {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.7rem;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-tertiary);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            pointer-events: none;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast.success { border-left: 3px solid var(--success); }
+        .toast.error { border-left: 3px solid var(--error); }
+        .toast.info { border-left: 3px solid #3b82f6; }
+        
+        .toast-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .shortcut-hint {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.7rem;
+            color: var(--accent);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 10;
+        }
+        
+        .shortcut-hint.show {
+            opacity: 1;
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <div class="brand">VERTEX MONACO</div>
+                <h1 class="title">Video Generator ULTIMATE</h1>
+            </div>
+            
+            <div class="header-actions">
+                <div class="quick-actions">
+                    <button class="icon-btn" onclick="undo()" title="Annuler (Ctrl+Z)" id="undoBtn">
+                        ↶
+                    </button>
+                    <button class="icon-btn" onclick="redo()" title="Refaire (Ctrl+Y)" id="redoBtn">
+                        ↷
+                    </button>
+                </div>
+                
+                <div class="theme-toggle" onclick="toggleTheme()">
+                    <button class="theme-toggle-btn active" id="darkBtn">🌙</button>
+                    <button class="theme-toggle-btn" id="lightBtn">☀️</button>
+                </div>
+            </div>
+        </header>
+        
+        <div class="workspace">
+            <!-- Left Panel: Setup -->
+            <div class="panel">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(0)">Format</button>
+                    <button class="tab" onclick="switchTab(1)">Médias</button>
+                    <button class="tab" onclick="switchTab(2)">Projets</button>
+                </div>
+                
+                <!-- Tab 0: Format & Templates -->
+                <div class="tab-content active">
+                    <div class="form-group">
+                        <div class="label">Format vidéo</div>
+                        <div class="format-grid">
+                            <button class="format-btn active" onclick="setFormat('square')">
+                                <div class="format-name">Carré</div>
+                                <div class="format-size">1080×1080</div>
+                            </button>
+                            <button class="format-btn" onclick="setFormat('story')">
+                                <div class="format-name">Story</div>
+                                <div class="format-size">1080×1920</div>
+                            </button>
+                            <button class="format-btn" onclick="setFormat('landscape')">
+                                <div class="format-name">Paysage</div>
+                                <div class="format-size">1920×1080</div>
+                            </button>
+                            <button class="format-btn" onclick="setFormat('vertical')">
+                                <div class="format-name">Vertical</div>
+                                <div class="format-size">1080×1350</div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="label">Templates VERTEX</div>
+                        <div class="template-grid">
+                            <button class="template-btn" onclick="applyTemplate('product')">
+                                <div class="template-name">🎯 Produit</div>
+                                <div class="template-desc">Mise en avant solution</div>
+                            </button>
+                            <button class="template-btn" onclick="applyTemplate('announcement')">
+                                <div class="template-name">📣 Annonce</div>
+                                <div class="template-desc">Nouveautés & événements</div>
+                            </button>
+                            <button class="template-btn" onclick="applyTemplate('quote')">
+                                <div class="template-name">💬 Citation</div>
+                                <div class="template-desc">Message inspirant</div>
+                            </button>
+                            <button class="template-btn" onclick="applyTemplate('stats')">
+                                <div class="template-name">📊 Statistique</div>
+                                <div class="template-desc">Chiffres clés</div>
+                            </button>
+                            <button class="template-btn" onclick="applyTemplate('showcase')">
+                                <div class="template-name">✨ Showcase</div>
+                                <div class="template-desc">Portfolio premium</div>
+                            </button>
+                            <button class="template-btn" onclick="applyTemplate('comparison')">
+                                <div class="template-name">⚖️ Comparaison</div>
+                                <div class="template-desc">Avant/Après</div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="label">Presets Couleurs</div>
+                        <div class="preset-grid">
+                            <button class="preset-btn" onclick="applyPreset('vertex')">
+                                <div class="preset-colors">
+                                    <div class="preset-color" style="background: #020617;"></div>
+                                    <div class="preset-color" style="background: #FFD700;"></div>
+                                </div>
+                                <div class="preset-name">Vertex</div>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('luxe')">
+                                <div class="preset-colors">
+                                    <div class="preset-color" style="background: #1a1a1a;"></div>
+                                    <div class="preset-color" style="background: #C0C0C0;"></div>
+                                </div>
+                                <div class="preset-name">Luxe</div>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('tech')">
+                                <div class="preset-colors">
+                                    <div class="preset-color" style="background: #0f172a;"></div>
+                                    <div class="preset-color" style="background: #3b82f6;"></div>
+                                </div>
+                                <div class="preset-name">Tech</div>
+                            </button>
+                            <button class="preset-btn" onclick="applyPreset('elegant')">
+                                <div class="preset-colors">
+                                    <div class="preset-color" style="background: #fef3c7;"></div>
+                                    <div class="preset-color" style="background: #92400e;"></div>
+                                </div>
+                                <div class="preset-name">Élégant</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 1: Médias -->
+                <div class="tab-content">
+                    <div class="form-group">
+                        <div class="label">Upload Images/Logos</div>
+                        <div class="upload-zone" id="uploadZone">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">
+                                <strong>Glissez</strong> vos fichiers<br>
+                                ou <strong>cliquez</strong> pour parcourir
+                            </div>
+                            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div class="uploaded-media" id="mediaLibrary"></div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2: Projets -->
+                <div class="tab-content">
+                    <div class="form-group">
+                        <button class="btn btn-secondary btn-small" onclick="saveCurrentProject()">
+                            💾 Sauvegarder projet actuel
+                        </button>
+                    </div>
+                    
+                    <div class="label">Projets sauvegardés</div>
+                    <div class="projects-list" id="projectsList">
+                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem;">
+                            Aucun projet sauvegardé
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Center Panel: Preview -->
+            <div class="panel">
+                <div class="panel-title">
+                    👁️ Aperçu en temps réel
+                </div>
+                
+                <div class="recording-indicator" id="recordingIndicator">
+                    <div class="recording-dot"></div>
+                    <span id="recordingTime">00:00</span>
+                    <span style="margin-left: auto;">Enregistrement...</span>
+                </div>
+                
+                <div class="canvas-container">
+                    <canvas id="previewCanvas"></canvas>
+                    <div class="shortcut-hint" id="shortcutHint">Espace = Play/Pause</div>
+                </div>
+                
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-secondary" onclick="playPreview()">
+                        ▶️ Prévisualiser
+                    </button>
+                    <button class="btn" onclick="startRecording()">
+                        🎬 WebM
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportGIF()">
+                        🖼️ GIF
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Right Panel: Content & AI -->
+            <div class="panel">
+                <div class="panel-title">
+                    ✨ Contenu & IA
+                </div>
+                
+                <!-- AI Assistant Panel -->
+                <div class="ai-panel">
+                    <div class="ai-panel-title">
+                        🤖 Assistant IA
+                    </div>
+                    
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            class="input" 
+                            id="aiTopic" 
+                            placeholder="Ex: Totem LED 65 pouces pour retail"
+                            style="margin-bottom: 0.75rem;"
+                        >
+                    </div>
+                    
+                    <button class="btn btn-ai btn-small" onclick="generateContent()" id="aiBtn">
+                        ✨ Générer avec IA
+                    </button>
+                    
+                    <div id="aiSuggestions" class="ai-suggestions" style="margin-top: 1rem; display: none;"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Titre principal</label>
+                    <input 
+                        type="text" 
+                        class="input" 
+                        id="mainText" 
+                        placeholder="INNOVATION"
+                        oninput="updatePreview()"
+                        value="INNOVATION"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Sous-titre</label>
+                    <input 
+                        type="text" 
+                        class="input" 
+                        id="subText" 
+                        placeholder="DIGITAL SIGNAGE"
+                        oninput="updatePreview()"
+                        value="DIGITAL SIGNAGE"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Description</label>
+                    <textarea 
+                        class="textarea" 
+                        id="descText" 
+                        placeholder="Solutions d'affichage professionnel"
+                        oninput="updatePreview()"
+                    >Solutions d'affichage professionnel</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Animation</label>
+                    <select class="select" id="animation" onchange="updatePreview()">
+                        <option value="fadeIn">Apparition progressive</option>
+                        <option value="slideUp">Glissement vers le haut</option>
+                        <option value="slideRight">Glissement de la droite</option>
+                        <option value="slideLeft">Glissement de la gauche</option>
+                        <option value="scale">Zoom</option>
+                        <option value="rotate">Rotation</option>
+                        <option value="bounce">Rebond</option>
+                        <option value="typewriter">Machine à écrire</option>
+                    </select>
+                    <div class="animation-preview">
+                        ⏱️ Durée: <span id="durationDisplay">5</span>s
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Durée (secondes)</label>
+                    <input 
+                        type="range" 
+                        class="slider" 
+                        id="duration" 
+                        min="3" 
+                        max="15" 
+                        value="5"
+                        oninput="updateDuration()"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Couleurs</label>
+                    <div class="color-picker-group">
+                        <div class="color-picker">
+                            <input 
+                                type="color" 
+                                class="color-input" 
+                                id="bgColor" 
+                                value="#020617"
+                                onchange="updatePreview()"
+                            >
+                            <span class="color-label">Fond</span>
+                        </div>
+                        <div class="color-picker">
+                            <input 
+                                type="color" 
+                                class="color-input" 
+                                id="accentColor" 
+                                value="#FFD700"
+                                onchange="updatePreview()"
+                            >
+                            <span class="color-label">Accent</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="label">Hashtags - Cliquez pour copier</label>
+                    <div class="hashtags" id="hashtags">
+                        <span class="hashtag" onclick="copyHashtag(this)">#DigitalSignage</span>
+                        <span class="hashtag" onclick="copyHashtag(this)">#Innovation</span>
+                        <span class="hashtag" onclick="copyHashtag(this)">#VertexMonaco</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary btn-small" onclick="resetSettings()" style="margin-top: 0.75rem;">
+                    🔄 Réinitialiser
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <script>
+        // Configuration & State
+        let currentFormat = 'square';
+        let canvas, ctx;
+        let isRecording = false;
+        let mediaRecorder;
+        let recordedChunks = [];
+        let animationId;
+        let startTime;
+        let isDarkMode = true;
+        
+        // History for undo/redo
+        let history = [];
+        let historyIndex = -1;
+        const MAX_HISTORY = 50;
+        
+        // Media library
+        let mediaLibrary = [];
+        let selectedMedia = null;
+        
+        const formats = {
+            square: { width: 1080, height: 1080 },
+            story: { width: 1080, height: 1920 },
+            landscape: { width: 1920, height: 1080 },
+            vertical: { width: 1080, height: 1350 }
+        };
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            canvas = document.getElementById('previewCanvas');
+            ctx = canvas.getContext('2d');
+            setFormat('square');
+            updatePreview();
+            loadProjects();
+            setupDragAndDrop();
+            setupKeyboardShortcuts();
+            saveState();
+        });
+        
+        // Keyboard shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ctrl+Z - Undo
+                if (e.ctrlKey && e.key === 'z') {
+                    e.preventDefault();
+                    undo();
+                }
+                
+                // Ctrl+Y - Redo
+                if (e.ctrlKey && e.key === 'y') {
+                    e.preventDefault();
+                    redo();
+                }
+                
+                // Space - Play/Pause
+                if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                    e.preventDefault();
+                    playPreview();
+                    showShortcutHint('Espace = Play/Pause');
+                }
+                
+                // Ctrl+S - Save project
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    saveCurrentProject();
+                    showShortcutHint('Projet sauvegardé !');
+                }
+                
+                // Ctrl+E - Export
+                if (e.ctrlKey && e.key === 'e') {
+                    e.preventDefault();
+                    startRecording();
+                    showShortcutHint('Export démarré !');
+                }
+            });
+        }
+        
+        function showShortcutHint(text) {
+            const hint = document.getElementById('shortcutHint');
+            hint.textContent = text;
+            hint.classList.add('show');
+            setTimeout(() => {
+                hint.classList.remove('show');
+            }, 2000);
+        }
+        
+        // History management
+        function saveState() {
+            const state = {
+                mainText: document.getElementById('mainText').value,
+                subText: document.getElementById('subText').value,
+                descText: document.getElementById('descText').value,
+                animation: document.getElementById('animation').value,
+                duration: document.getElementById('duration').value,
+                bgColor: document.getElementById('bgColor').value,
+                accentColor: document.getElementById('accentColor').value,
+                format: currentFormat,
+                selectedMedia: selectedMedia
+            };
+            
+            // Remove states after current index
+            history = history.slice(0, historyIndex + 1);
+            
+            // Add new state
+            history.push(JSON.stringify(state));
+            historyIndex++;
+            
+            // Limit history size
+            if (history.length > MAX_HISTORY) {
+                history.shift();
+                historyIndex--;
+            }
+            
+            updateHistoryButtons();
+        }
+        
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                loadState(history[historyIndex]);
+                showToast('Annulé', 'info');
+            }
+        }
+        
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                loadState(history[historyIndex]);
+                showToast('Refait', 'info');
+            }
+        }
+        
+        function loadState(stateStr) {
+            const state = JSON.parse(stateStr);
+            
+            document.getElementById('mainText').value = state.mainText;
+            document.getElementById('subText').value = state.subText;
+            document.getElementById('descText').value = state.descText;
+            document.getElementById('animation').value = state.animation;
+            document.getElementById('duration').value = state.duration;
+            document.getElementById('bgColor').value = state.bgColor;
+            document.getElementById('accentColor').value = state.accentColor;
+            
+            updateDuration();
+            updatePreview();
+            updateHistoryButtons();
+        }
+        
+        function updateHistoryButtons() {
+            const undoBtn = document.getElementById('undoBtn');
+            const redoBtn = document.getElementById('redoBtn');
+            
+            undoBtn.style.opacity = historyIndex > 0 ? '1' : '0.3';
+            undoBtn.style.cursor = historyIndex > 0 ? 'pointer' : 'not-allowed';
+            
+            redoBtn.style.opacity = historyIndex < history.length - 1 ? '1' : '0.3';
+            redoBtn.style.cursor = historyIndex < history.length - 1 ? 'pointer' : 'not-allowed';
+        }
+        
+        // Tab switching
+        function switchTab(index) {
+            document.querySelectorAll('.tab').forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            
+            document.querySelectorAll('.tab-content').forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+        
+        // Drag and drop
+        function setupDragAndDrop() {
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+            
+            uploadZone.onclick = () => fileInput.click();
+            
+            fileInput.onchange = (e) => {
+                handleFiles(e.target.files);
+            };
+            
+            uploadZone.ondragover = (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('drag-over');
+            };
+            
+            uploadZone.ondragleave = () => {
+                uploadZone.classList.remove('drag-over');
+            };
+            
+            uploadZone.ondrop = (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            };
+        }
+        
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            mediaLibrary.push({
+                                id: Date.now() + Math.random(),
+                                src: e.target.result,
+                                width: img.width,
+                                height: img.height
+                            });
+                            renderMediaLibrary();
+                            showToast('Image ajoutée !', 'success');
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+        
+        function renderMediaLibrary() {
+            const container = document.getElementById('mediaLibrary');
+            container.innerHTML = mediaLibrary.map(media => `
+                <div class="media-item ${selectedMedia === media.id ? 'selected' : ''}" onclick="selectMedia('${media.id}')">
+                    <img src="${media.src}" alt="Media">
+                    <div class="media-remove" onclick="removeMedia('${media.id}', event)">×</div>
+                </div>
+            `).join('');
+        }
+        
+        function selectMedia(id) {
+            selectedMedia = selectedMedia === id ? null : id;
+            renderMediaLibrary();
+            updatePreview();
+            saveState();
+        }
+        
+        function removeMedia(id, event) {
+            event.stopPropagation();
+            mediaLibrary = mediaLibrary.filter(m => m.id != id);
+            if (selectedMedia == id) selectedMedia = null;
+            renderMediaLibrary();
+            updatePreview();
+            showToast('Image supprimée', 'info');
+        }
+        
+        // Theme toggle
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('light-mode');
+            
+            document.getElementById('darkBtn').classList.toggle('active', isDarkMode);
+            document.getElementById('lightBtn').classList.toggle('active', !isDarkMode);
+            
+            if (!isDarkMode) {
+                document.getElementById('bgColor').value = '#f8fafc';
+            } else {
+                document.getElementById('bgColor').value = '#020617';
+            }
+            
+            updatePreview();
+            saveState();
+        }
+        
+        // Format selection
+        function setFormat(format) {
+            currentFormat = format;
+            const dims = formats[format];
+            canvas.width = dims.width;
+            canvas.height = dims.height;
+            
+            document.querySelectorAll('.format-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.format-btn').classList.add('active');
+            
+            updatePreview();
+            saveState();
+        }
+        
+        // Templates
+        function applyTemplate(template) {
+            const templates = {
+                product: {
+                    mainText: 'NOUVELLE SOLUTION',
+                    subText: 'Digital Signage',
+                    descText: 'Découvrez nos écrans LED haute définition',
+                    animation: 'slideUp'
+                },
+                announcement: {
+                    mainText: 'ANNONCE',
+                    subText: 'Événement à venir',
+                    descText: 'Rejoignez-nous pour la démonstration',
+                    animation: 'scale'
+                },
+                quote: {
+                    mainText: 'INNOVATION',
+                    subText: "L'avenir de l'affichage",
+                    descText: '"Transformez votre communication"',
+                    animation: 'fadeIn'
+                },
+                stats: {
+                    mainText: '+300%',
+                    subText: 'Visibilité',
+                    descText: 'Augmentez votre impact visuel',
+                    animation: 'rotate'
+                },
+                showcase: {
+                    mainText: 'EXCELLENCE',
+                    subText: 'Portfolio Premium',
+                    descText: 'Solutions haute performance',
+                    animation: 'bounce'
+                },
+                comparison: {
+                    mainText: 'AVANT / APRÈS',
+                    subText: 'Transformation',
+                    descText: 'Résultats visibles immédiatement',
+                    animation: 'slideRight'
+                }
+            };
+            
+            const t = templates[template];
+            document.getElementById('mainText').value = t.mainText;
+            document.getElementById('subText').value = t.subText;
+            document.getElementById('descText').value = t.descText;
+            document.getElementById('animation').value = t.animation;
+            
+            updatePreview();
+            saveState();
+            showToast('Template appliqué !', 'success');
+        }
+        
+        // Color presets
+        function applyPreset(preset) {
+            const presets = {
+                vertex: { bg: '#020617', accent: '#FFD700' },
+                luxe: { bg: '#1a1a1a', accent: '#C0C0C0' },
+                tech: { bg: '#0f172a', accent: '#3b82f6' },
+                elegant: { bg: '#fef3c7', accent: '#92400e' }
+            };
+            
+            const p = presets[preset];
+            document.getElementById('bgColor').value = p.bg;
+            document.getElementById('accentColor').value = p.accent;
+            
+            updatePreview();
+            saveState();
+            showToast('Preset appliqué !', 'success');
+        }
+        
+        // AI Content Generation
+        async function generateContent() {
+            const topic = document.getElementById('aiTopic').value.trim();
+            if (!topic) {
+                showToast('Entrez un thème !', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('aiBtn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="loading-spinner"></span> Génération...';
+            
+            const suggestionsDiv = document.getElementById('aiSuggestions');
+            suggestionsDiv.style.display = 'block';
+            suggestionsDiv.innerHTML = '<div style="text-align: center; padding: 1rem;"><span class="loading-spinner"></span></div>';
+            
+            try {
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 1000,
+                        messages: [{
+                            role: "user",
+                            content: `Tu es un expert en marketing digital pour VERTEX Monaco, société de luxe spécialisée dans le digital signage premium.
+
+Génère 3 variantes de contenu vidéo pour: "${topic}"
+
+Pour chaque variante:
+- Titre percutant (2-3 mots MAX, MAJUSCULES)
+- Sous-titre accrocheur (3-5 mots)
+- Description courte (10-15 mots MAX)
+- 4 hashtags pertinents
+
+Format JSON uniquement:
+{
+  "variants": [
+    {
+      "title": "TITRE 1",
+      "subtitle": "sous-titre 1",
+      "description": "description courte 1",
+      "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4"]
+    },
+    {
+      "title": "TITRE 2",
+      "subtitle": "sous-titre 2",
+      "description": "description courte 2",
+      "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4"]
+    },
+    {
+      "title": "TITRE 3",
+      "subtitle": "sous-titre 3",
+      "description": "description courte 3",
+      "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4"]
+    }
+  ]
+}
+
+UNIQUEMENT le JSON, rien d'autre.`
+                        }]
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.content && data.content[0]) {
+                    let jsonText = data.content[0].text;
+                    jsonText = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+                    const content = JSON.parse(jsonText);
+                    displayAISuggestions(content.variants);
+                    showToast('Contenu généré !', 'success');
+                } else {
+                    throw new Error('Invalid response');
+                }
+                
+            } catch (error) {
+                console.error('AI Error:', error);
+                suggestionsDiv.innerHTML = `
+                    <div style="padding: 1rem; color: #ef4444; font-size: 0.8rem;">
+                        ⚠️ Erreur lors de la génération. Réessayez.
+                    </div>
+                `;
+                showToast('Erreur IA', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
+        
+        function displayAISuggestions(variants) {
+            const suggestionsDiv = document.getElementById('aiSuggestions');
+            
+            let html = '';
+            variants.forEach((variant, index) => {
+                html += `
+                    <div class="ai-suggestion" onclick='applyAISuggestion(${JSON.stringify(variant).replace(/'/g, "&apos;")})'>
+                        <strong>${variant.title}</strong><br>
+                        <small style="color: var(--text-secondary);">${variant.subtitle}</small>
+                    </div>
+                `;
+            });
+            
+            suggestionsDiv.innerHTML = html;
+        }
+        
+        function applyAISuggestion(variant) {
+            document.getElementById('mainText').value = variant.title;
+            document.getElementById('subText').value = variant.subtitle;
+            document.getElementById('descText').value = variant.description;
+            
+            const hashtagsDiv = document.getElementById('hashtags');
+            hashtagsDiv.innerHTML = variant.hashtags.map(tag => 
+                `<span class="hashtag" onclick="copyHashtag(this)">${tag}</span>`
+            ).join('');
+            
+            updatePreview();
+            saveState();
+            showToast('Suggestion appliquée !', 'success');
+        }
+        
+        function copyHashtag(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Copié: ' + text, 'success');
+            });
+        }
+        
+        // Project management
+        function saveCurrentProject() {
+            const name = prompt('Nom du projet:', `VERTEX-${Date.now()}`);
+            if (!name) return;
+            
+            const project = {
+                id: Date.now(),
+                name: name,
+                date: new Date().toISOString(),
+                state: {
+                    mainText: document.getElementById('mainText').value,
+                    subText: document.getElementById('subText').value,
+                    descText: document.getElementById('descText').value,
+                    animation: document.getElementById('animation').value,
+                    duration: document.getElementById('duration').value,
+                    bgColor: document.getElementById('bgColor').value,
+                    accentColor: document.getElementById('accentColor').value,
+                    format: currentFormat,
+                    media: mediaLibrary,
+                    selectedMedia: selectedMedia
+                }
+            };
+            
+            let projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            projects.unshift(project);
+            localStorage.setItem('vertex_projects', JSON.stringify(projects));
+            
+            loadProjects();
+            showToast('Projet sauvegardé !', 'success');
+        }
+        
+        function loadProjects() {
+            const projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            const container = document.getElementById('projectsList');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem;">Aucun projet sauvegardé</div>';
+                return;
+            }
+            
+            container.innerHTML = projects.map(project => `
+                <div class="project-item">
+                    <div class="project-name">${project.name}</div>
+                    <div class="project-date">${new Date(project.date).toLocaleDateString('fr-FR')}</div>
+                    <div class="project-actions">
+                        <button class="btn btn-secondary btn-small" onclick="loadProject(${project.id})">
+                            📂 Charger
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="deleteProject(${project.id})">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadProject(id) {
+            const projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+            
+            const state = project.state;
+            document.getElementById('mainText').value = state.mainText;
+            document.getElementById('subText').value = state.subText;
+            document.getElementById('descText').value = state.descText;
+            document.getElementById('animation').value = state.animation;
+            document.getElementById('duration').value = state.duration;
+            document.getElementById('bgColor').value = state.bgColor;
+            document.getElementById('accentColor').value = state.accentColor;
+            
+            currentFormat = state.format;
+            mediaLibrary = state.media || [];
+            selectedMedia = state.selectedMedia;
+            
+            updateDuration();
+            renderMediaLibrary();
+            updatePreview();
+            saveState();
+            
+            showToast('Projet chargé !', 'success');
+        }
+        
+        function deleteProject(id) {
+            if (!confirm('Supprimer ce projet ?')) return;
+            
+            let projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            projects = projects.filter(p => p.id !== id);
+            localStorage.setItem('vertex_projects', JSON.stringify(projects));
+            
+            loadProjects();
+            showToast('Projet supprimé', 'info');
+        }
+        
+        // Canvas drawing
+        function updatePreview() {
+            if (!ctx) return;
+            
+            const mainText = document.getElementById('mainText').value || 'VERTEX';
+            const subText = document.getElementById('subText').value || 'MONACO';
+            const descText = document.getElementById('descText').value || '';
+            const bgColor = document.getElementById('bgColor').value;
+            const accentColor = document.getElementById('accentColor').value;
+            
+            // Clear
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            if (isDarkMode) {
+                gradient.addColorStop(0, bgColor);
+                gradient.addColorStop(1, '#0f172a');
+            } else {
+                gradient.addColorStop(0, bgColor);
+                gradient.addColorStop(1, '#e2e8f0');
+            }
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Decorative shapes
+            ctx.save();
+            ctx.globalAlpha = isDarkMode ? 0.1 : 0.05;
+            ctx.strokeStyle = accentColor;
+            ctx.lineWidth = 3;
+            
+            for (let i = 0; i < 5; i++) {
+                ctx.beginPath();
+                ctx.moveTo(canvas.width * 0.1 + i * 50, canvas.height * 0.3);
+                ctx.lineTo(canvas.width * 0.9 - i * 50, canvas.height * 0.3);
+                ctx.stroke();
+            }
+            ctx.restore();
+            
+            // Brand
+            ctx.font = `bold ${canvas.width * 0.03}px Outfit`;
+            ctx.fillStyle = accentColor;
+            ctx.textAlign = 'center';
+            ctx.fillText('VERTEX MONACO', canvas.width / 2, canvas.height * 0.15);
+            
+            // Main text
+            const mainTextColor = isDarkMode ? '#FFFFFF' : '#0f172a';
+            ctx.font = `900 italic ${canvas.width * 0.12}px Outfit`;
+            ctx.fillStyle = mainTextColor;
+            ctx.fillText(mainText.toUpperCase(), canvas.width / 2, canvas.height * 0.45);
+            
+            ctx.strokeStyle = accentColor;
+            ctx.lineWidth = 3;
+            ctx.strokeText(mainText.toUpperCase(), canvas.width / 2, canvas.height * 0.45);
+            
+            // Sub text
+            ctx.font = `700 ${canvas.width * 0.05}px Outfit`;
+            ctx.fillStyle = accentColor;
+            ctx.fillText(subText.toUpperCase(), canvas.width / 2, canvas.height * 0.58);
+            
+            // Description
+            if (descText) {
+                ctx.font = `400 ${canvas.width * 0.03}px Outfit`;
+                ctx.fillStyle = isDarkMode ? '#94a3b8' : '#475569';
+                
+                const maxWidth = canvas.width * 0.7;
+                const words = descText.split(' ');
+                let line = '';
+                let y = canvas.height * 0.7;
+                
+                for (let word of words) {
+                    const testLine = line + word + ' ';
+                    const metrics = ctx.measureText(testLine);
+                    
+                    if (metrics.width > maxWidth && line !== '') {
+                        ctx.fillText(line, canvas.width / 2, y);
+                        line = word + ' ';
+                        y += canvas.width * 0.04;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, canvas.width / 2, y);
+            }
+            
+            // Selected media
+            if (selectedMedia) {
+                const media = mediaLibrary.find(m => m.id === selectedMedia);
+                if (media) {
+                    const img = new Image();
+                    img.onload = () => {
+                        const size = Math.min(canvas.width, canvas.height) * 0.25;
+                        const x = canvas.width * 0.5 - size / 2;
+                        const y = canvas.height * 0.2;
+                        
+                        ctx.save();
+                        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+                        ctx.shadowBlur = 20;
+                        ctx.drawImage(img, x, y, size, size);
+                        ctx.restore();
+                    };
+                    img.src = media.src;
+                }
+            }
+            
+            // Bottom accent
+            ctx.fillStyle = accentColor;
+            ctx.fillRect(canvas.width * 0.3, canvas.height * 0.88, canvas.width * 0.4, 4);
+            
+            // Logo
+            ctx.beginPath();
+            ctx.arc(canvas.width / 2, canvas.height * 0.95, canvas.width * 0.03, 0, Math.PI * 2);
+            ctx.fillStyle = accentColor;
+            ctx.fill();
+            
+            ctx.font = `900 ${canvas.width * 0.025}px Outfit`;
+            ctx.fillStyle = isDarkMode ? bgColor : '#000';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('V', canvas.width / 2, canvas.height * 0.95);
+        }
+        
+        function drawFrame(progress) {
+            const animation = document.getElementById('animation').value;
+            
+            updatePreview();
+            
+            ctx.save();
+            
+            switch(animation) {
+                case 'fadeIn':
+                    ctx.globalAlpha = progress;
+                    break;
+                    
+                case 'slideUp':
+                    ctx.translate(0, (1 - progress) * canvas.height * 0.3);
+                    ctx.globalAlpha = progress;
+                    break;
+                    
+                case 'slideRight':
+                    ctx.translate((1 - progress) * canvas.width * 0.5, 0);
+                    ctx.globalAlpha = progress;
+                    break;
+                    
+                case 'slideLeft':
+                    ctx.translate((progress - 1) * canvas.width * 0.5, 0);
+                    ctx.globalAlpha = progress;
+                    break;
+                    
+                case 'scale':
+                    const scale = 0.5 + (progress * 0.5);
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.scale(scale, scale);
+                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+                    ctx.globalAlpha = progress;
+                    break;
+                    
+                case 'rotate':
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.rotate((1 - progress) * Math.PI * 0.5);
+                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+                    ctx.globalAlpha = progress;
+                    break;
+                    
+                case 'bounce':
+                    const bounce = Math.abs(Math.sin(progress * Math.PI * 2)) * (1 - progress) * 50;
+                    ctx.translate(0, -bounce);
+                    ctx.globalAlpha = progress;
+                    break;
+            }
+            
+            ctx.restore();
+        }
+        
+        function playPreview() {
+            const duration = parseInt(document.getElementById('duration').value) * 1000;
+            const startTime = Date.now();
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                drawFrame(progress);
+                
+                if (progress < 1) {
+                    animationId = requestAnimationFrame(animate);
+                } else {
+                    updatePreview();
+                }
+            }
+            
+            animate();
+        }
+        
+        // Recording WebM
+        async function startRecording() {
+            const btn = event.target;
+            
+            if (isRecording) {
+                stopRecording();
+                return;
+            }
+            
+            try {
+                const stream = canvas.captureStream(30);
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'video/webm;codecs=vp9',
+                    videoBitsPerSecond: 8000000
+                });
+                
+                recordedChunks = [];
+                
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `vertex-video-${Date.now()}.webm`;
+                    a.click();
+                    
+                    URL.revokeObjectURL(url);
+                    
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                    document.getElementById('progressBar').classList.remove('active');
+                    
+                    showToast('Vidéo exportée !', 'success');
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                
+                btn.textContent = '⏹️ Stop';
+                btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                
+                document.getElementById('recordingIndicator').classList.add('active');
+                document.getElementById('progressBar').classList.add('active');
+                
+                const duration = parseInt(document.getElementById('duration').value) * 1000;
+                startTime = Date.now();
+                
+                function animate() {
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const seconds = Math.floor(elapsed / 1000);
+                    const ms = Math.floor((elapsed % 1000) / 10);
+                    document.getElementById('recordingTime').textContent = 
+                        `${String(seconds).padStart(2, '0')}:${String(ms).padStart(2, '0')}`;
+                    
+                    document.getElementById('progressFill').style.width = (progress * 100) + '%';
+                    
+                    drawFrame(progress);
+                    
+                    if (progress < 1 && isRecording) {
+                        animationId = requestAnimationFrame(animate);
+                    } else if (isRecording) {
+                        stopRecording();
+                    }
+                }
+                
+                animate();
+                
+            } catch (err) {
+                console.error('Recording error:', err);
+                showToast('Erreur enregistrement', 'error');
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                
+                const btn = document.querySelector('.controls .btn:nth-child(2)');
+                btn.textContent = '🎬 WebM';
+                btn.style.background = '';
+                
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+            }
+        }
+        
+        // Export GIF
+        function exportGIF() {
+            showToast('Génération GIF...', 'info');
+            
+            const gif = new GIF({
+                workers: 2,
+                quality: 10,
+                width: canvas.width,
+                height: canvas.height,
+                workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
+            });
+            
+            const duration = parseInt(document.getElementById('duration').value) * 1000;
+            const fps = 10;
+            const frames = Math.floor(duration / 1000 * fps);
+            
+            for (let i = 0; i < frames; i++) {
+                const progress = i / frames;
+                drawFrame(progress);
+                gif.addFrame(canvas, { delay: 1000 / fps, copy: true });
+            }
+            
+            gif.on('finished', (blob) => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `vertex-video-${Date.now()}.gif`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                updatePreview();
+                showToast('GIF exporté !', 'success');
+            });
+            
+            gif.render();
+        }
+        
+        function updateDuration() {
+            const duration = document.getElementById('duration').value;
+            document.getElementById('durationDisplay').textContent = duration;
+        }
+        
+        function resetSettings() {
+            document.getElementById('mainText').value = 'INNOVATION';
+            document.getElementById('subText').value = 'DIGITAL SIGNAGE';
+            document.getElementById('descText').value = "Solutions d'affichage professionnel";
+            document.getElementById('animation').value = 'fadeIn';
+            document.getElementById('duration').value = 5;
+            document.getElementById('bgColor').value = isDarkMode ? '#020617' : '#f8fafc';
+            document.getElementById('accentColor').value = '#FFD700';
+            document.getElementById('aiTopic').value = '';
+            
+            const suggestionsDiv = document.getElementById('aiSuggestions');
+            suggestionsDiv.style.display = 'none';
+            
+            selectedMedia = null;
+            renderMediaLibrary();
+            
+            updateDuration();
+            updatePreview();
+            saveState();
+            showToast('Réinitialisé !', 'info');
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+            
+            toast.innerHTML = `
+                <span style="font-size: 1.2rem;">${icon}</span>
+                <span class="toast-text">${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+            });
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
