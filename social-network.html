@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VERTEX Video Generator ULTIMATE | Pro Edition</title>
+    <title>VERTEX Video Generator ULTIMATE v3 | Complete Edition</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=Inter:wght@400;500;600;700&display=swap');
         
         * {
             margin: 0;
@@ -40,17 +40,17 @@
         }
         
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 1.5rem;
+            padding: 1rem;
             -webkit-font-smoothing: antialiased;
             transition: all 0.3s ease;
         }
         
         .container {
-            max-width: 1800px;
+            max-width: 1920px;
             margin: 0 auto;
         }
         
@@ -58,13 +58,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
-        }
-        
-        .header-left {
-            flex: 1;
         }
         
         .brand {
@@ -77,7 +73,8 @@
         }
         
         .title {
-            font-size: 2rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.75rem;
             font-weight: 900;
             text-transform: uppercase;
             font-style: italic;
@@ -85,7 +82,18 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.02em;
+        }
+        
+        .version-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
         }
         
         .header-actions {
@@ -94,28 +102,52 @@
             align-items: center;
         }
         
+        .icon-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            background: var(--bg-tertiary);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .icon-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+        
+        .icon-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
         .theme-toggle {
             background: var(--bg-tertiary);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
             border-radius: 2rem;
-            padding: 0.35rem;
+            padding: 0.25rem;
             display: flex;
-            gap: 0.35rem;
-            cursor: pointer;
+            gap: 0.25rem;
         }
         
         .theme-toggle-btn {
-            padding: 0.4rem 0.9rem;
+            padding: 0.35rem 0.75rem;
             border-radius: 1.5rem;
             font-size: 0.7rem;
-            font-weight: 700;
             background: transparent;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.3s;
-            text-transform: uppercase;
         }
         
         .theme-toggle-btn.active {
@@ -123,49 +155,17 @@
             color: #000;
         }
         
-        .quick-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .icon-btn {
-            width: 2.5rem;
-            height: 2.5rem;
-            background: var(--bg-tertiary);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: var(--text-primary);
-            font-size: 1.1rem;
-        }
-        
-        .icon-btn:hover {
-            border-color: var(--accent);
-            background: var(--bg-secondary);
-        }
-        
-        .icon-btn.active {
-            background: rgba(255, 215, 0, 0.2);
-            border-color: var(--accent);
-        }
-        
         .workspace {
             display: grid;
-            grid-template-columns: 320px 1fr 320px;
-            gap: 1.5rem;
+            grid-template-columns: 300px 1fr 340px;
+            gap: 1rem;
             align-items: start;
         }
         
         @media (max-width: 1400px) {
             .workspace {
-                grid-template-columns: 300px 1fr;
+                grid-template-columns: 280px 1fr;
             }
-            
             .workspace > :last-child {
                 grid-column: 1 / -1;
             }
@@ -181,74 +181,76 @@
             background: var(--bg-tertiary);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
-            border-radius: 1.25rem;
-            padding: 1.5rem;
+            border-radius: 1rem;
+            padding: 1.25rem;
             transition: all 0.3s;
         }
         
         .panel-title {
-            font-size: 1rem;
-            font-weight: 900;
+            font-size: 0.875rem;
+            font-weight: 700;
             text-transform: uppercase;
-            font-style: italic;
             color: var(--accent);
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
         
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            background: var(--bg-secondary);
-            padding: 0.35rem;
-            border-radius: 0.75rem;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 0.6rem;
-            background: transparent;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Outfit', sans-serif;
-        }
-        
-        .tab:hover {
-            color: var(--text-primary);
-        }
-        
-        .tab.active {
-            background: var(--accent);
-            color: #000;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .canvas-container {
+        .canvas-wrapper {
             position: relative;
             background: var(--canvas-bg);
-            border-radius: 1rem;
+            border-radius: 0.75rem;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .canvas-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+        
+        .canvas-btn {
+            width: 2rem;
+            height: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            font-size: 0.875rem;
+        }
+        
+        .canvas-btn:hover {
+            background: rgba(255, 215, 0, 0.9);
+            color: black;
+        }
+        
+        .canvas-btn.active {
+            background: var(--accent);
+            color: black;
+        }
+        
+        #canvasContainer {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 500px;
+            cursor: crosshair;
+        }
+        
+        #canvasContainer.dragging {
+            cursor: move;
         }
         
         #previewCanvas {
@@ -257,144 +259,99 @@
             height: auto;
         }
         
-        .format-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+        .layers-panel {
+            max-height: 400px;
+            overflow-y: auto;
         }
         
-        .format-btn {
+        .layer-item {
             background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            padding: 0.9rem;
-            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
             cursor: pointer;
             transition: all 0.3s;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
-        .format-btn:hover {
-            border-color: rgba(255, 215, 0, 0.3);
+        .layer-item:hover {
+            border-color: var(--accent);
         }
         
-        .format-btn.active {
+        .layer-item.selected {
             border-color: var(--accent);
             background: rgba(255, 215, 0, 0.1);
         }
         
-        .format-name {
-            font-weight: 900;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            margin-bottom: 0.2rem;
+        .layer-icon {
+            width: 2rem;
+            height: 2rem;
+            background: var(--bg-tertiary);
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+        
+        .layer-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .layer-name {
+            font-size: 0.75rem;
+            font-weight: 600;
             color: var(--text-primary);
-        }
-        
-        .format-size {
-            font-size: 0.6rem;
-            color: var(--text-secondary);
-        }
-        
-        .template-grid {
-            display: grid;
-            gap: 0.75rem;
-        }
-        
-        .template-btn {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-            border: 2px solid var(--border-color);
-            padding: 1.25rem;
-            border-radius: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
+            white-space: nowrap;
             overflow: hidden;
-            text-align: left;
+            text-overflow: ellipsis;
         }
         
-        .template-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--accent) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .template-btn:hover::before {
-            opacity: 0.1;
-        }
-        
-        .template-btn:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-        
-        .template-name {
-            font-weight: 900;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            font-style: italic;
-            margin-bottom: 0.4rem;
-            position: relative;
-            color: var(--text-primary);
-        }
-        
-        .template-desc {
-            font-size: 0.7rem;
+        .layer-type {
+            font-size: 0.65rem;
             color: var(--text-secondary);
-            position: relative;
         }
         
-        .preset-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-        
-        .preset-btn {
-            padding: 0.75rem;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 0.75rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-        
-        .preset-btn:hover {
-            border-color: var(--accent);
-        }
-        
-        .preset-colors {
+        .layer-actions {
             display: flex;
             gap: 0.25rem;
-            justify-content: center;
-            margin-bottom: 0.5rem;
         }
         
-        .preset-color {
-            width: 1.25rem;
-            height: 1.25rem;
-            border-radius: 0.25rem;
+        .layer-btn {
+            width: 1.5rem;
+            height: 1.5rem;
+            background: transparent;
             border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.75rem;
         }
         
-        .preset-name {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-primary);
+        .layer-btn:hover {
+            border-color: var(--accent);
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .layer-btn.active {
+            background: var(--accent);
+            color: black;
         }
         
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
         }
         
         .label {
             display: block;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -406,23 +363,160 @@
             width: 100%;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            padding: 0.7rem 0.9rem;
+            padding: 0.6rem 0.75rem;
             border-radius: 0.5rem;
             color: var(--text-primary);
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
             transition: all 0.3s;
         }
         
         .input:focus, .textarea:focus, .select:focus {
             outline: none;
             border-color: var(--accent);
-            background: var(--bg-tertiary);
         }
         
-        .textarea {
-            resize: vertical;
-            min-height: 80px;
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--bg-secondary);
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .slider-group {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .slider-value {
+            width: 3rem;
+            text-align: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 0.5rem;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            color: black;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.7rem 1.25rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--bg-tertiary);
+            box-shadow: none;
+        }
+        
+        .btn-small {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.7rem;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+        
+        .btn-ai {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            color: white;
+        }
+        
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+        }
+        
+        .color-input {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+        
+        .color-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            flex: 1;
         }
         
         .upload-zone {
@@ -445,18 +539,9 @@
             background: rgba(255, 215, 0, 0.1);
         }
         
-        .upload-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
         .upload-text {
             font-size: 0.8rem;
             color: var(--text-secondary);
-        }
-        
-        .upload-text strong {
-            color: var(--accent);
         }
         
         .uploaded-media {
@@ -513,196 +598,120 @@
             opacity: 1;
         }
         
-        .color-picker-group {
+        .filter-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.7rem;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .filter-btn:hover {
+            border-color: var(--accent);
+        }
+        
+        .filter-btn.active {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--accent);
+        }
+        
+        .template-grid {
+            display: grid;
+            gap: 0.5rem;
+        }
+        
+        .template-btn {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border: 2px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+        
+        .template-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .template-name {
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+        
+        .template-desc {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .preset-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem;
         }
         
-        .color-picker {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .preset-btn {
+            padding: 0.75rem;
             background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-        }
-        
-        .color-input {
-            width: 35px;
-            height: 35px;
-            border: none;
+            border: 2px solid var(--border-color);
             border-radius: 0.5rem;
             cursor: pointer;
-        }
-        
-        .color-label {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: var(--text-primary);
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
-            color: black;
-            font-weight: 900;
-            text-transform: uppercase;
-            padding: 0.9rem 1.5rem;
-            border: none;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
             transition: all 0.3s;
-            width: 100%;
+            text-align: center;
+        }
+        
+        .preset-btn:hover {
+            border-color: var(--accent);
+        }
+        
+        .preset-colors {
             display: flex;
-            align-items: center;
+            gap: 0.25rem;
             justify-content: center;
-            gap: 0.5rem;
-            font-family: 'Outfit', sans-serif;
+            margin-bottom: 0.5rem;
         }
         
-        .btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
+        .preset-color {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 0.25rem;
             border: 1px solid var(--border-color);
         }
         
-        .btn-secondary:hover {
-            background: var(--bg-tertiary);
-            box-shadow: none;
-        }
-        
-        .btn-ai {
-            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-            color: white;
-        }
-        
-        .btn-ai:hover {
-            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3);
-        }
-        
-        .btn-small {
-            padding: 0.6rem 1rem;
+        .preset-name {
             font-size: 0.7rem;
-        }
-        
-        .controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
-        }
-        
-        .recording-indicator {
-            display: none;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid var(--error);
-            padding: 0.65rem 1rem;
-            border-radius: 0.5rem;
-            margin-bottom: 1rem;
-            font-size: 0.8rem;
-        }
-        
-        .recording-indicator.active {
-            display: flex;
-        }
-        
-        .recording-dot {
-            width: 10px;
-            height: 10px;
-            background: var(--error);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 5px;
-            background: var(--bg-secondary);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-top: 1rem;
-            display: none;
-        }
-        
-        .progress-bar.active {
-            display: block;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent) 0%, #FFA500 100%);
-            width: 0%;
-            transition: width 0.3s;
-        }
-        
-        .slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 5px;
-            border-radius: 3px;
-            background: var(--bg-secondary);
-            outline: none;
-        }
-        
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--accent);
-            cursor: pointer;
-        }
-        
-        .slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: var(--accent);
-            cursor: pointer;
-            border: none;
+            font-weight: 600;
+            color: var(--text-primary);
         }
         
         .ai-panel {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
             border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 0.9rem;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
         }
         
         .ai-panel-title {
-            font-weight: 900;
-            font-size: 0.8rem;
+            font-weight: 700;
+            font-size: 0.75rem;
             text-transform: uppercase;
             color: #8b5cf6;
-            margin-bottom: 0.9rem;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -712,22 +721,22 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            margin-top: 0.75rem;
         }
         
         .ai-suggestion {
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
-            padding: 0.7rem 0.9rem;
+            padding: 0.7rem;
             border-radius: 0.5rem;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-primary);
         }
         
         .ai-suggestion:hover {
             border-color: var(--accent);
-            background: var(--bg-secondary);
             transform: translateX(4px);
         }
         
@@ -768,20 +777,73 @@
             border-color: var(--accent);
         }
         
-        .animation-preview {
+        .shapes-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+        
+        .shape-btn {
+            aspect-ratio: 1;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.7rem;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .shape-btn:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 1rem;
             background: var(--bg-secondary);
+            padding: 0.25rem;
             border-radius: 0.5rem;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.5rem;
+            background: transparent;
+            border: none;
+            border-radius: 0.375rem;
             font-size: 0.7rem;
-            margin-top: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
             color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .tab:hover {
+            color: var(--text-primary);
+        }
+        
+        .tab.active {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
         }
         
         .projects-list {
-            max-height: 400px;
+            max-height: 350px;
             overflow-y: auto;
         }
         
@@ -789,20 +851,19 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             padding: 1rem;
-            border-radius: 0.75rem;
-            margin-bottom: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
             cursor: pointer;
             transition: all 0.3s;
         }
         
         .project-item:hover {
             border-color: var(--accent);
-            transform: translateX(4px);
         }
         
         .project-name {
-            font-weight: 900;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 0.85rem;
             margin-bottom: 0.25rem;
             color: var(--text-primary);
         }
@@ -820,8 +881,6 @@
         
         .project-actions button {
             flex: 1;
-            padding: 0.5rem;
-            font-size: 0.7rem;
         }
         
         .toast {
@@ -831,8 +890,8 @@
             background: var(--bg-tertiary);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
-            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            padding: 1rem 1.25rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -842,6 +901,7 @@
             transition: all 0.3s;
             pointer-events: none;
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
         }
         
         .toast.show {
@@ -854,68 +914,112 @@
         .toast.info { border-left: 3px solid #3b82f6; }
         
         .toast-text {
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
         
-        .shortcut-hint {
-            position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(10px);
-            padding: 0.5rem 1rem;
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--error);
+            padding: 0.6rem 1rem;
             border-radius: 0.5rem;
-            font-size: 0.7rem;
-            color: var(--accent);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            z-index: 10;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
         }
         
-        .shortcut-hint.show {
-            opacity: 1;
+        .recording-indicator.active {
+            display: flex;
         }
         
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
+        .recording-dot {
             width: 8px;
             height: 8px;
+            background: var(--error);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-secondary);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 0.75rem;
+            display: none;
+        }
+        
+        .progress-bar.active {
+            display: block;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent) 0%, #FFA500 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
         
         ::-webkit-scrollbar-track {
             background: var(--bg-secondary);
-            border-radius: 4px;
+            border-radius: 3px;
         }
         
         ::-webkit-scrollbar-thumb {
             background: var(--border-color);
-            border-radius: 4px;
+            border-radius: 3px;
         }
         
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent);
+        }
+        
+        .divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 1rem 0;
+        }
+        
+        .font-preview {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 1.5rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
-            <div class="header-left">
+            <div>
                 <div class="brand">VERTEX MONACO</div>
-                <h1 class="title">Video Generator ULTIMATE</h1>
+                <h1 class="title">
+                    Video Generator ULTIMATE
+                    <span class="version-badge">v3.0 COMPLETE</span>
+                </h1>
             </div>
             
             <div class="header-actions">
-                <div class="quick-actions">
-                    <button class="icon-btn" onclick="undo()" title="Annuler (Ctrl+Z)" id="undoBtn">
-                        ↶
-                    </button>
-                    <button class="icon-btn" onclick="redo()" title="Refaire (Ctrl+Y)" id="redoBtn">
-                        ↷
-                    </button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="icon-btn" onclick="undo()" title="Annuler (Ctrl+Z)" id="undoBtn" disabled>↶</button>
+                    <button class="icon-btn" onclick="redo()" title="Refaire (Ctrl+Y)" id="redoBtn" disabled>↷</button>
+                    <button class="icon-btn" onclick="saveProject()" title="Sauvegarder (Ctrl+S)">💾</button>
                 </div>
                 
                 <div class="theme-toggle" onclick="toggleTheme()">
@@ -926,40 +1030,76 @@
         </header>
         
         <div class="workspace">
-            <!-- Left Panel: Setup -->
+            <!-- Left Panel: Layers, Media, Templates -->
             <div class="panel">
                 <div class="tabs">
-                    <button class="tab active" onclick="switchTab(0)">Format</button>
-                    <button class="tab" onclick="switchTab(1)">Médias</button>
-                    <button class="tab" onclick="switchTab(2)">Projets</button>
+                    <button class="tab active" onclick="switchLeftTab(0)">Calques</button>
+                    <button class="tab" onclick="switchLeftTab(1)">Médias</button>
+                    <button class="tab" onclick="switchLeftTab(2)">Assets</button>
+                    <button class="tab" onclick="switchLeftTab(3)">Projets</button>
                 </div>
                 
-                <!-- Tab 0: Format & Templates -->
+                <!-- Tab 0: Layers -->
                 <div class="tab-content active">
+                    <div class="panel-title">🎨 Calques</div>
+                    
                     <div class="form-group">
-                        <div class="label">Format vidéo</div>
-                        <div class="format-grid">
-                            <button class="format-btn active" onclick="setFormat('square')">
-                                <div class="format-name">Carré</div>
-                                <div class="format-size">1080×1080</div>
+                        <div class="grid-3">
+                            <button class="btn btn-secondary btn-small" onclick="addTextLayer()">
+                                ➕ Texte
                             </button>
-                            <button class="format-btn" onclick="setFormat('story')">
-                                <div class="format-name">Story</div>
-                                <div class="format-size">1080×1920</div>
+                            <button class="btn btn-secondary btn-small" onclick="addShapeLayer()">
+                                ⬜ Forme
                             </button>
-                            <button class="format-btn" onclick="setFormat('landscape')">
-                                <div class="format-name">Paysage</div>
-                                <div class="format-size">1920×1080</div>
-                            </button>
-                            <button class="format-btn" onclick="setFormat('vertical')">
-                                <div class="format-name">Vertical</div>
-                                <div class="format-size">1080×1350</div>
+                            <button class="btn btn-secondary btn-small" onclick="addImageLayer()">
+                                🖼️ Image
                             </button>
                         </div>
                     </div>
                     
+                    <div class="layers-panel" id="layersPanel">
+                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.75rem;">
+                            Aucun calque
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 1: Media -->
+                <div class="tab-content">
+                    <div class="panel-title">📁 Médias</div>
+                    
                     <div class="form-group">
-                        <div class="label">Templates VERTEX</div>
+                        <div class="upload-zone" id="uploadZone">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">📁</div>
+                            <div class="upload-text">
+                                <strong>Glissez</strong> vos fichiers<br>
+                                ou <strong>cliquez</strong> pour parcourir<br>
+                                <small style="font-size: 0.65rem;">Max 5MB par image</small>
+                            </div>
+                            <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" multiple style="display: none;">
+                        </div>
+                        <div class="uploaded-media" id="mediaLibrary"></div>
+                    </div>
+                    
+                    <div class="form-group" id="filterSection" style="display: none;">
+                        <label class="label">Filtres</label>
+                        <div class="filter-controls">
+                            <button class="filter-btn active" onclick="applyFilter('none')" data-filter="none">Original</button>
+                            <button class="filter-btn" onclick="applyFilter('grayscale')" data-filter="grayscale">N&B</button>
+                            <button class="filter-btn" onclick="applyFilter('sepia')" data-filter="sepia">Sépia</button>
+                            <button class="filter-btn" onclick="applyFilter('blur')" data-filter="blur">Flou</button>
+                            <button class="filter-btn" onclick="applyFilter('brightness')" data-filter="brightness">Lumineux</button>
+                            <button class="filter-btn" onclick="applyFilter('contrast')" data-filter="contrast">Contrasté</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tab 2: Templates & Presets -->
+                <div class="tab-content">
+                    <div class="panel-title">✨ Assets</div>
+                    
+                    <div class="form-group">
+                        <label class="label">Templates</label>
                         <div class="template-grid">
                             <button class="template-btn" onclick="applyTemplate('product')">
                                 <div class="template-name">🎯 Produit</div>
@@ -977,19 +1117,13 @@
                                 <div class="template-name">📊 Statistique</div>
                                 <div class="template-desc">Chiffres clés</div>
                             </button>
-                            <button class="template-btn" onclick="applyTemplate('showcase')">
-                                <div class="template-name">✨ Showcase</div>
-                                <div class="template-desc">Portfolio premium</div>
-                            </button>
-                            <button class="template-btn" onclick="applyTemplate('comparison')">
-                                <div class="template-name">⚖️ Comparaison</div>
-                                <div class="template-desc">Avant/Après</div>
-                            </button>
                         </div>
                     </div>
                     
+                    <div class="divider"></div>
+                    
                     <div class="form-group">
-                        <div class="label">Presets Couleurs</div>
+                        <label class="label">Presets Couleurs</label>
                         <div class="preset-grid">
                             <button class="preset-btn" onclick="applyPreset('vertex')">
                                 <div class="preset-colors">
@@ -1023,43 +1157,43 @@
                     </div>
                 </div>
                 
-                <!-- Tab 1: Médias -->
+                <!-- Tab 3: Projects -->
                 <div class="tab-content">
+                    <div class="panel-title">💾 Projets</div>
+                    
                     <div class="form-group">
-                        <div class="label">Upload Images/Logos</div>
-                        <div class="upload-zone" id="uploadZone">
-                            <div class="upload-icon">📁</div>
-                            <div class="upload-text">
-                                <strong>Glissez</strong> vos fichiers<br>
-                                ou <strong>cliquez</strong> pour parcourir
-                            </div>
-                            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
-                        </div>
-                        <div class="uploaded-media" id="mediaLibrary"></div>
-                    </div>
-                </div>
-                
-                <!-- Tab 2: Projets -->
-                <div class="tab-content">
-                    <div class="form-group">
-                        <button class="btn btn-secondary btn-small" onclick="saveCurrentProject()">
+                        <button class="btn btn-secondary btn-small" onclick="saveProject()">
                             💾 Sauvegarder projet actuel
                         </button>
                     </div>
                     
-                    <div class="label">Projets sauvegardés</div>
                     <div class="projects-list" id="projectsList">
-                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem;">
+                        <div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.75rem;">
                             Aucun projet sauvegardé
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Center Panel: Preview -->
+            <!-- Center Panel: Canvas -->
             <div class="panel">
-                <div class="panel-title">
-                    👁️ Aperçu en temps réel
+                <div class="panel-title">👁️ Canvas</div>
+                
+                <div class="form-group">
+                    <div class="grid-4" style="margin-bottom: 0.5rem;">
+                        <button class="btn btn-secondary btn-small" onclick="setFormat('square')" data-format="square">
+                            1:1<br><small style="font-size: 0.6rem;">1080×1080</small>
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="setFormat('story')" data-format="story">
+                            9:16<br><small style="font-size: 0.6rem;">1080×1920</small>
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="setFormat('landscape')" data-format="landscape">
+                            16:9<br><small style="font-size: 0.6rem;">1920×1080</small>
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="setFormat('vertical')" data-format="vertical">
+                            4:5<br><small style="font-size: 0.6rem;">1080×1350</small>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="recording-indicator" id="recordingIndicator">
@@ -1068,35 +1202,45 @@
                     <span style="margin-left: auto;">Enregistrement...</span>
                 </div>
                 
-                <div class="canvas-container">
-                    <canvas id="previewCanvas"></canvas>
-                    <div class="shortcut-hint" id="shortcutHint">Espace = Play/Pause</div>
+                <div class="canvas-wrapper">
+                    <div class="canvas-controls">
+                        <button class="canvas-btn" onclick="toggleGrid()" title="Grille" id="gridBtn">⊞</button>
+                        <button class="canvas-btn" onclick="zoomIn()" title="Zoom +">🔍+</button>
+                        <button class="canvas-btn" onclick="zoomOut()" title="Zoom -">🔍-</button>
+                        <button class="canvas-btn" onclick="resetZoom()" title="Reset">⊙</button>
+                    </div>
+                    
+                    <div id="canvasContainer">
+                        <canvas id="previewCanvas"></canvas>
+                    </div>
                 </div>
                 
                 <div class="progress-bar" id="progressBar">
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
                 
-                <div class="controls">
-                    <button class="btn btn-secondary" onclick="playPreview()">
-                        ▶️ Prévisualiser
-                    </button>
-                    <button class="btn" onclick="startRecording()">
-                        🎬 WebM
-                    </button>
-                    <button class="btn btn-secondary" onclick="exportGIF()">
-                        🖼️ GIF
-                    </button>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label class="label">Durée (s)</label>
+                    <div class="slider-group">
+                        <input type="range" class="slider" id="totalDuration" min="3" max="30" value="5" oninput="updateTotalDuration()">
+                        <input type="number" class="slider-value" id="totalDurationValue" value="5" min="3" max="30" onchange="updateTotalDuration()">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="grid-3">
+                        <button class="btn btn-secondary" onclick="playPreview()">▶️ Play</button>
+                        <button class="btn" onclick="startRecording()" id="recordBtn">🎬 WebM</button>
+                        <button class="btn btn-secondary" onclick="exportGIF()">🖼️ GIF</button>
+                    </div>
                 </div>
             </div>
             
-            <!-- Right Panel: Content & AI -->
+            <!-- Right Panel: Properties & AI -->
             <div class="panel">
-                <div class="panel-title">
-                    ✨ Contenu & IA
-                </div>
+                <div class="panel-title">⚙️ Propriétés</div>
                 
-                <!-- AI Assistant Panel -->
+                <!-- AI Assistant -->
                 <div class="ai-panel">
                     <div class="ai-panel-title">
                         🤖 Assistant IA
@@ -1108,7 +1252,7 @@
                             class="input" 
                             id="aiTopic" 
                             placeholder="Ex: Totem LED 65 pouces pour retail"
-                            style="margin-bottom: 0.75rem;"
+                            maxlength="200"
                         >
                     </div>
                     
@@ -1116,135 +1260,72 @@
                         ✨ Générer avec IA
                     </button>
                     
-                    <div id="aiSuggestions" class="ai-suggestions" style="margin-top: 1rem; display: none;"></div>
+                    <div id="aiSuggestions" class="ai-suggestions" style="display: none;"></div>
                 </div>
                 
-                <div class="form-group">
-                    <label class="label">Titre principal</label>
-                    <input 
-                        type="text" 
-                        class="input" 
-                        id="mainText" 
-                        placeholder="INNOVATION"
-                        oninput="updatePreview()"
-                        value="INNOVATION"
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label class="label">Sous-titre</label>
-                    <input 
-                        type="text" 
-                        class="input" 
-                        id="subText" 
-                        placeholder="DIGITAL SIGNAGE"
-                        oninput="updatePreview()"
-                        value="DIGITAL SIGNAGE"
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <label class="label">Description</label>
-                    <textarea 
-                        class="textarea" 
-                        id="descText" 
-                        placeholder="Solutions d'affichage professionnel"
-                        oninput="updatePreview()"
-                    >Solutions d'affichage professionnel</textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label class="label">Animation</label>
-                    <select class="select" id="animation" onchange="updatePreview()">
-                        <option value="fadeIn">Apparition progressive</option>
-                        <option value="slideUp">Glissement vers le haut</option>
-                        <option value="slideRight">Glissement de la droite</option>
-                        <option value="slideLeft">Glissement de la gauche</option>
-                        <option value="scale">Zoom</option>
-                        <option value="rotate">Rotation</option>
-                        <option value="bounce">Rebond</option>
-                        <option value="typewriter">Machine à écrire</option>
-                    </select>
-                    <div class="animation-preview">
-                        ⏱️ Durée: <span id="durationDisplay">5</span>s
+                <div id="propertiesPanel">
+                    <div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.75rem;">
+                        Sélectionnez un calque
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label class="label">Durée (secondes)</label>
-                    <input 
-                        type="range" 
-                        class="slider" 
-                        id="duration" 
-                        min="3" 
-                        max="15" 
-                        value="5"
-                        oninput="updateDuration()"
-                    >
-                </div>
+                <div class="divider"></div>
                 
                 <div class="form-group">
-                    <label class="label">Couleurs</label>
-                    <div class="color-picker-group">
-                        <div class="color-picker">
-                            <input 
-                                type="color" 
-                                class="color-input" 
-                                id="bgColor" 
-                                value="#020617"
-                                onchange="updatePreview()"
-                            >
-                            <span class="color-label">Fond</span>
-                        </div>
-                        <div class="color-picker">
-                            <input 
-                                type="color" 
-                                class="color-input" 
-                                id="accentColor" 
-                                value="#FFD700"
-                                onchange="updatePreview()"
-                            >
-                            <span class="color-label">Accent</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="label">Hashtags - Cliquez pour copier</label>
+                    <label class="label">Hashtags</label>
                     <div class="hashtags" id="hashtags">
                         <span class="hashtag" onclick="copyHashtag(this)">#DigitalSignage</span>
                         <span class="hashtag" onclick="copyHashtag(this)">#Innovation</span>
                         <span class="hashtag" onclick="copyHashtag(this)">#VertexMonaco</span>
                     </div>
                 </div>
-                
-                <button class="btn btn-secondary btn-small" onclick="resetSettings()" style="margin-top: 0.75rem;">
-                    🔄 Réinitialiser
-                </button>
             </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
     <script>
-        // Configuration & State
-        let currentFormat = 'square';
-        let canvas, ctx;
-        let isRecording = false;
-        let mediaRecorder;
-        let recordedChunks = [];
-        let animationId;
-        let startTime;
-        let isDarkMode = true;
+        // Configuration
+        const CONFIG = {
+            MAX_FILE_SIZE: 5 * 1024 * 1024,
+            ALLOWED_FORMATS: ['image/png', 'image/jpeg', 'image/webp'],
+            API_TIMEOUT: 30000,
+            MAX_HISTORY: 50,
+            FONTS: [
+                'Outfit', 'Inter', 'Arial', 'Helvetica', 'Times New Roman', 
+                'Georgia', 'Courier New', 'Verdana', 'Impact', 'Comic Sans MS'
+            ]
+        };
         
-        // History for undo/redo
-        let history = [];
-        let historyIndex = -1;
-        const MAX_HISTORY = 50;
+        // State
+        let canvas, ctx;
+        let currentFormat = 'square';
+        let zoom = 1;
+        let showGrid = false;
+        let isDarkMode = true;
+        let isRecording = false;
+        let mediaRecorder, recordedChunks = [];
+        let animationId;
+        
+        // Layers
+        let layers = [];
+        let selectedLayerId = null;
+        let layerIdCounter = 0;
         
         // Media library
         let mediaLibrary = [];
-        let selectedMedia = null;
+        let selectedMediaId = null;
+        let currentFilter = 'none';
+        
+        // History
+        let history = [];
+        let historyIndex = -1;
+        
+        // Canvas interaction
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let dragLayerId = null;
         
         const formats = {
             square: { width: 1080, height: 1080 },
@@ -1258,145 +1339,47 @@
             canvas = document.getElementById('previewCanvas');
             ctx = canvas.getContext('2d');
             setFormat('square');
-            updatePreview();
-            loadProjects();
-            setupDragAndDrop();
+            setupCanvasInteraction();
             setupKeyboardShortcuts();
+            setupDragAndDrop();
+            loadProjects();
+            
+            // Add default background
+            addBackgroundLayer();
+            addTextLayer('VERTEX', { fontSize: 120, fontWeight: 900, y: 450, color: '#FFFFFF' });
+            addTextLayer('MONACO', { fontSize: 60, fontWeight: 700, y: 550, color: '#FFD700' });
+            
             saveState();
         });
         
         // Keyboard shortcuts
         function setupKeyboardShortcuts() {
             document.addEventListener('keydown', (e) => {
-                // Ctrl+Z - Undo
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+                
                 if (e.ctrlKey && e.key === 'z') {
                     e.preventDefault();
                     undo();
                 }
-                
-                // Ctrl+Y - Redo
                 if (e.ctrlKey && e.key === 'y') {
                     e.preventDefault();
                     redo();
                 }
-                
-                // Space - Play/Pause
-                if (e.code === 'Space' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                    e.preventDefault();
-                    playPreview();
-                    showShortcutHint('Espace = Play/Pause');
-                }
-                
-                // Ctrl+S - Save project
                 if (e.ctrlKey && e.key === 's') {
                     e.preventDefault();
-                    saveCurrentProject();
-                    showShortcutHint('Projet sauvegardé !');
+                    saveProject();
                 }
-                
-                // Ctrl+E - Export
-                if (e.ctrlKey && e.key === 'e') {
+                if (e.key === 'Delete' && selectedLayerId) {
+                    deleteLayer(selectedLayerId);
+                }
+                if (e.key === ' ') {
                     e.preventDefault();
-                    startRecording();
-                    showShortcutHint('Export démarré !');
+                    playPreview();
                 }
             });
         }
         
-        function showShortcutHint(text) {
-            const hint = document.getElementById('shortcutHint');
-            hint.textContent = text;
-            hint.classList.add('show');
-            setTimeout(() => {
-                hint.classList.remove('show');
-            }, 2000);
-        }
-        
-        // History management
-        function saveState() {
-            const state = {
-                mainText: document.getElementById('mainText').value,
-                subText: document.getElementById('subText').value,
-                descText: document.getElementById('descText').value,
-                animation: document.getElementById('animation').value,
-                duration: document.getElementById('duration').value,
-                bgColor: document.getElementById('bgColor').value,
-                accentColor: document.getElementById('accentColor').value,
-                format: currentFormat,
-                selectedMedia: selectedMedia
-            };
-            
-            // Remove states after current index
-            history = history.slice(0, historyIndex + 1);
-            
-            // Add new state
-            history.push(JSON.stringify(state));
-            historyIndex++;
-            
-            // Limit history size
-            if (history.length > MAX_HISTORY) {
-                history.shift();
-                historyIndex--;
-            }
-            
-            updateHistoryButtons();
-        }
-        
-        function undo() {
-            if (historyIndex > 0) {
-                historyIndex--;
-                loadState(history[historyIndex]);
-                showToast('Annulé', 'info');
-            }
-        }
-        
-        function redo() {
-            if (historyIndex < history.length - 1) {
-                historyIndex++;
-                loadState(history[historyIndex]);
-                showToast('Refait', 'info');
-            }
-        }
-        
-        function loadState(stateStr) {
-            const state = JSON.parse(stateStr);
-            
-            document.getElementById('mainText').value = state.mainText;
-            document.getElementById('subText').value = state.subText;
-            document.getElementById('descText').value = state.descText;
-            document.getElementById('animation').value = state.animation;
-            document.getElementById('duration').value = state.duration;
-            document.getElementById('bgColor').value = state.bgColor;
-            document.getElementById('accentColor').value = state.accentColor;
-            
-            updateDuration();
-            updatePreview();
-            updateHistoryButtons();
-        }
-        
-        function updateHistoryButtons() {
-            const undoBtn = document.getElementById('undoBtn');
-            const redoBtn = document.getElementById('redoBtn');
-            
-            undoBtn.style.opacity = historyIndex > 0 ? '1' : '0.3';
-            undoBtn.style.cursor = historyIndex > 0 ? 'pointer' : 'not-allowed';
-            
-            redoBtn.style.opacity = historyIndex < history.length - 1 ? '1' : '0.3';
-            redoBtn.style.cursor = historyIndex < history.length - 1 ? 'pointer' : 'not-allowed';
-        }
-        
-        // Tab switching
-        function switchTab(index) {
-            document.querySelectorAll('.tab').forEach((tab, i) => {
-                tab.classList.toggle('active', i === index);
-            });
-            
-            document.querySelectorAll('.tab-content').forEach((content, i) => {
-                content.classList.toggle('active', i === index);
-            });
-        }
-        
-        // Drag and drop
+        // Drag and drop for media upload
         function setupDragAndDrop() {
             const uploadZone = document.getElementById('uploadZone');
             const fileInput = document.getElementById('fileInput');
@@ -1425,136 +1408,1082 @@
         
         function handleFiles(files) {
             Array.from(files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const img = new Image();
-                        img.onload = () => {
-                            mediaLibrary.push({
-                                id: Date.now() + Math.random(),
-                                src: e.target.result,
-                                width: img.width,
-                                height: img.height
-                            });
-                            renderMediaLibrary();
-                            showToast('Image ajoutée !', 'success');
-                        };
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
+                if (!CONFIG.ALLOWED_FORMATS.includes(file.type)) {
+                    showToast('Format non supporté', 'error');
+                    return;
                 }
+                if (file.size > CONFIG.MAX_FILE_SIZE) {
+                    showToast('Fichier trop volumineux (max 5MB)', 'error');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const id = Date.now() + Math.random();
+                        mediaLibrary.push({
+                            id: id,
+                            src: e.target.result,
+                            width: img.width,
+                            height: img.height,
+                            name: file.name
+                        });
+                        renderMediaLibrary();
+                        showToast('Image ajoutée !', 'success');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             });
         }
         
         function renderMediaLibrary() {
             const container = document.getElementById('mediaLibrary');
+            const filterSection = document.getElementById('filterSection');
+            
+            if (mediaLibrary.length === 0) {
+                container.innerHTML = '';
+                filterSection.style.display = 'none';
+                return;
+            }
+            
             container.innerHTML = mediaLibrary.map(media => `
-                <div class="media-item ${selectedMedia === media.id ? 'selected' : ''}" onclick="selectMedia('${media.id}')">
-                    <img src="${media.src}" alt="Media">
+                <div class="media-item ${selectedMediaId === media.id ? 'selected' : ''}" 
+                     onclick="selectMedia('${media.id}')">
+                    <img src="${media.src}" alt="${media.name}">
                     <div class="media-remove" onclick="removeMedia('${media.id}', event)">×</div>
                 </div>
             `).join('');
+            
+            if (selectedMediaId) {
+                filterSection.style.display = 'block';
+            }
         }
         
         function selectMedia(id) {
-            selectedMedia = selectedMedia === id ? null : id;
+            selectedMediaId = selectedMediaId === id ? null : id;
             renderMediaLibrary();
-            updatePreview();
-            saveState();
+            
+            const filterSection = document.getElementById('filterSection');
+            filterSection.style.display = selectedMediaId ? 'block' : 'none';
         }
         
         function removeMedia(id, event) {
             event.stopPropagation();
+            
+            if (!confirm('Supprimer cette image ?')) return;
+            
             mediaLibrary = mediaLibrary.filter(m => m.id != id);
-            if (selectedMedia == id) selectedMedia = null;
+            if (selectedMediaId == id) {
+                selectedMediaId = null;
+                document.getElementById('filterSection').style.display = 'none';
+            }
             renderMediaLibrary();
-            updatePreview();
             showToast('Image supprimée', 'info');
         }
         
-        // Theme toggle
-        function toggleTheme() {
-            isDarkMode = !isDarkMode;
-            document.body.classList.toggle('light-mode');
+        function applyFilter(filterType) {
+            currentFilter = filterType;
             
-            document.getElementById('darkBtn').classList.toggle('active', isDarkMode);
-            document.getElementById('lightBtn').classList.toggle('active', !isDarkMode);
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.filter === filterType);
+            });
             
-            if (!isDarkMode) {
-                document.getElementById('bgColor').value = '#f8fafc';
-            } else {
-                document.getElementById('bgColor').value = '#020617';
-            }
-            
-            updatePreview();
+            updateCanvas();
             saveState();
         }
         
-        // Format selection
+        function getFilterString() {
+            switch(currentFilter) {
+                case 'grayscale': return 'grayscale(100%)';
+                case 'sepia': return 'sepia(100%)';
+                case 'blur': return 'blur(3px)';
+                case 'brightness': return 'brightness(1.3)';
+                case 'contrast': return 'contrast(1.5)';
+                default: return 'none';
+            }
+        }
+        
+        // Canvas interaction
+        function setupCanvasInteraction() {
+            const container = document.getElementById('canvasContainer');
+            
+            container.addEventListener('mousedown', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+                const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+                
+                const layer = getLayerAt(x, y);
+                if (layer && !layer.locked) {
+                    selectLayer(layer.id);
+                    isDragging = true;
+                    dragLayerId = layer.id;
+                    dragStartX = x - layer.x;
+                    dragStartY = y - layer.y;
+                    container.style.cursor = 'move';
+                    container.classList.add('dragging');
+                }
+            });
+            
+            container.addEventListener('mousemove', (e) => {
+                if (!isDragging || !dragLayerId) return;
+                
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+                const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+                
+                const layer = layers.find(l => l.id === dragLayerId);
+                if (layer) {
+                    layer.x = x - dragStartX;
+                    layer.y = y - dragStartY;
+                    updateCanvas();
+                    updatePropertiesPanel();
+                }
+            });
+            
+            container.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    dragLayerId = null;
+                    container.style.cursor = 'crosshair';
+                    container.classList.remove('dragging');
+                    saveState();
+                }
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    dragLayerId = null;
+                    container.style.cursor = 'crosshair';
+                    container.classList.remove('dragging');
+                }
+            });
+        }
+        
+        function getLayerAt(x, y) {
+            for (let i = layers.length - 1; i >= 0; i--) {
+                const layer = layers[i];
+                if (!layer.visible || layer.type === 'background') continue;
+                
+                if (layer.type === 'text') {
+                    ctx.font = `${layer.fontWeight || 400} ${layer.fontSize}px ${layer.fontFamily}`;
+                    const metrics = ctx.measureText(layer.text);
+                    const width = metrics.width;
+                    const height = layer.fontSize;
+                    
+                    if (x >= layer.x - width/2 && x <= layer.x + width/2 &&
+                        y >= layer.y - height/2 && y <= layer.y + height/2) {
+                        return layer;
+                    }
+                } else if (layer.type === 'shape' || layer.type === 'image') {
+                    const halfW = layer.width / 2;
+                    const halfH = layer.height / 2;
+                    
+                    if (x >= layer.x - halfW && x <= layer.x + halfW &&
+                        y >= layer.y - halfH && y <= layer.y + halfH) {
+                        return layer;
+                    }
+                }
+            }
+            return null;
+        }
+        
+        // Layer management
+        function addBackgroundLayer() {
+            const layer = {
+                id: layerIdCounter++,
+                type: 'background',
+                name: 'Fond',
+                color: '#020617',
+                visible: true,
+                locked: false
+            };
+            
+            layers.push(layer);
+            updateLayersPanel();
+            updateCanvas();
+        }
+        
+        function addTextLayer(text = 'Nouveau texte', options = {}) {
+            const layer = {
+                id: layerIdCounter++,
+                type: 'text',
+                name: `Texte ${layers.filter(l => l.type === 'text').length + 1}`,
+                text: text,
+                x: options.x || canvas.width / 2,
+                y: options.y || canvas.height / 2,
+                fontSize: options.fontSize || 60,
+                fontFamily: options.fontFamily || 'Outfit',
+                fontWeight: options.fontWeight || 700,
+                color: options.color || '#FFFFFF',
+                opacity: 1,
+                rotation: 0,
+                visible: true,
+                locked: false,
+                animationType: 'fadeIn',
+                animationStart: 0,
+                animationDuration: 1,
+                shadowBlur: 0,
+                shadowColor: '#000000',
+                shadowX: 0,
+                shadowY: 0,
+                strokeWidth: 0,
+                strokeColor: '#000000'
+            };
+            
+            layers.push(layer);
+            selectLayer(layer.id);
+            updateLayersPanel();
+            updateCanvas();
+            saveState();
+            showToast('Calque texte ajouté', 'success');
+        }
+        
+        function addShapeLayer(shapeType = 'rectangle') {
+            const layer = {
+                id: layerIdCounter++,
+                type: 'shape',
+                name: `Forme ${layers.filter(l => l.type === 'shape').length + 1}`,
+                shapeType: shapeType,
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                width: 200,
+                height: 200,
+                color: '#FFD700',
+                opacity: 1,
+                rotation: 0,
+                visible: true,
+                locked: false,
+                animationType: 'fadeIn',
+                animationStart: 0,
+                animationDuration: 1,
+                shadowBlur: 0,
+                shadowColor: '#000000',
+                shadowX: 0,
+                shadowY: 0,
+                strokeWidth: 0,
+                strokeColor: '#000000'
+            };
+            
+            layers.push(layer);
+            selectLayer(layer.id);
+            updateLayersPanel();
+            updateCanvas();
+            saveState();
+            showToast('Calque forme ajouté', 'success');
+        }
+        
+        function addImageLayer() {
+            if (!selectedMediaId) {
+                showToast('Sélectionnez d\'abord une image dans l\'onglet Médias', 'error');
+                return;
+            }
+            
+            const media = mediaLibrary.find(m => m.id === selectedMediaId);
+            if (!media) return;
+            
+            const layer = {
+                id: layerIdCounter++,
+                type: 'image',
+                name: `Image ${layers.filter(l => l.type === 'image').length + 1}`,
+                imageSrc: media.src,
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                width: 300,
+                height: 300,
+                opacity: 1,
+                rotation: 0,
+                visible: true,
+                locked: false,
+                filter: currentFilter,
+                animationType: 'fadeIn',
+                animationStart: 0,
+                animationDuration: 1,
+                shadowBlur: 0,
+                shadowColor: '#000000',
+                shadowX: 0,
+                shadowY: 0
+            };
+            
+            layers.push(layer);
+            selectLayer(layer.id);
+            updateLayersPanel();
+            updateCanvas();
+            saveState();
+            showToast('Calque image ajouté', 'success');
+        }
+        
+        function selectLayer(id) {
+            selectedLayerId = id;
+            updateLayersPanel();
+            updatePropertiesPanel();
+            updateCanvas();
+        }
+        
+        function deleteLayer(id) {
+            const layer = layers.find(l => l.id === id);
+            if (layer && layer.type === 'background') {
+                showToast('Impossible de supprimer le fond', 'error');
+                return;
+            }
+            
+            if (!confirm('Supprimer ce calque ?')) return;
+            
+            layers = layers.filter(l => l.id !== id);
+            if (selectedLayerId === id) {
+                selectedLayerId = null;
+            }
+            updateLayersPanel();
+            updatePropertiesPanel();
+            updateCanvas();
+            saveState();
+            showToast('Calque supprimé', 'info');
+        }
+        
+        function duplicateLayer(id) {
+            const layer = layers.find(l => l.id === id);
+            if (!layer || layer.type === 'background') return;
+            
+            const newLayer = JSON.parse(JSON.stringify(layer));
+            newLayer.id = layerIdCounter++;
+            newLayer.name = layer.name + ' copie';
+            newLayer.x += 20;
+            newLayer.y += 20;
+            
+            layers.push(newLayer);
+            selectLayer(newLayer.id);
+            updateLayersPanel();
+            updateCanvas();
+            saveState();
+            showToast('Calque dupliqué', 'success');
+        }
+        
+        function toggleLayerVisibility(id) {
+            const layer = layers.find(l => l.id === id);
+            if (layer) {
+                layer.visible = !layer.visible;
+                updateLayersPanel();
+                updateCanvas();
+                saveState();
+            }
+        }
+        
+        function toggleLayerLock(id) {
+            const layer = layers.find(l => l.id === id);
+            if (layer) {
+                layer.locked = !layer.locked;
+                updateLayersPanel();
+            }
+        }
+        
+        // UI Updates
+        function updateLayersPanel() {
+            const panel = document.getElementById('layersPanel');
+            
+            if (layers.length === 0) {
+                panel.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.75rem;">Aucun calque</div>';
+                return;
+            }
+            
+            const getIcon = (layer) => {
+                if (layer.type === 'text') return '📝';
+                if (layer.type === 'shape') return '⬜';
+                if (layer.type === 'image') return '🖼️';
+                if (layer.type === 'background') return '🎨';
+                return '📄';
+            };
+            
+            panel.innerHTML = [...layers].reverse().map(layer => `
+                <div class="layer-item ${selectedLayerId === layer.id ? 'selected' : ''}" onclick="selectLayer(${layer.id})">
+                    <div class="layer-icon">${getIcon(layer)}</div>
+                    <div class="layer-info">
+                        <div class="layer-name">${layer.name}</div>
+                        <div class="layer-type">${layer.type}</div>
+                    </div>
+                    <div class="layer-actions">
+                        <button class="layer-btn ${layer.visible ? 'active' : ''}" onclick="event.stopPropagation(); toggleLayerVisibility(${layer.id})" title="Visibilité">
+                            ${layer.visible ? '👁️' : '🚫'}
+                        </button>
+                        ${layer.type !== 'background' ? `
+                        <button class="layer-btn ${layer.locked ? 'active' : ''}" onclick="event.stopPropagation(); toggleLayerLock(${layer.id})" title="Verrouiller">
+                            ${layer.locked ? '🔒' : '🔓'}
+                        </button>
+                        <button class="layer-btn" onclick="event.stopPropagation(); duplicateLayer(${layer.id})" title="Dupliquer">📋</button>
+                        <button class="layer-btn" onclick="event.stopPropagation(); deleteLayer(${layer.id})" title="Supprimer">🗑️</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function updatePropertiesPanel() {
+            const panel = document.getElementById('propertiesPanel');
+            
+            if (!selectedLayerId) {
+                panel.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.75rem;">Sélectionnez un calque</div>';
+                return;
+            }
+            
+            const layer = layers.find(l => l.id === selectedLayerId);
+            if (!layer) return;
+            
+            if (layer.type === 'background') {
+                panel.innerHTML = `
+                    <div class="form-group">
+                        <label class="label">Couleur de fond</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" class="color-input" value="${layer.color}" onchange="updateLayerProperty('color', this.value)">
+                            <span class="color-label">${layer.color}</span>
+                        </div>
+                    </div>
+                `;
+            } else if (layer.type === 'text') {
+                panel.innerHTML = `
+                    <div class="form-group">
+                        <label class="label">Nom du calque</label>
+                        <input type="text" class="input" value="${layer.name}" oninput="updateLayerProperty('name', this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Texte</label>
+                        <textarea class="input" rows="3" oninput="updateLayerProperty('text', this.value)">${layer.text}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Police</label>
+                        <select class="select" onchange="updateLayerProperty('fontFamily', this.value)">
+                            ${CONFIG.FONTS.map(font => `<option value="${font}" ${layer.fontFamily === font ? 'selected' : ''}>${font}</option>`).join('')}
+                        </select>
+                        <div class="font-preview" style="font-family: ${layer.fontFamily};">Aperçu ${layer.fontFamily}</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Taille (${layer.fontSize}px)</label>
+                        <div class="slider-group">
+                            <input type="range" class="slider" min="12" max="200" value="${layer.fontSize}" oninput="updateLayerProperty('fontSize', parseInt(this.value))">
+                            <input type="number" class="slider-value" value="${layer.fontSize}" min="12" max="200" onchange="updateLayerProperty('fontSize', parseInt(this.value))">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Graisse</label>
+                        <select class="select" onchange="updateLayerProperty('fontWeight', parseInt(this.value))">
+                            <option value="300" ${layer.fontWeight === 300 ? 'selected' : ''}>Light (300)</option>
+                            <option value="400" ${layer.fontWeight === 400 ? 'selected' : ''}>Normal (400)</option>
+                            <option value="600" ${layer.fontWeight === 600 ? 'selected' : ''}>SemiBold (600)</option>
+                            <option value="700" ${layer.fontWeight === 700 ? 'selected' : ''}>Bold (700)</option>
+                            <option value="900" ${layer.fontWeight === 900 ? 'selected' : ''}>Black (900)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="form-group">
+                        <label class="label">Position</label>
+                        <div class="grid-2">
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">X (${Math.round(layer.x)})</label>
+                                <input type="range" class="slider" min="0" max="${canvas.width}" value="${layer.x}" oninput="updateLayerProperty('x', parseFloat(this.value))">
+                            </div>
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">Y (${Math.round(layer.y)})</label>
+                                <input type="range" class="slider" min="0" max="${canvas.height}" value="${layer.y}" oninput="updateLayerProperty('y', parseFloat(this.value))">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Rotation (${layer.rotation}°)</label>
+                        <input type="range" class="slider" min="-180" max="180" value="${layer.rotation}" oninput="updateLayerProperty('rotation', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Opacité (${Math.round(layer.opacity * 100)}%)</label>
+                        <input type="range" class="slider" min="0" max="1" step="0.01" value="${layer.opacity}" oninput="updateLayerProperty('opacity', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="form-group">
+                        <label class="label">Couleur</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" class="color-input" value="${layer.color}" onchange="updateLayerProperty('color', this.value)">
+                            <span class="color-label">${layer.color}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="panel-title" style="font-size: 0.7rem; margin-top: 1rem;">EFFETS</div>
+                    
+                    <div class="form-group">
+                        <label class="label">Contour (${layer.strokeWidth}px)</label>
+                        <div class="slider-group">
+                            <input type="range" class="slider" min="0" max="20" value="${layer.strokeWidth}" oninput="updateLayerProperty('strokeWidth', parseFloat(this.value))">
+                            <input type="number" class="slider-value" value="${layer.strokeWidth}" min="0" max="20" onchange="updateLayerProperty('strokeWidth', parseFloat(this.value))">
+                        </div>
+                    </div>
+                    
+                    ${layer.strokeWidth > 0 ? `
+                    <div class="form-group">
+                        <label class="label">Couleur contour</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" class="color-input" value="${layer.strokeColor}" onchange="updateLayerProperty('strokeColor', this.value)">
+                            <span class="color-label">${layer.strokeColor}</span>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="form-group">
+                        <label class="label">Ombre (${layer.shadowBlur}px)</label>
+                        <div class="slider-group">
+                            <input type="range" class="slider" min="0" max="50" value="${layer.shadowBlur}" oninput="updateLayerProperty('shadowBlur', parseFloat(this.value))">
+                            <input type="number" class="slider-value" value="${layer.shadowBlur}" min="0" max="50" onchange="updateLayerProperty('shadowBlur', parseFloat(this.value))">
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="panel-title" style="font-size: 0.7rem; margin-top: 1rem;">ANIMATION</div>
+                    
+                    <div class="form-group">
+                        <label class="label">Type</label>
+                        <select class="select" onchange="updateLayerProperty('animationType', this.value)">
+                            <option value="none" ${layer.animationType === 'none' ? 'selected' : ''}>Aucune</option>
+                            <option value="fadeIn" ${layer.animationType === 'fadeIn' ? 'selected' : ''}>Apparition</option>
+                            <option value="slideUp" ${layer.animationType === 'slideUp' ? 'selected' : ''}>Glissement haut</option>
+                            <option value="slideDown" ${layer.animationType === 'slideDown' ? 'selected' : ''}>Glissement bas</option>
+                            <option value="slideLeft" ${layer.animationType === 'slideLeft' ? 'selected' : ''}>Glissement gauche</option>
+                            <option value="slideRight" ${layer.animationType === 'slideRight' ? 'selected' : ''}>Glissement droite</option>
+                            <option value="scale" ${layer.animationType === 'scale' ? 'selected' : ''}>Zoom</option>
+                            <option value="rotate" ${layer.animationType === 'rotate' ? 'selected' : ''}>Rotation</option>
+                            <option value="bounce" ${layer.animationType === 'bounce' ? 'selected' : ''}>Rebond</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Début (${layer.animationStart}s)</label>
+                        <input type="range" class="slider" min="0" max="10" step="0.1" value="${layer.animationStart}" oninput="updateLayerProperty('animationStart', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Durée (${layer.animationDuration}s)</label>
+                        <input type="range" class="slider" min="0.1" max="5" step="0.1" value="${layer.animationDuration}" oninput="updateLayerProperty('animationDuration', parseFloat(this.value))">
+                    </div>
+                `;
+            } else if (layer.type === 'shape') {
+                panel.innerHTML = `
+                    <div class="form-group">
+                        <label class="label">Nom du calque</label>
+                        <input type="text" class="input" value="${layer.name}" oninput="updateLayerProperty('name', this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Forme</label>
+                        <div class="shapes-grid">
+                            <button class="shape-btn ${layer.shapeType === 'rectangle' ? 'active' : ''}" onclick="updateLayerProperty('shapeType', 'rectangle')">⬜</button>
+                            <button class="shape-btn ${layer.shapeType === 'circle' ? 'active' : ''}" onclick="updateLayerProperty('shapeType', 'circle')">⭕</button>
+                            <button class="shape-btn ${layer.shapeType === 'triangle' ? 'active' : ''}" onclick="updateLayerProperty('shapeType', 'triangle')">▲</button>
+                            <button class="shape-btn ${layer.shapeType === 'star' ? 'active' : ''}" onclick="updateLayerProperty('shapeType', 'star')">⭐</button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Dimensions</label>
+                        <div class="grid-2">
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">Largeur (${Math.round(layer.width)})</label>
+                                <input type="range" class="slider" min="10" max="1000" value="${layer.width}" oninput="updateLayerProperty('width', parseFloat(this.value))">
+                            </div>
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">Hauteur (${Math.round(layer.height)})</label>
+                                <input type="range" class="slider" min="10" max="1000" value="${layer.height}" oninput="updateLayerProperty('height', parseFloat(this.value))">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Position</label>
+                        <div class="grid-2">
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">X (${Math.round(layer.x)})</label>
+                                <input type="range" class="slider" min="0" max="${canvas.width}" value="${layer.x}" oninput="updateLayerProperty('x', parseFloat(this.value))">
+                            </div>
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">Y (${Math.round(layer.y)})</label>
+                                <input type="range" class="slider" min="0" max="${canvas.height}" value="${layer.y}" oninput="updateLayerProperty('y', parseFloat(this.value))">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Rotation (${layer.rotation}°)</label>
+                        <input type="range" class="slider" min="-180" max="180" value="${layer.rotation}" oninput="updateLayerProperty('rotation', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Opacité (${Math.round(layer.opacity * 100)}%)</label>
+                        <input type="range" class="slider" min="0" max="1" step="0.01" value="${layer.opacity}" oninput="updateLayerProperty('opacity', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="form-group">
+                        <label class="label">Couleur</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" class="color-input" value="${layer.color}" onchange="updateLayerProperty('color', this.value)">
+                            <span class="color-label">${layer.color}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Contour (${layer.strokeWidth}px)</label>
+                        <div class="slider-group">
+                            <input type="range" class="slider" min="0" max="20" value="${layer.strokeWidth}" oninput="updateLayerProperty('strokeWidth', parseFloat(this.value))">
+                            <input type="number" class="slider-value" value="${layer.strokeWidth}" min="0" max="20" onchange="updateLayerProperty('strokeWidth', parseFloat(this.value))">
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="panel-title" style="font-size: 0.7rem; margin-top: 1rem;">ANIMATION</div>
+                    
+                    <div class="form-group">
+                        <label class="label">Type</label>
+                        <select class="select" onchange="updateLayerProperty('animationType', this.value)">
+                            <option value="none" ${layer.animationType === 'none' ? 'selected' : ''}>Aucune</option>
+                            <option value="fadeIn" ${layer.animationType === 'fadeIn' ? 'selected' : ''}>Apparition</option>
+                            <option value="scale" ${layer.animationType === 'scale' ? 'selected' : ''}>Zoom</option>
+                            <option value="rotate" ${layer.animationType === 'rotate' ? 'selected' : ''}>Rotation</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Début (${layer.animationStart}s)</label>
+                        <input type="range" class="slider" min="0" max="10" step="0.1" value="${layer.animationStart}" oninput="updateLayerProperty('animationStart', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Durée (${layer.animationDuration}s)</label>
+                        <input type="range" class="slider" min="0.1" max="5" step="0.1" value="${layer.animationDuration}" oninput="updateLayerProperty('animationDuration', parseFloat(this.value))">
+                    </div>
+                `;
+            } else if (layer.type === 'image') {
+                panel.innerHTML = `
+                    <div class="form-group">
+                        <label class="label">Nom du calque</label>
+                        <input type="text" class="input" value="${layer.name}" oninput="updateLayerProperty('name', this.value)">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Dimensions</label>
+                        <div class="grid-2">
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">Largeur (${Math.round(layer.width)})</label>
+                                <input type="range" class="slider" min="10" max="1000" value="${layer.width}" oninput="updateLayerProperty('width', parseFloat(this.value))">
+                            </div>
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">Hauteur (${Math.round(layer.height)})</label>
+                                <input type="range" class="slider" min="10" max="1000" value="${layer.height}" oninput="updateLayerProperty('height', parseFloat(this.value))">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Position</label>
+                        <div class="grid-2">
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">X (${Math.round(layer.x)})</label>
+                                <input type="range" class="slider" min="0" max="${canvas.width}" value="${layer.x}" oninput="updateLayerProperty('x', parseFloat(this.value))">
+                            </div>
+                            <div>
+                                <label class="label" style="font-size: 0.65rem;">Y (${Math.round(layer.y)})</label>
+                                <input type="range" class="slider" min="0" max="${canvas.height}" value="${layer.y}" oninput="updateLayerProperty('y', parseFloat(this.value))">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Rotation (${layer.rotation}°)</label>
+                        <input type="range" class="slider" min="-180" max="180" value="${layer.rotation}" oninput="updateLayerProperty('rotation', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Opacité (${Math.round(layer.opacity * 100)}%)</label>
+                        <input type="range" class="slider" min="0" max="1" step="0.01" value="${layer.opacity}" oninput="updateLayerProperty('opacity', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="panel-title" style="font-size: 0.7rem; margin-top: 1rem;">ANIMATION</div>
+                    
+                    <div class="form-group">
+                        <label class="label">Type</label>
+                        <select class="select" onchange="updateLayerProperty('animationType', this.value)">
+                            <option value="none" ${layer.animationType === 'none' ? 'selected' : ''}>Aucune</option>
+                            <option value="fadeIn" ${layer.animationType === 'fadeIn' ? 'selected' : ''}>Apparition</option>
+                            <option value="scale" ${layer.animationType === 'scale' ? 'selected' : ''}>Zoom</option>
+                            <option value="rotate" ${layer.animationType === 'rotate' ? 'selected' : ''}>Rotation</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Début (${layer.animationStart}s)</label>
+                        <input type="range" class="slider" min="0" max="10" step="0.1" value="${layer.animationStart}" oninput="updateLayerProperty('animationStart', parseFloat(this.value))">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Durée (${layer.animationDuration}s)</label>
+                        <input type="range" class="slider" min="0.1" max="5" step="0.1" value="${layer.animationDuration}" oninput="updateLayerProperty('animationDuration', parseFloat(this.value))">
+                    </div>
+                `;
+            }
+        }
+        
+        function updateLayerProperty(property, value) {
+            const layer = layers.find(l => l.id === selectedLayerId);
+            if (layer) {
+                layer[property] = value;
+                updatePropertiesPanel();
+                updateCanvas();
+                
+                if (!['x', 'y', 'width', 'height', 'rotation', 'opacity', 'fontSize', 'shadowBlur', 'strokeWidth', 'shadowX', 'shadowY'].includes(property)) {
+                    saveState();
+                }
+            }
+        }
+        
+        // Canvas drawing
+        function updateCanvas() {
+            if (!ctx) return;
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw layers
+            layers.forEach(layer => {
+                if (!layer.visible) return;
+                drawLayer(layer);
+            });
+            
+            // Selection indicator
+            if (selectedLayerId) {
+                const layer = layers.find(l => l.id === selectedLayerId);
+                if (layer && layer.visible && layer.type !== 'background') {
+                    drawSelectionBox(layer);
+                }
+            }
+            
+            // Grid
+            if (showGrid) {
+                drawGrid();
+            }
+        }
+        
+        function drawLayer(layer, progress = 1) {
+            ctx.save();
+            
+            if (layer.type === 'background') {
+                ctx.fillStyle = layer.color;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
+                return;
+            }
+            
+            // Animation
+            let animProgress = 1;
+            if (layer.animationType !== 'none' && progress < 1) {
+                const totalDuration = parseFloat(document.getElementById('totalDuration').value);
+                const currentTime = progress * totalDuration;
+                
+                if (currentTime >= layer.animationStart) {
+                    const elapsed = currentTime - layer.animationStart;
+                    animProgress = Math.min(elapsed / layer.animationDuration, 1);
+                } else {
+                    animProgress = 0;
+                }
+            }
+            
+            ctx.translate(layer.x, layer.y);
+            ctx.rotate((layer.rotation * Math.PI) / 180);
+            
+            if (layer.animationType !== 'none') {
+                applyAnimation(layer, animProgress);
+            }
+            
+            ctx.globalAlpha = layer.opacity;
+            
+            if (layer.shadowBlur > 0) {
+                ctx.shadowColor = layer.shadowColor;
+                ctx.shadowBlur = layer.shadowBlur;
+                ctx.shadowOffsetX = layer.shadowX;
+                ctx.shadowOffsetY = layer.shadowY;
+            }
+            
+            if (layer.type === 'text') {
+                ctx.font = `${layer.fontWeight} ${layer.fontSize}px ${layer.fontFamily}`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                if (layer.strokeWidth > 0) {
+                    ctx.strokeStyle = layer.strokeColor;
+                    ctx.lineWidth = layer.strokeWidth;
+                    ctx.strokeText(layer.text, 0, 0);
+                }
+                
+                ctx.fillStyle = layer.color;
+                ctx.fillText(layer.text, 0, 0);
+                
+            } else if (layer.type === 'shape') {
+                if (layer.strokeWidth > 0) {
+                    ctx.strokeStyle = layer.strokeColor;
+                    ctx.lineWidth = layer.strokeWidth;
+                }
+                
+                ctx.fillStyle = layer.color;
+                drawShape(layer);
+                
+            } else if (layer.type === 'image') {
+                const img = new Image();
+                img.src = layer.imageSrc;
+                
+                if (layer.filter && layer.filter !== 'none') {
+                    ctx.filter = getFilterString();
+                }
+                
+                ctx.drawImage(img, -layer.width/2, -layer.height/2, layer.width, layer.height);
+            }
+            
+            ctx.restore();
+        }
+        
+        function drawShape(layer) {
+            const halfW = layer.width / 2;
+            const halfH = layer.height / 2;
+            
+            ctx.beginPath();
+            
+            switch (layer.shapeType) {
+                case 'rectangle':
+                    ctx.rect(-halfW, -halfH, layer.width, layer.height);
+                    break;
+                    
+                case 'circle':
+                    const radius = Math.min(halfW, halfH);
+                    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                    break;
+                    
+                case 'triangle':
+                    ctx.moveTo(0, -halfH);
+                    ctx.lineTo(halfW, halfH);
+                    ctx.lineTo(-halfW, halfH);
+                    ctx.closePath();
+                    break;
+                    
+                case 'star':
+                    const spikes = 5;
+                    const outerRadius = Math.min(halfW, halfH);
+                    const innerRadius = outerRadius / 2;
+                    
+                    for (let i = 0; i < spikes * 2; i++) {
+                        const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                        const angle = (i * Math.PI) / spikes - Math.PI / 2;
+                        const x = Math.cos(angle) * radius;
+                        const y = Math.sin(angle) * radius;
+                        
+                        if (i === 0) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                    ctx.closePath();
+                    break;
+            }
+            
+            ctx.fill();
+            if (layer.strokeWidth > 0) {
+                ctx.stroke();
+            }
+        }
+        
+        function applyAnimation(layer, progress) {
+            switch (layer.animationType) {
+                case 'fadeIn':
+                    ctx.globalAlpha *= progress;
+                    break;
+                    
+                case 'slideUp':
+                    ctx.translate(0, (1 - progress) * 100);
+                    ctx.globalAlpha *= progress;
+                    break;
+                    
+                case 'slideDown':
+                    ctx.translate(0, -(1 - progress) * 100);
+                    ctx.globalAlpha *= progress;
+                    break;
+                    
+                case 'slideLeft':
+                    ctx.translate((1 - progress) * 100, 0);
+                    ctx.globalAlpha *= progress;
+                    break;
+                    
+                case 'slideRight':
+                    ctx.translate(-(1 - progress) * 100, 0);
+                    ctx.globalAlpha *= progress;
+                    break;
+                    
+                case 'scale':
+                    const scale = 0.5 + (progress * 0.5);
+                    ctx.scale(scale, scale);
+                    ctx.globalAlpha *= progress;
+                    break;
+                    
+                case 'rotate':
+                    ctx.rotate((1 - progress) * Math.PI * 2);
+                    ctx.globalAlpha *= progress;
+                    break;
+                    
+                case 'bounce':
+                    const bounce = Math.abs(Math.sin(progress * Math.PI * 2)) * (1 - progress) * 50;
+                    ctx.translate(0, -bounce);
+                    ctx.globalAlpha *= progress;
+                    break;
+            }
+        }
+        
+        function drawSelectionBox(layer) {
+            ctx.save();
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            ctx.translate(layer.x, layer.y);
+            ctx.rotate((layer.rotation * Math.PI) / 180);
+            
+            if (layer.type === 'text') {
+                ctx.font = `${layer.fontWeight} ${layer.fontSize}px ${layer.fontFamily}`;
+                const metrics = ctx.measureText(layer.text);
+                const width = metrics.width;
+                const height = layer.fontSize;
+                
+                ctx.strokeRect(-width/2 - 10, -height/2 - 10, width + 20, height + 20);
+            } else if (layer.type === 'shape' || layer.type === 'image') {
+                const halfW = layer.width / 2;
+                const halfH = layer.height / 2;
+                ctx.strokeRect(-halfW - 10, -halfH - 10, layer.width + 20, layer.height + 20);
+            }
+            
+            ctx.restore();
+        }
+        
+        function drawGrid() {
+            ctx.save();
+            ctx.strokeStyle = isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            ctx.lineWidth = 1;
+            
+            const gridSize = 50;
+            
+            for (let x = 0; x <= canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            
+            for (let y = 0; y <= canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            ctx.restore();
+        }
+        
+        // Canvas controls
+        function toggleGrid() {
+            showGrid = !showGrid;
+            document.getElementById('gridBtn').classList.toggle('active', showGrid);
+            updateCanvas();
+        }
+        
+        function zoomIn() {
+            zoom = Math.min(zoom * 1.2, 3);
+            applyZoom();
+        }
+        
+        function zoomOut() {
+            zoom = Math.max(zoom / 1.2, 0.5);
+            applyZoom();
+        }
+        
+        function resetZoom() {
+            zoom = 1;
+            applyZoom();
+        }
+        
+        function applyZoom() {
+            canvas.style.transform = `scale(${zoom})`;
+        }
+        
+        // Format
         function setFormat(format) {
             currentFormat = format;
             const dims = formats[format];
             canvas.width = dims.width;
             canvas.height = dims.height;
             
-            document.querySelectorAll('.format-btn').forEach(btn => {
-                btn.classList.remove('active');
+            document.querySelectorAll('[data-format]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.format === format);
             });
-            event.target.closest('.format-btn').classList.add('active');
             
-            updatePreview();
+            // Reposition layers proportionally
+            layers.forEach(layer => {
+                if (layer.type !== 'background') {
+                    layer.x = (layer.x / canvas.width) * dims.width || dims.width / 2;
+                    layer.y = (layer.y / canvas.height) * dims.height || dims.height / 2;
+                }
+            });
+            
+            updateCanvas();
             saveState();
         }
         
         // Templates
         function applyTemplate(template) {
+            // Clear non-background layers
+            layers = layers.filter(l => l.type === 'background');
+            
             const templates = {
                 product: {
-                    mainText: 'NOUVELLE SOLUTION',
-                    subText: 'Digital Signage',
-                    descText: 'Découvrez nos écrans LED haute définition',
-                    animation: 'slideUp'
+                    title: 'NOUVELLE SOLUTION',
+                    subtitle: 'Digital Signage',
+                    desc: 'Découvrez nos écrans LED haute définition'
                 },
                 announcement: {
-                    mainText: 'ANNONCE',
-                    subText: 'Événement à venir',
-                    descText: 'Rejoignez-nous pour la démonstration',
-                    animation: 'scale'
+                    title: 'ANNONCE',
+                    subtitle: 'Événement à venir',
+                    desc: 'Rejoignez-nous pour la démonstration'
                 },
                 quote: {
-                    mainText: 'INNOVATION',
-                    subText: "L'avenir de l'affichage",
-                    descText: '"Transformez votre communication"',
-                    animation: 'fadeIn'
+                    title: 'INNOVATION',
+                    subtitle: "L'avenir de l'affichage",
+                    desc: '"Transformez votre communication"'
                 },
                 stats: {
-                    mainText: '+300%',
-                    subText: 'Visibilité',
-                    descText: 'Augmentez votre impact visuel',
-                    animation: 'rotate'
-                },
-                showcase: {
-                    mainText: 'EXCELLENCE',
-                    subText: 'Portfolio Premium',
-                    descText: 'Solutions haute performance',
-                    animation: 'bounce'
-                },
-                comparison: {
-                    mainText: 'AVANT / APRÈS',
-                    subText: 'Transformation',
-                    descText: 'Résultats visibles immédiatement',
-                    animation: 'slideRight'
+                    title: '+300%',
+                    subtitle: 'Visibilité',
+                    desc: 'Augmentez votre impact visuel'
                 }
             };
             
             const t = templates[template];
-            document.getElementById('mainText').value = t.mainText;
-            document.getElementById('subText').value = t.subText;
-            document.getElementById('descText').value = t.descText;
-            document.getElementById('animation').value = t.animation;
+            addTextLayer(t.title, { fontSize: 120, fontWeight: 900, y: 400, color: '#FFFFFF' });
+            addTextLayer(t.subtitle, { fontSize: 60, fontWeight: 700, y: 500, color: '#FFD700' });
+            addTextLayer(t.desc, { fontSize: 40, fontWeight: 400, y: 600, color: '#94a3b8' });
             
-            updatePreview();
-            saveState();
             showToast('Template appliqué !', 'success');
         }
         
@@ -1568,10 +2497,20 @@
             };
             
             const p = presets[preset];
-            document.getElementById('bgColor').value = p.bg;
-            document.getElementById('accentColor').value = p.accent;
             
-            updatePreview();
+            const bgLayer = layers.find(l => l.type === 'background');
+            if (bgLayer) {
+                bgLayer.color = p.bg;
+            }
+            
+            // Update accent colors
+            layers.forEach(layer => {
+                if (layer.type !== 'background' && layer.color === '#FFD700') {
+                    layer.color = p.accent;
+                }
+            });
+            
+            updateCanvas();
             saveState();
             showToast('Preset appliqué !', 'success');
         }
@@ -1622,18 +2561,6 @@ Format JSON uniquement:
       "subtitle": "sous-titre 1",
       "description": "description courte 1",
       "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4"]
-    },
-    {
-      "title": "TITRE 2",
-      "subtitle": "sous-titre 2",
-      "description": "description courte 2",
-      "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4"]
-    },
-    {
-      "title": "TITRE 3",
-      "subtitle": "sous-titre 3",
-      "description": "description courte 3",
-      "hashtags": ["#tag1", "#tag2", "#tag3", "#tag4"]
     }
   ]
 }
@@ -1642,6 +2569,10 @@ UNIQUEMENT le JSON, rien d'autre.`
                         }]
                     })
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 
                 const data = await response.json();
                 
@@ -1652,14 +2583,14 @@ UNIQUEMENT le JSON, rien d'autre.`
                     displayAISuggestions(content.variants);
                     showToast('Contenu généré !', 'success');
                 } else {
-                    throw new Error('Invalid response');
+                    throw new Error('Réponse invalide');
                 }
                 
             } catch (error) {
                 console.error('AI Error:', error);
                 suggestionsDiv.innerHTML = `
-                    <div style="padding: 1rem; color: #ef4444; font-size: 0.8rem;">
-                        ⚠️ Erreur lors de la génération. Réessayez.
+                    <div style="padding: 1rem; color: #ef4444; font-size: 0.75rem;">
+                        ⚠️ Erreur lors de la génération
                     </div>
                 `;
                 showToast('Erreur IA', 'error');
@@ -1686,17 +2617,18 @@ UNIQUEMENT le JSON, rien d'autre.`
         }
         
         function applyAISuggestion(variant) {
-            document.getElementById('mainText').value = variant.title;
-            document.getElementById('subText').value = variant.subtitle;
-            document.getElementById('descText').value = variant.description;
+            // Clear non-background layers
+            layers = layers.filter(l => l.type === 'background');
+            
+            addTextLayer(variant.title, { fontSize: 120, fontWeight: 900, y: 400, color: '#FFFFFF' });
+            addTextLayer(variant.subtitle, { fontSize: 60, fontWeight: 700, y: 500, color: '#FFD700' });
+            addTextLayer(variant.description, { fontSize: 40, fontWeight: 400, y: 600, color: '#94a3b8' });
             
             const hashtagsDiv = document.getElementById('hashtags');
             hashtagsDiv.innerHTML = variant.hashtags.map(tag => 
                 `<span class="hashtag" onclick="copyHashtag(this)">${tag}</span>`
             ).join('');
             
-            updatePreview();
-            saveState();
             showToast('Suggestion appliquée !', 'success');
         }
         
@@ -1707,8 +2639,291 @@ UNIQUEMENT le JSON, rien d'autre.`
             });
         }
         
+        // Animation
+        function playPreview() {
+            const duration = parseFloat(document.getElementById('totalDuration').value) * 1000;
+            const startTime = Date.now();
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                layers.forEach(layer => {
+                    if (layer.visible) {
+                        drawLayer(layer, progress);
+                    }
+                });
+                
+                if (showGrid) {
+                    drawGrid();
+                }
+                
+                if (progress < 1) {
+                    animationId = requestAnimationFrame(animate);
+                } else {
+                    updateCanvas();
+                }
+            }
+            
+            animate();
+        }
+        
+        function updateTotalDuration() {
+            const slider = document.getElementById('totalDuration');
+            const input = document.getElementById('totalDurationValue');
+            
+            if (document.activeElement === input) {
+                slider.value = input.value;
+            } else {
+                input.value = slider.value;
+            }
+        }
+        
+        // Recording
+        async function startRecording() {
+            const btn = document.getElementById('recordBtn');
+            
+            if (isRecording) {
+                stopRecording();
+                return;
+            }
+            
+            try {
+                const stream = canvas.captureStream(30);
+                
+                let mimeType = 'video/webm;codecs=vp9';
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'video/webm;codecs=vp8';
+                }
+                if (!MediaRecorder.isTypeSupported(mimeType)) {
+                    mimeType = 'video/webm';
+                }
+                
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: mimeType,
+                    videoBitsPerSecond: 8000000
+                });
+                
+                recordedChunks = [];
+                
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: mimeType });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `vertex-video-${Date.now()}.webm`;
+                    a.click();
+                    
+                    URL.revokeObjectURL(url);
+                    
+                    document.getElementById('recordingIndicator').classList.remove('active');
+                    document.getElementById('progressBar').classList.remove('active');
+                    
+                    showToast('Vidéo exportée !', 'success');
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                
+                btn.textContent = '⏹️ Stop';
+                btn.classList.add('btn-danger');
+                btn.classList.remove('btn');
+                
+                document.getElementById('recordingIndicator').classList.add('active');
+                document.getElementById('progressBar').classList.add('active');
+                
+                const duration = parseFloat(document.getElementById('totalDuration').value) * 1000;
+                const startTime = Date.now();
+                
+                function animate() {
+                    if (!isRecording) return;
+                    
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const seconds = Math.floor(elapsed / 1000);
+                    const ms = Math.floor((elapsed % 1000) / 10);
+                    document.getElementById('recordingTime').textContent = 
+                        `${String(seconds).padStart(2, '0')}:${String(ms).padStart(2, '0')}`;
+                    
+                    document.getElementById('progressFill').style.width = (progress * 100) + '%';
+                    
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    layers.forEach(layer => {
+                        if (layer.visible) {
+                            drawLayer(layer, progress);
+                        }
+                    });
+                    
+                    if (progress < 1) {
+                        animationId = requestAnimationFrame(animate);
+                    } else {
+                        stopRecording();
+                    }
+                }
+                
+                animate();
+                
+            } catch (err) {
+                console.error('Recording error:', err);
+                showToast('Erreur: ' + err.message, 'error');
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                
+                const btn = document.getElementById('recordBtn');
+                btn.textContent = '🎬 WebM';
+                btn.classList.add('btn');
+                btn.classList.remove('btn-danger');
+                
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+                
+                updateCanvas();
+            }
+        }
+        
+        function exportGIF() {
+            showToast('Génération GIF...', 'info');
+            
+            try {
+                const gif = new GIF({
+                    workers: 2,
+                    quality: 10,
+                    width: canvas.width,
+                    height: canvas.height,
+                    workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
+                });
+                
+                const duration = parseFloat(document.getElementById('totalDuration').value) * 1000;
+                const fps = 15;
+                const frames = Math.floor(duration / 1000 * fps);
+                
+                for (let i = 0; i < frames; i++) {
+                    const progress = i / frames;
+                    
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    layers.forEach(layer => {
+                        if (layer.visible) {
+                            drawLayer(layer, progress);
+                        }
+                    });
+                    
+                    gif.addFrame(canvas, { delay: 1000 / fps, copy: true });
+                }
+                
+                gif.on('finished', (blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `vertex-video-${Date.now()}.gif`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    updateCanvas();
+                    showToast('GIF exporté !', 'success');
+                });
+                
+                gif.on('progress', (progress) => {
+                    showToast(`Génération: ${Math.round(progress * 100)}%`, 'info');
+                });
+                
+                gif.render();
+            } catch (error) {
+                console.error('GIF export error:', error);
+                showToast('Erreur d\'export GIF', 'error');
+            }
+        }
+        
+        // History
+        function saveState() {
+            const state = {
+                layers: JSON.parse(JSON.stringify(layers)),
+                selectedLayerId,
+                currentFormat,
+                isDarkMode,
+                showGrid,
+                mediaLibrary,
+                selectedMediaId,
+                currentFilter
+            };
+            
+            history = history.slice(0, historyIndex + 1);
+            history.push(JSON.stringify(state));
+            historyIndex++;
+            
+            if (history.length > CONFIG.MAX_HISTORY) {
+                history.shift();
+                historyIndex--;
+            }
+            
+            updateHistoryButtons();
+        }
+        
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                loadState(history[historyIndex]);
+                showToast('Annulé', 'info');
+            }
+        }
+        
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                loadState(history[historyIndex]);
+                showToast('Refait', 'info');
+            }
+        }
+        
+        function loadState(stateStr) {
+            const state = JSON.parse(stateStr);
+            
+            layers = state.layers;
+            selectedLayerId = state.selectedLayerId;
+            currentFormat = state.currentFormat;
+            isDarkMode = state.isDarkMode;
+            showGrid = state.showGrid;
+            mediaLibrary = state.mediaLibrary || [];
+            selectedMediaId = state.selectedMediaId || null;
+            currentFilter = state.currentFilter || 'none';
+            
+            document.body.classList.toggle('light-mode', !isDarkMode);
+            document.getElementById('darkBtn').classList.toggle('active', isDarkMode);
+            document.getElementById('lightBtn').classList.toggle('active', !isDarkMode);
+            document.getElementById('gridBtn').classList.toggle('active', showGrid);
+            
+            setFormat(currentFormat);
+            updateLayersPanel();
+            updatePropertiesPanel();
+            renderMediaLibrary();
+            updateCanvas();
+            updateHistoryButtons();
+        }
+        
+        function updateHistoryButtons() {
+            document.getElementById('undoBtn').disabled = historyIndex <= 0;
+            document.getElementById('redoBtn').disabled = historyIndex >= history.length - 1;
+        }
+        
         // Project management
-        function saveCurrentProject() {
+        function saveProject() {
             const name = prompt('Nom du projet:', `VERTEX-${Date.now()}`);
             if (!name) return;
             
@@ -1717,33 +2932,35 @@ UNIQUEMENT le JSON, rien d'autre.`
                 name: name,
                 date: new Date().toISOString(),
                 state: {
-                    mainText: document.getElementById('mainText').value,
-                    subText: document.getElementById('subText').value,
-                    descText: document.getElementById('descText').value,
-                    animation: document.getElementById('animation').value,
-                    duration: document.getElementById('duration').value,
-                    bgColor: document.getElementById('bgColor').value,
-                    accentColor: document.getElementById('accentColor').value,
-                    format: currentFormat,
-                    media: mediaLibrary,
-                    selectedMedia: selectedMedia
+                    layers,
+                    currentFormat,
+                    isDarkMode,
+                    showGrid,
+                    mediaLibrary,
+                    selectedMediaId,
+                    currentFilter
                 }
             };
             
-            let projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            let projects = JSON.parse(localStorage.getItem('vertex_projects_complete') || '[]');
             projects.unshift(project);
-            localStorage.setItem('vertex_projects', JSON.stringify(projects));
+            
+            if (projects.length > 20) {
+                projects = projects.slice(0, 20);
+            }
+            
+            localStorage.setItem('vertex_projects_complete', JSON.stringify(projects));
             
             loadProjects();
             showToast('Projet sauvegardé !', 'success');
         }
         
         function loadProjects() {
-            const projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            const projects = JSON.parse(localStorage.getItem('vertex_projects_complete') || '[]');
             const container = document.getElementById('projectsList');
             
             if (projects.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.85rem;">Aucun projet sauvegardé</div>';
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 0.75rem;">Aucun projet sauvegardé</div>';
                 return;
             }
             
@@ -1764,26 +2981,28 @@ UNIQUEMENT le JSON, rien d'autre.`
         }
         
         function loadProject(id) {
-            const projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            const projects = JSON.parse(localStorage.getItem('vertex_projects_complete') || '[]');
             const project = projects.find(p => p.id === id);
             if (!project) return;
             
             const state = project.state;
-            document.getElementById('mainText').value = state.mainText;
-            document.getElementById('subText').value = state.subText;
-            document.getElementById('descText').value = state.descText;
-            document.getElementById('animation').value = state.animation;
-            document.getElementById('duration').value = state.duration;
-            document.getElementById('bgColor').value = state.bgColor;
-            document.getElementById('accentColor').value = state.accentColor;
+            layers = state.layers;
+            currentFormat = state.currentFormat;
+            isDarkMode = state.isDarkMode;
+            showGrid = state.showGrid;
+            mediaLibrary = state.mediaLibrary || [];
+            selectedMediaId = state.selectedMediaId || null;
+            currentFilter = state.currentFilter || 'none';
             
-            currentFormat = state.format;
-            mediaLibrary = state.media || [];
-            selectedMedia = state.selectedMedia;
+            document.body.classList.toggle('light-mode', !isDarkMode);
+            document.getElementById('darkBtn').classList.toggle('active', isDarkMode);
+            document.getElementById('lightBtn').classList.toggle('active', !isDarkMode);
             
-            updateDuration();
+            setFormat(currentFormat);
+            updateLayersPanel();
+            updatePropertiesPanel();
             renderMediaLibrary();
-            updatePreview();
+            updateCanvas();
             saveState();
             
             showToast('Projet chargé !', 'success');
@@ -1792,369 +3011,46 @@ UNIQUEMENT le JSON, rien d'autre.`
         function deleteProject(id) {
             if (!confirm('Supprimer ce projet ?')) return;
             
-            let projects = JSON.parse(localStorage.getItem('vertex_projects') || '[]');
+            let projects = JSON.parse(localStorage.getItem('vertex_projects_complete') || '[]');
             projects = projects.filter(p => p.id !== id);
-            localStorage.setItem('vertex_projects', JSON.stringify(projects));
+            localStorage.setItem('vertex_projects_complete', JSON.stringify(projects));
             
             loadProjects();
             showToast('Projet supprimé', 'info');
         }
         
-        // Canvas drawing
-        function updatePreview() {
-            if (!ctx) return;
+        // Theme
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('light-mode');
             
-            const mainText = document.getElementById('mainText').value || 'VERTEX';
-            const subText = document.getElementById('subText').value || 'MONACO';
-            const descText = document.getElementById('descText').value || '';
-            const bgColor = document.getElementById('bgColor').value;
-            const accentColor = document.getElementById('accentColor').value;
+            document.getElementById('darkBtn').classList.toggle('active', isDarkMode);
+            document.getElementById('lightBtn').classList.toggle('active', !isDarkMode);
             
-            // Clear
-            ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Gradient
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            if (isDarkMode) {
-                gradient.addColorStop(0, bgColor);
-                gradient.addColorStop(1, '#0f172a');
-            } else {
-                gradient.addColorStop(0, bgColor);
-                gradient.addColorStop(1, '#e2e8f0');
-            }
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Decorative shapes
-            ctx.save();
-            ctx.globalAlpha = isDarkMode ? 0.1 : 0.05;
-            ctx.strokeStyle = accentColor;
-            ctx.lineWidth = 3;
-            
-            for (let i = 0; i < 5; i++) {
-                ctx.beginPath();
-                ctx.moveTo(canvas.width * 0.1 + i * 50, canvas.height * 0.3);
-                ctx.lineTo(canvas.width * 0.9 - i * 50, canvas.height * 0.3);
-                ctx.stroke();
-            }
-            ctx.restore();
-            
-            // Brand
-            ctx.font = `bold ${canvas.width * 0.03}px Outfit`;
-            ctx.fillStyle = accentColor;
-            ctx.textAlign = 'center';
-            ctx.fillText('VERTEX MONACO', canvas.width / 2, canvas.height * 0.15);
-            
-            // Main text
-            const mainTextColor = isDarkMode ? '#FFFFFF' : '#0f172a';
-            ctx.font = `900 italic ${canvas.width * 0.12}px Outfit`;
-            ctx.fillStyle = mainTextColor;
-            ctx.fillText(mainText.toUpperCase(), canvas.width / 2, canvas.height * 0.45);
-            
-            ctx.strokeStyle = accentColor;
-            ctx.lineWidth = 3;
-            ctx.strokeText(mainText.toUpperCase(), canvas.width / 2, canvas.height * 0.45);
-            
-            // Sub text
-            ctx.font = `700 ${canvas.width * 0.05}px Outfit`;
-            ctx.fillStyle = accentColor;
-            ctx.fillText(subText.toUpperCase(), canvas.width / 2, canvas.height * 0.58);
-            
-            // Description
-            if (descText) {
-                ctx.font = `400 ${canvas.width * 0.03}px Outfit`;
-                ctx.fillStyle = isDarkMode ? '#94a3b8' : '#475569';
-                
-                const maxWidth = canvas.width * 0.7;
-                const words = descText.split(' ');
-                let line = '';
-                let y = canvas.height * 0.7;
-                
-                for (let word of words) {
-                    const testLine = line + word + ' ';
-                    const metrics = ctx.measureText(testLine);
-                    
-                    if (metrics.width > maxWidth && line !== '') {
-                        ctx.fillText(line, canvas.width / 2, y);
-                        line = word + ' ';
-                        y += canvas.width * 0.04;
-                    } else {
-                        line = testLine;
-                    }
-                }
-                ctx.fillText(line, canvas.width / 2, y);
+            const bgLayer = layers.find(l => l.type === 'background');
+            if (bgLayer) {
+                bgLayer.color = isDarkMode ? '#020617' : '#f8fafc';
             }
             
-            // Selected media
-            if (selectedMedia) {
-                const media = mediaLibrary.find(m => m.id === selectedMedia);
-                if (media) {
-                    const img = new Image();
-                    img.onload = () => {
-                        const size = Math.min(canvas.width, canvas.height) * 0.25;
-                        const x = canvas.width * 0.5 - size / 2;
-                        const y = canvas.height * 0.2;
-                        
-                        ctx.save();
-                        ctx.shadowColor = 'rgba(0,0,0,0.5)';
-                        ctx.shadowBlur = 20;
-                        ctx.drawImage(img, x, y, size, size);
-                        ctx.restore();
-                    };
-                    img.src = media.src;
-                }
-            }
-            
-            // Bottom accent
-            ctx.fillStyle = accentColor;
-            ctx.fillRect(canvas.width * 0.3, canvas.height * 0.88, canvas.width * 0.4, 4);
-            
-            // Logo
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height * 0.95, canvas.width * 0.03, 0, Math.PI * 2);
-            ctx.fillStyle = accentColor;
-            ctx.fill();
-            
-            ctx.font = `900 ${canvas.width * 0.025}px Outfit`;
-            ctx.fillStyle = isDarkMode ? bgColor : '#000';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('V', canvas.width / 2, canvas.height * 0.95);
-        }
-        
-        function drawFrame(progress) {
-            const animation = document.getElementById('animation').value;
-            
-            updatePreview();
-            
-            ctx.save();
-            
-            switch(animation) {
-                case 'fadeIn':
-                    ctx.globalAlpha = progress;
-                    break;
-                    
-                case 'slideUp':
-                    ctx.translate(0, (1 - progress) * canvas.height * 0.3);
-                    ctx.globalAlpha = progress;
-                    break;
-                    
-                case 'slideRight':
-                    ctx.translate((1 - progress) * canvas.width * 0.5, 0);
-                    ctx.globalAlpha = progress;
-                    break;
-                    
-                case 'slideLeft':
-                    ctx.translate((progress - 1) * canvas.width * 0.5, 0);
-                    ctx.globalAlpha = progress;
-                    break;
-                    
-                case 'scale':
-                    const scale = 0.5 + (progress * 0.5);
-                    ctx.translate(canvas.width / 2, canvas.height / 2);
-                    ctx.scale(scale, scale);
-                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
-                    ctx.globalAlpha = progress;
-                    break;
-                    
-                case 'rotate':
-                    ctx.translate(canvas.width / 2, canvas.height / 2);
-                    ctx.rotate((1 - progress) * Math.PI * 0.5);
-                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
-                    ctx.globalAlpha = progress;
-                    break;
-                    
-                case 'bounce':
-                    const bounce = Math.abs(Math.sin(progress * Math.PI * 2)) * (1 - progress) * 50;
-                    ctx.translate(0, -bounce);
-                    ctx.globalAlpha = progress;
-                    break;
-            }
-            
-            ctx.restore();
-        }
-        
-        function playPreview() {
-            const duration = parseInt(document.getElementById('duration').value) * 1000;
-            const startTime = Date.now();
-            
-            function animate() {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                
-                drawFrame(progress);
-                
-                if (progress < 1) {
-                    animationId = requestAnimationFrame(animate);
-                } else {
-                    updatePreview();
-                }
-            }
-            
-            animate();
-        }
-        
-        // Recording WebM
-        async function startRecording() {
-            const btn = event.target;
-            
-            if (isRecording) {
-                stopRecording();
-                return;
-            }
-            
-            try {
-                const stream = canvas.captureStream(30);
-                mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: 'video/webm;codecs=vp9',
-                    videoBitsPerSecond: 8000000
-                });
-                
-                recordedChunks = [];
-                
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) {
-                        recordedChunks.push(e.data);
-                    }
-                };
-                
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    const url = URL.createObjectURL(blob);
-                    
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `vertex-video-${Date.now()}.webm`;
-                    a.click();
-                    
-                    URL.revokeObjectURL(url);
-                    
-                    document.getElementById('recordingIndicator').classList.remove('active');
-                    document.getElementById('progressBar').classList.remove('active');
-                    
-                    showToast('Vidéo exportée !', 'success');
-                };
-                
-                mediaRecorder.start();
-                isRecording = true;
-                
-                btn.textContent = '⏹️ Stop';
-                btn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-                
-                document.getElementById('recordingIndicator').classList.add('active');
-                document.getElementById('progressBar').classList.add('active');
-                
-                const duration = parseInt(document.getElementById('duration').value) * 1000;
-                startTime = Date.now();
-                
-                function animate() {
-                    const elapsed = Date.now() - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    
-                    const seconds = Math.floor(elapsed / 1000);
-                    const ms = Math.floor((elapsed % 1000) / 10);
-                    document.getElementById('recordingTime').textContent = 
-                        `${String(seconds).padStart(2, '0')}:${String(ms).padStart(2, '0')}`;
-                    
-                    document.getElementById('progressFill').style.width = (progress * 100) + '%';
-                    
-                    drawFrame(progress);
-                    
-                    if (progress < 1 && isRecording) {
-                        animationId = requestAnimationFrame(animate);
-                    } else if (isRecording) {
-                        stopRecording();
-                    }
-                }
-                
-                animate();
-                
-            } catch (err) {
-                console.error('Recording error:', err);
-                showToast('Erreur enregistrement', 'error');
-            }
-        }
-        
-        function stopRecording() {
-            if (mediaRecorder && isRecording) {
-                mediaRecorder.stop();
-                isRecording = false;
-                
-                const btn = document.querySelector('.controls .btn:nth-child(2)');
-                btn.textContent = '🎬 WebM';
-                btn.style.background = '';
-                
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                }
-            }
-        }
-        
-        // Export GIF
-        function exportGIF() {
-            showToast('Génération GIF...', 'info');
-            
-            const gif = new GIF({
-                workers: 2,
-                quality: 10,
-                width: canvas.width,
-                height: canvas.height,
-                workerScript: 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js'
-            });
-            
-            const duration = parseInt(document.getElementById('duration').value) * 1000;
-            const fps = 10;
-            const frames = Math.floor(duration / 1000 * fps);
-            
-            for (let i = 0; i < frames; i++) {
-                const progress = i / frames;
-                drawFrame(progress);
-                gif.addFrame(canvas, { delay: 1000 / fps, copy: true });
-            }
-            
-            gif.on('finished', (blob) => {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `vertex-video-${Date.now()}.gif`;
-                a.click();
-                URL.revokeObjectURL(url);
-                
-                updatePreview();
-                showToast('GIF exporté !', 'success');
-            });
-            
-            gif.render();
-        }
-        
-        function updateDuration() {
-            const duration = document.getElementById('duration').value;
-            document.getElementById('durationDisplay').textContent = duration;
-        }
-        
-        function resetSettings() {
-            document.getElementById('mainText').value = 'INNOVATION';
-            document.getElementById('subText').value = 'DIGITAL SIGNAGE';
-            document.getElementById('descText').value = "Solutions d'affichage professionnel";
-            document.getElementById('animation').value = 'fadeIn';
-            document.getElementById('duration').value = 5;
-            document.getElementById('bgColor').value = isDarkMode ? '#020617' : '#f8fafc';
-            document.getElementById('accentColor').value = '#FFD700';
-            document.getElementById('aiTopic').value = '';
-            
-            const suggestionsDiv = document.getElementById('aiSuggestions');
-            suggestionsDiv.style.display = 'none';
-            
-            selectedMedia = null;
-            renderMediaLibrary();
-            
-            updateDuration();
-            updatePreview();
+            updateCanvas();
             saveState();
-            showToast('Réinitialisé !', 'info');
         }
         
+        // Tabs
+        function switchLeftTab(index) {
+            const tabs = document.querySelectorAll('.workspace > .panel:first-child .tabs .tab');
+            const contents = document.querySelectorAll('.workspace > .panel:first-child .tab-content');
+            
+            tabs.forEach((tab, i) => {
+                tab.classList.toggle('active', i === index);
+            });
+            
+            contents.forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+        
+        // Toast
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
@@ -2162,7 +3058,7 @@ UNIQUEMENT le JSON, rien d'autre.`
             const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
             
             toast.innerHTML = `
-                <span style="font-size: 1.2rem;">${icon}</span>
+                <span style="font-size: 1.1rem;">${icon}</span>
                 <span class="toast-text">${message}</span>
             `;
             
